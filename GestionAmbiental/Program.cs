@@ -19,17 +19,17 @@ namespace GestionAmbiental
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder                  
-                    .UseSerilog((hostingContext, loggerConfiguration) =>
-                    {
-                        loggerConfiguration.MinimumLevel.Debug()
-                        .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                        .Enrich.FromLogContext()
-                        .WriteTo.File(Path.Combine(hostingContext.HostingEnvironment.ContentRootPath, "logs/log-" + DateTime.Today.ToString("yyyyMMdd") + ".log"));
-                    })
-                    .ConfigureServices(services => services.AddAutofac())
+                    webBuilder.ConfigureServices(services => services.AddAutofac())
                     .UseStartup<Startup>();
-                }).ConfigureAppConfiguration((context,config)=>
+                })
+                .UseSerilog((hostingContext, loggerConfiguration) =>
+                {
+                    loggerConfiguration.MinimumLevel.Debug()
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                    .Enrich.FromLogContext()
+                    .WriteTo.File(Path.Combine(hostingContext.HostingEnvironment.ContentRootPath, "logs/log-" + DateTime.Today.ToString("yyyyMMdd") + ".log"));
+                })
+                .ConfigureAppConfiguration((context,config)=>
                 {
                     var env = context.HostingEnvironment;
                     config.AddJsonFile("autofac.json");
@@ -38,31 +38,6 @@ namespace GestionAmbiental
                 .Build();
 
             host.Run();
-        }
-        // NET CORE 2.2
-        //public static IHostBuilder BuildWebHost(string[] args)
-        //{
-            
-        //    return WebHost.CreateDefaultBuilder(args)
-        //            .UseStartup<Startup>()
-        //            .ConfigureAppConfiguration((builderContext, config) =>
-        //            {
-                         
-        //                IHostingEnvironment env = builderContext.HostingEnvironment;
-        //                config.AddJsonFile("autofac.json");
-        //                config.AddEnvironmentVariables();
-                        
-        //            })
-        //            .UseSerilog((hostingContext, loggerConfiguration) =>
-        //            {
-        //                loggerConfiguration.MinimumLevel.Debug()
-        //                    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-        //                    .Enrich.FromLogContext()
-        //                    .WriteTo.RollingFile(Path.Combine(hostingContext.HostingEnvironment.ContentRootPath, "logs/log-{Date}.log"));
-        //            })
-        //            .ConfigureServices(services => services.AddAutofac())
-        //            .Build();
-            
-        //}
+        }        
     }
 }

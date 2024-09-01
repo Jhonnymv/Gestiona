@@ -21,6 +21,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         public string Hora_Avistamiento { get; set; }
         [DisplayName("Ubicación:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
+        //[RegularExpression(@"^ -? ([0 - 9]{ 1, 2}| 1[0 - 7][0 - 9] | 180) (\.[0 - 9]{ 1, 20 }) , -? ([0 - 9]{ 1, 2 }| 1[0 - 7][0 - 9] | 180) (\.[0 - 9]{ 1, 20 }) $")]
         public string Ubicacion { get; set; }
         [DisplayName("Cantidad:")]
         public int Cantidad { get; set; }

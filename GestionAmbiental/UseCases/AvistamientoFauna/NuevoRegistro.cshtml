@@ -71,6 +71,9 @@
                                             <label asp-for="Ubicacion">Ubicación</label>
                                             <span class="text-danger" asp-validation-for="Ubicacion"></span>
                                             <input type="text" class="form-control" asp-for="Ubicacion" />
+                                            <span class="text-danger field-validation-error" data-valmsg-for="Ubicacion" data-valmsg-replace="true" id="span_alerta_ubicacion">
+                                                <span id="alerta_ubicacion" class=""></span>
+                                            </span>
                                         </div>
                                         <div class="col-4 m-0 d-flex justify-content-end">
                                             <button type="button" class="btn btn-primary" onclick="ObtenerUbicacion()"><img src="~/img/icons/gps.png" /></button>
@@ -119,7 +122,7 @@
                             </div>
                             <div class="row">
                                 <div class="d-flex justify-content-end">
-                                    <button type="button" class="btn btn-mc next-btn">Siguiente</button>
+                                    <button type="button" class="btn btn-mc next-btn" id="btn-siguiente">Siguiente</button>
                                 </div>
                             </div>
                         </div>
@@ -438,6 +441,17 @@
         function ImprimirPermisos(state) {
             console.log('Permission ' + state);
         }
+
+        let coordinatesRegex = /^-?([0-9]{1,2}|1[0-7][0-9]|180)(\.[0-9]{1,20}) , -?([0-9]{1,2}|1[0-7][0-9]|180)(\.[0-9]{1,20})$/
+        $("#Ubicacion").on('change', function () {
+            let input = document.getElementById('Ubicacion').value;
+            let errorMsg = document.getElementById('span_alerta_ubicacion');
+            errorMsg.style.display = 'none';
+            if (!coordinatesRegex.test(input)) {
+                $("#alerta_ubicacion").text("Las coordenadas no son válidas (ej. \"-13.123456789 , -74.123456789\")");
+                errorMsg.style.display = 'block';                
+            }
+        });
     </script>
 }
 

@@ -28,6 +28,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Renci.SshNet;
 using Serilog;
+using System.Text.RegularExpressions;
 
 namespace GestionAmbiental.UseCases.AvistamientoFauna
 {
