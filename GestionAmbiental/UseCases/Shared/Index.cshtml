@@ -41,28 +41,46 @@
             $("#error_message").text("");
             var user = $("#User").val();
             var password = $("#Password").val();
-            if (user != "" && password != "") {
-                $.ajax({
-                    type: "POST",
-                    url: "@Url.Action("IniciarSesion", "Autenticacion")",
-                    data: {
-                        User: user,
-                        Password: password
-                    },
-                    success: function (result) {
-                        console.log(result);
-                        if (result.success) {
-                            if (result.returnUrl != null)
-                                window.location = result.returnUrl;
-                            else
-                                window.location = '@Url.Action("Modulos", "Home")';
-                        } else {
-                            $("#error_message").css('display', 'block');
-                            $('#error_message').text(result.mensaje);
-                        }
-                    }
-                });
-            } else {
+            const reCaptchaResponse = grecaptcha.getResponse();
+            // console.log("CAPTCHA: ",reCaptchaResponse)
+            if (user != "" && password != "" && reCaptchaResponse) {
+                    // console.log("CAPTCHA TRUE")
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("GetreCaptchaResponse", "Autenticacion")",
+                        data: {
+                            userResponse: reCaptchaResponse
+                        },
+                        success: function () {
+                            $.ajax({
+                                type: "POST",
+                                url: "@Url.Action("IniciarSesion", "Autenticacion")",
+                                data: {
+                                    User: user,
+                                    Password: password
+                                },
+                                success: function (result) {
+                                    // console.log(result);
+                                    if (result.success) {
+                                        if (result.returnUrl != null)
+                                            window.location = result.returnUrl;
+                                        else
+                                            window.location = '@Url.Action("Modulos", "Home")';
+                                    }
+                                    else {
+                                        $("#error_message").css('display', 'block');
+                                        $('#error_message').text(result.mensaje);
+                                    }
+                                }
+                            });
+                        },
+                        error:function (error) {
+                            // console.log("Validación captcha error:")
+                            // console.error(error)
+                        },
+                    });                
+            } 
+            else {
                 if (user == "") {
                     $("#error_message").css('display', 'block');
                     $('#error_message').text("Debe ingresar su nombre de usuario");
@@ -71,7 +89,13 @@
                     $("#error_message").css('display', 'block');
                     $('#error_message').text("Debe ingresar su contraseña");
                 }
+                if (!reCaptchaResponse) {
+                    $("#error_message").css('display', 'block');
+                    $('#error_message').text("Debe completar el CAPTCHA antes de continuar.");
+                    alert("Debe completar el CAPTCHA antes de continuar.");
+                }
             }
-    });
+    });            
     </script>
+    <script type="text/javascript" src="https://www.google.com/recaptcha/api.js"></script>
 }

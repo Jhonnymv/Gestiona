@@ -21,6 +21,18 @@ namespace GestionAmbiental
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReCaptcha",
+                    policy =>
+                    {
+                        policy.WithOrigins("https://www.google.com", "https://www.recaptcha.net")  // Dominios de Google para reCAPTCHA
+                            .AllowAnyMethod()   // Permitir cualquier método HTTP
+                            .AllowAnyHeader()   // Permitir cualquier encabezado
+                            .AllowCredentials(); // Permitir envío de credenciales si es necesario                            
+                    });
+            });
+            services.AddHttpClient();
             services.AddDistributedMemoryCache();
 
             services.AddSession(options =>
@@ -92,6 +104,8 @@ namespace GestionAmbiental
             });
 
             app.UseHttpsRedirection();
+
+            app.UseCors();
 
             app.UseStaticFiles();
 
