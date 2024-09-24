@@ -285,15 +285,15 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                         adSearchRoot.Close();
                         rst = rst.OrderBy(x => x.UsuarioRed).ToList();
                     }
-
-                    linePerLine.Add("Usuarios Listados");
+                    //linePerLine.Add("Usuarios Listados");
                     adSearcher.Dispose();
                     adSearchRoot.Dispose();
-                    // lineJson = JsonConvert.SerializeObject(rst);
-                    // linePerLine.Add(JsonConvert.SerializeObject(rst));
-                    await _updateUsuarios.Execute(JsonConvert.SerializeObject(rst));
-                    linePerLine.Add("Usuarios Actualizados");
                 }
+
+                // lineJson = JsonConvert.SerializeObject(rst);
+                // linePerLine.Add(JsonConvert.SerializeObject(rst));
+                await _updateUsuarios.Execute(JsonConvert.SerializeObject(rst));
+                //linePerLine.Add("Usuarios Actualizados");
             }
             catch (Exception e)
             {
