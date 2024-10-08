@@ -16,5 +16,7 @@ namespace GestionAmbiental.UseCases.Autenticacion
         [DisplayName("Contraseña")]
         public string Password { get; set; }
         public string MensajeAut { get; set; }
+        [Required(ErrorMessage = "Debe completar el CAPTCHA antes de continuar")]
+        public string userResponse { get; set; }
     }
 }

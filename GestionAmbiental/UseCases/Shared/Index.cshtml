@@ -34,52 +34,40 @@
     await Html.RenderPartialAsync("_Login", new GestionAmbiental.UseCases.Autenticacion.SigninModel());
 }
 
-@section Scripts{
-    <script type="text/javascript">       
+@section Scripts {
+    <script type="text/javascript">
         $("#btnIniciarSesion").click(function () {
             $("#error_message").css('display', 'none');
             $("#error_message").text("");
             var user = $("#User").val();
             var password = $("#Password").val();
             const reCaptchaResponse = grecaptcha.getResponse();
-            // console.log("CAPTCHA: ",reCaptchaResponse)
             if (user != "" && password != "" && reCaptchaResponse) {
-                    // console.log("CAPTCHA TRUE")
-                    $.ajax({
-                        type: "GET",
-                        url: "@Url.Action("GetreCaptchaResponse", "Autenticacion")",
-                        data: {
-                            userResponse: reCaptchaResponse
-                        },
-                        success: function () {
-                            $.ajax({
-                                type: "POST",
-                                url: "@Url.Action("IniciarSesion", "Autenticacion")",
-                                data: {
-                                    User: user,
-                                    Password: password
-                                },
-                                success: function (result) {
-                                    // console.log(result);
-                                    if (result.success) {
-                                        if (result.returnUrl != null)
-                                            window.location = result.returnUrl;
-                                        else
-                                            window.location = '@Url.Action("Modulos", "Home")';
-                                    }
-                                    else {
-                                        $("#error_message").css('display', 'block');
-                                        $('#error_message').text(result.mensaje);
-                                    }
-                                }
-                            });
-                        },
-                        error:function (error) {
-                            // console.log("Validación captcha error:")
-                            // console.error(error)
-                        },
-                    });                
-            } 
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("IniciarSesion", "Autenticacion")",
+                    data: {
+                        User: user,
+                        Password: password,
+                        userResponse: reCaptchaResponse
+                    },
+                    success: function (result) {
+                        // console.log(result);
+                        if (result.success) {
+                            if (result.returnUrl != null)
+                                window.location = result.returnUrl;
+                            else
+                                window.location = '@Url.Action("Modulos", "Home")';
+                        }
+                        else {
+                            $("#error_message").css('display', 'block');
+                            $('#error_message').text(result.mensaje);
+
+                            console.log("Error: ",result)
+                        }
+                    }
+                });
+            }
             else {
                 if (user == "") {
                     $("#error_message").css('display', 'block');
@@ -95,7 +83,7 @@
                     alert("Debe completar el CAPTCHA antes de continuar.");
                 }
             }
-    });            
+        });
     </script>
     <script type="text/javascript" src="https://www.google.com/recaptcha/api.js"></script>
 }
