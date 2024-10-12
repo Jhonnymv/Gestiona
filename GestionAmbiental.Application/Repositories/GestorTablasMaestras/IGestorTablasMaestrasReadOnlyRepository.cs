@@ -18,6 +18,16 @@ namespace GestionAmbiental.Application.Repositories.GestorTablasMaestras
         Task<Usuario> GetUsuario(int idUsuario);
         Task UpdateUsuario(Usuario usuario);
         //Task<int> AddUsuario(Usuario usuario);
+        //Tb_Tipo_Inspeccion
+        Task<List<Tipo_Inspeccion>> GetTiposInspeccion(string filtro);
+        Task<Tipo_Inspeccion> GetTipoInspeccion(int id);
+        Task UpdateTipoInspeccion(Tipo_Inspeccion tipoInspeccion);
+        Task<int> AddTipoInspeccion(Tipo_Inspeccion tipoInspeccion);
+        //Tb_Miembro_Comite_Inspeccion
+        Task<List<MiembroComiteInspeccion>> GetMiembrosComiteInspeccion(string filtro);
+        Task<MiembroComiteInspeccion> GetMiembroComiteInspeccion(int id);
+        Task UpdateMiembroComiteInspeccion(MiembroComiteInspeccion miembroComiteInspeccion);
+        Task<int> AddMiembroComiteInspeccion(MiembroComiteInspeccion miembroComiteInspeccion);
         //Tb_Empresa
         Task<List<Empresa>> GetEmpresas(string filtro);
         Task<Empresa> GetEmpresa(int idEmpresa);

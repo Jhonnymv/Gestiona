@@ -13,6 +13,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Ins
     {
         [Key]
         public int Id_Inspeccion_Cabecera { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string Codigo_Formato { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string Area_Formato { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string Codigo { get; set; }
         [Column(TypeName = "int")]
@@ -25,8 +29,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Ins
         public DateTime Fecha_Inspeccion { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Area_Inspeccionada { get; set; }
-        [Column(TypeName = "varchar(10)")]
+        [Column(TypeName = "varchar(100)")]
         public string Tipo_Inspeccion { get; set; }
+        [Column(TypeName = "varchar(500)")]
+        public string Participantes_Inspección { get; set; }
         [Column(TypeName = "int")]
         public int Id_Responsable_Area { get; set; }
         [Column(TypeName = "varchar(100)")]
@@ -39,5 +45,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Ins
         public string Estado { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Gerencia_Inspeccionada { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Miembro_Comite { get; set; }
     }
 }

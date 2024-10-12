@@ -14,6 +14,7 @@ using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Monitor
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.FOCAM;
 using Microsoft.EntityFrameworkCore;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.MonitoreoCampoInterno.Calidad_Agua;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inspecciones.Items;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 {
@@ -22,6 +23,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public Context(DbContextOptions options) : base(options)
         {
         }
+        //Inspecciones
+        public DbSet<Tipo_Inspeccion> TiposInspeccion { get; set; }        
+        public DbSet<Miembro_Comite_Inspeccion> MiembrosComiteInspeccion { get; set; }
         public DbSet<Empresa> Empresas { get; set; }
         public DbSet<Gerencia> Gerencias { get; set; }
         public DbSet<Inspeccion_Cabecera> Inspecciones_Cabecera { get; set; }
@@ -154,6 +158,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Tipo_Inspeccion>()
+               .ToTable("Tb_Tipo_Inspeccion");
+            modelBuilder.Entity<Miembro_Comite_Inspeccion>()
+               .ToTable("Tb_Miembro_Comite_Inspeccion");
+            modelBuilder.Entity<Empresa>()
+               .ToTable("Tb_Empresa");
             modelBuilder.Entity<Empresa>()
                .ToTable("Tb_Empresa");
             modelBuilder.Entity<Gerencia>()

@@ -2222,5 +2222,104 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.Archivos_Configuracion.Update(entity);
             await _context.SaveChangesAsync();
         }
+        //Tb_Tipo_Inspeccion
+        public async Task<List<Tipo_Inspeccion>> GetTiposInspeccion(string filtro)
+        {
+            var tiposInspeccion = await _context.TiposInspeccion.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<Tipo_Inspeccion>();
+            foreach (var item in tiposInspeccion)
+                output.Add(new Tipo_Inspeccion{
+                    Id_Tipo_Inspeccion = item.Id_Tipo_Inspeccion,
+                    Descripcion = item.Descripcion                    
+                });
+            return output;
+        }
+
+        public async Task<Tipo_Inspeccion> GetTipoInspeccion(int id)
+        {
+            var tipoInspeccion = await _context.TiposInspeccion.FirstOrDefaultAsync(x => x.Id_Tipo_Inspeccion.Equals(id));
+            var output = new Tipo_Inspeccion
+            {
+                Id_Tipo_Inspeccion = tipoInspeccion.Id_Tipo_Inspeccion,
+                Descripcion = tipoInspeccion.Descripcion
+            };
+            return output;
+        }
+
+        public async Task UpdateTipoInspeccion(Tipo_Inspeccion tipoInspeccion)
+        {
+            var tipoInspeccionEntity = await _context.TiposInspeccion.FirstOrDefaultAsync(x => x.Id_Tipo_Inspeccion.Equals(tipoInspeccion.Id_Tipo_Inspeccion));
+            tipoInspeccionEntity.Descripcion = tipoInspeccion.Descripcion;
+            _context.TiposInspeccion.Update(tipoInspeccionEntity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> AddTipoInspeccion(Tipo_Inspeccion tipoInspeccion)
+        {
+            var tipoInspeccionEntity = new Entities.Inspecciones.Items.Tipo_Inspeccion
+            {
+                Descripcion = tipoInspeccion.Descripcion
+            };
+            _context.TiposInspeccion.Add(tipoInspeccionEntity);
+            await _context.SaveChangesAsync();
+            return tipoInspeccionEntity.Id_Tipo_Inspeccion;
+        }
+
+        public async Task<List<MiembroComiteInspeccion>> GetMiembrosComiteInspeccion(string filtro)
+        {
+            var test = await _context.MiembrosComiteInspeccion.ToListAsync();
+            var miembrosComite = await _context.MiembrosComiteInspeccion.Where(x => 
+            x.Nombres.Contains(filtro == null ? x.Nombres : filtro) ||
+            x.Apellidos.Contains(filtro == null ? x.Apellidos : filtro))
+                .OrderBy(x => x.Nombres).ToListAsync();
+
+            var output = new List<MiembroComiteInspeccion>();
+            foreach (var item in miembrosComite)
+                output.Add(new MiembroComiteInspeccion
+                {
+                    Id_Miembro_Comite = item.Id_Miembro_Comite,
+                    Nombres = item.Nombres,
+                    Apellidos = item.Apellidos,
+                    Estado = item.Estado
+                });
+            return output;
+        }
+
+        public async Task<MiembroComiteInspeccion> GetMiembroComiteInspeccion(int id)
+        {
+            var miembroComite = await _context.MiembrosComiteInspeccion.FirstOrDefaultAsync(x => x.Id_Miembro_Comite.Equals(id));
+            var output = new MiembroComiteInspeccion
+            {
+                Id_Miembro_Comite = miembroComite.Id_Miembro_Comite,
+                Nombres = miembroComite.Nombres,
+                Apellidos = miembroComite.Apellidos,
+                Estado = miembroComite.Estado
+            };
+            return output;
+        }
+
+        public async Task UpdateMiembroComiteInspeccion(MiembroComiteInspeccion miembroComiteInspeccion)
+        {
+            var miembroComite = await _context.MiembrosComiteInspeccion.FirstOrDefaultAsync(x => x.Id_Miembro_Comite.Equals(miembroComiteInspeccion.Id_Miembro_Comite));
+            miembroComite.Nombres = miembroComiteInspeccion.Nombres;
+            miembroComite.Apellidos = miembroComiteInspeccion.Apellidos;
+            miembroComite.Estado = miembroComiteInspeccion.Estado;
+            _context.MiembrosComiteInspeccion.Update(miembroComite);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> AddMiembroComiteInspeccion(MiembroComiteInspeccion miembroComiteInspeccion)
+        {
+            var miembroComiteEntity = new Entities.Inspecciones.Items.Miembro_Comite_Inspeccion
+            {
+                Nombres = miembroComiteInspeccion.Nombres,
+                Apellidos = miembroComiteInspeccion.Apellidos,
+                Estado = miembroComiteInspeccion.Estado,
+            };
+            _context.MiembrosComiteInspeccion.Add(miembroComiteEntity);
+            await _context.SaveChangesAsync();
+            return miembroComiteEntity.Id_Miembro_Comite;
+        }
     }
 }

@@ -1,0 +1,39 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.Inspecciones.Model.TipoInspeccionModel
+@{
+    ViewData["Title"] = "Agregar Tipo Inspección";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Agregar Tipo de Inspección</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="GestorInspecciones" asp-action="AgregarTipoInspeccion" method="post" enctype="multipart/form-data">
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <label asp-for="Descripcion"></label>
+                        <span class="text-danger" asp-validation-for="Descripcion"></span>
+                        <input type="text" class="form-control" asp-for="Descripcion">
+                    </div>                    
+                    <div class="row input_container">
+                        <div class="button-container">
+                            <div></div>
+                            <div id="bntsDetalle">
+                                <a asp-controller="GestorInspecciones" asp-action="Resumen" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>
+                                <button type="submit" class="btn btn-mc-success" id="btnAgregar">Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
