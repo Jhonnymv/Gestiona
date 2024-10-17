@@ -116,6 +116,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<List<InspeccionCabecera>> GetInspeccionesYObservaciones(int empresa, int gerencia, int respLevObs, int asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada)
         {
             var output = new List<InspeccionCabecera>();
+            var usuarios = await _context.Usuarios.ToListAsync();
             var cabeceras = await _context.Inspecciones_Cabecera.ToListAsync();
             cabeceras = cabeceras.Where(x =>
                 !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) &&
@@ -131,9 +132,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 empresa != 0 ? x.Id_Empresa.Equals(empresa) : x.Id_Empresa.Equals(x.Id_Empresa) &&
                 gerencia != 0 ? x.Id_Gerencia.Equals(gerencia) : x.Id_Gerencia.Equals(x.Id_Gerencia)
             ).ToList();
-
             if (idGerenciaInspeccionada != 0)
-                cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
+                cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();                       
 
             var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
             observaciones = observaciones.Where(x =>
@@ -175,14 +175,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 }
             }
             var tiposCondicion = await _context.Tipos_Condicion.ToListAsync();
-            var usuarios = await _context.Usuarios.ToListAsync();
 
             var empresas = await _context.Empresas.ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
+            var miembrosComite = await _context.MiembrosComiteInspeccion.ToListAsync();
             foreach (var cabecera in cabeceras)
             {
                 var responsableArea = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(cabecera.Id_Responsable_Area));
-                var cabDomain = new InspeccionCabecera {
+                var cabDomain = new InspeccionCabecera
+                {
                     IdCabecera = cabecera.Id_Inspeccion_Cabecera,
                     AreaInspeccionada = cabecera.Area_Inspeccionada,
                     Codigo = cabecera.Codigo,
@@ -196,13 +197,20 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     GerenciaInspeccionada = gerencias.FirstOrDefault(x => cabecera.Id_Gerencia_Inspeccionada.HasValue && x.Id_Gerencia.Equals(cabecera.Id_Gerencia_Inspeccionada.Value))?.Descripcion,
                     Objetivo = cabecera.Objetivo,
                     Participantes = cabecera.Participantes,
-                    ResponsableArea = new Usuario { 
+                    ResponsableArea = new Usuario
+                    {
                         IdUsuario = responsableArea.Id_Usuario,
                         Nombres = responsableArea.Nombres,
-                        Apellidos = responsableArea.Apellidos                        
+                        Apellidos = responsableArea.Apellidos
                     },
-                    TipoInspeccion = cabecera.Tipo_Inspeccion                    
+                    TipoInspeccion = cabecera.Tipo_Inspeccion,
+                    Codigo_Formato = cabecera.Codigo_Formato,
+                    Area_Formato = cabecera.Area_Formato,
+                    Id_Miembro_Comite = cabecera.Id_Miembro_Comite,
+                    Miembro_Comite = miembrosComite.Select(x => new { Id = x.Id_Miembro_Comite, Miembro = x.Nombres + " " + x.Apellidos }).FirstOrDefault(x => cabecera.Id_Miembro_Comite.Equals(x.Id))?.Miembro,
+                    Participantes_Inspección_Detalle = new List<Usuario>()
                 };
+
                 if (!IsValidJson(cabecera.Responsable_Inspeccion))
                     cabDomain.ResponsableInspeccion = cabecera.Responsable_Inspeccion;
                 else
@@ -211,6 +219,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     var lista_usuario = usuarios.Where(x => lista_ids.Contains(x.Id_Usuario)).Select(x => x.Nombres.ToUpper() + " " + x.Apellidos.ToUpper()).ToList();
                     cabDomain.ResponsableInspeccion = ConcatUsingComa(lista_usuario);
                 }
+                if (IsValidJson(cabecera.Participantes_Inspección)) 
+                { 
+                    var lista_ids = JsonConvert.DeserializeObject<List<int>>(cabecera.Responsable_Inspeccion);
+                    var lista_usuario = usuarios.Where(x => lista_ids.Contains(x.Id_Usuario)).ToList();
+                    foreach( var x in lista_usuario)
+                    {
+                        cabDomain.Participantes_Inspección_Detalle.Add(new Usuario
+                        {
+                            IdUsuario = x.Id_Usuario,
+                            Nombres = x.Nombres,
+                            Apellidos = x.Apellidos
+                        });
+                    }
+                }
+
                 var observacionesCab = observaciones.Where(x => x.Id_Inspeccion_Cabecera.Equals(cabecera.Id_Inspeccion_Cabecera)).ToList();
                 var obsDomain = new List<InspeccionDetalle>();
                 foreach (var item in observacionesCab)

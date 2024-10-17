@@ -10,5 +10,6 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Inspeccione
     public interface IGetMiembrosComiteInspeccion
     {
         Task<MiembrosComiteInspeccionOutput> Execute(string filtro, int pagina, int rpp);
+        Task<List<MiembroComiteInspeccionOutput>> Execute();
     }
 }

@@ -21,7 +21,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.RegistrarI
         }
 
 
-        public async Task<int> Execute(string objetivo, string usuario_red, int gerenciaMarc, int empresaMarc, int gerenciaInspec, string lugar, string fechaInspeccion, string hora, string tipoInspeccion, int responsableLugar, string responsableInspeccion, string inspectores, string opcion)
+        public async Task<int> Execute(string objetivo, string usuario_red, int gerenciaMarc, int empresaMarc, int gerenciaInspec, string lugar, string fechaInspeccion, string hora, string tipoInspeccion, int responsableLugar, string responsableInspeccion, string inspectores, string opcion, string codigoFormato, string areaFormato, int? idMiembroComision, string participantesInspeccion)
         {
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
             var cabecera = new NuevaInspeccionCabecera
@@ -36,7 +36,11 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.RegistrarI
                 IdResponsableArea = responsableLugar,
                 ResponsableInspeccion = responsableInspeccion,
                 Inspectores = inspectores,
-                Objetivo = objetivo
+                Objetivo = objetivo,
+                Codigo_Formato = codigoFormato,
+                Area_Formato = areaFormato,
+                Id_Miembro_Comite = idMiembroComision,
+                Participantes_Inspección = participantesInspeccion
             };
 
             switch (opcion)

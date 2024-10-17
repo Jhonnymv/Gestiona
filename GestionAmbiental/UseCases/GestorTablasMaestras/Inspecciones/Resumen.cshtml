@@ -19,6 +19,9 @@
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" type="button" id="MiembroComite" href="#MiembroComite" data-bs-toggle="pill" aria-selected="true">Miembros Comite </a>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" id="CodigoAreaFormato" href="#CodigoAreaFormato" data-bs-toggle="pill" aria-selected="true">Configuración del Formato </a>
+                </li>
             </ul>
 
             <div class="content-header">
@@ -97,6 +100,9 @@
             if ($("#NombreComun").hasClass("active")) {
                 FiltrarMiembroComite(1);
             }
+            if ($("#CodigoAreaFormato").hasClass("active")) {
+                FiltrarCodigosAreasFormato(1);
+            }
         });
         $("#TipoInspeccion").on('click', function (e) {
             $(this).tab('show');
@@ -109,6 +115,12 @@
             $("#btn_agregar").prop("href", "/GestorInspecciones/AgregarMiembroComite");
             $("#opcion_editar_mensaje").hide();
             FiltrarMiembroComite(1);
+        });
+        $("#CodigoAreaFormato").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorInspecciones/AgregarCodigoAreaFormato");
+            $("#opcion_editar_mensaje").hide();
+            FiltrarCodigosAreasFormato(1);
         });
 
         function FiltrarTipoInspeccion(pag) {
@@ -133,6 +145,24 @@
             $.ajax({
                 type: "POST",
                 url: "/GestorInspecciones/FiltrarMiembroComite",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    dataModulo();
+                }
+            });
+        }
+        function FiltrarCodigosAreasFormato(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorInspecciones/FiltrarCodigosAreasFormato",
                 data: {
                     "pagina": pag,
                     "rpp": 10,

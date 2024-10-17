@@ -39,5 +39,21 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Inspeccione
 
             return output;
         }
+
+        public async Task<List<MiembroComiteInspeccionOutput>> Execute()
+        {
+            var input = await _gestorTablasMaestrasReadOnlyRepository.GetMiembrosComiteInspeccion(null);
+            var outputs = new List<MiembroComiteInspeccionOutput>();
+            foreach (var item in input)
+            {
+                var temp = new MiembroComiteInspeccionOutput();
+                temp.IdMiembroComite = item.Id_Miembro_Comite;
+                temp.Nombres = item.Nombres;
+                temp.Apellidos = item.Apellidos;
+                temp.Estado = item.Estado;
+                outputs.Add(temp);
+            }
+            return outputs;
+        }
     }
 }

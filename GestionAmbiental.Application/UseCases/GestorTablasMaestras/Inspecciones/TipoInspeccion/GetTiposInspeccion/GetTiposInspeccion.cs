@@ -37,5 +37,20 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Inspeccione
 
             return output;
         }
+
+        public async Task<List<TipoInspeccionOutput>> Execute()
+        {
+            var input = await _gestorTablasMaestrasReadOnlyRepository.GetTiposInspeccion(null);
+            var outputs = new List<TipoInspeccionOutput>();
+            foreach (var item in input)
+            {
+                var temp = new TipoInspeccionOutput();
+                temp.IdTipoInspeccion = item.Id_Tipo_Inspeccion;
+                temp.Descripcion = item.Descripcion;
+                outputs.Add(temp);
+            }
+
+            return outputs;
+        }
     }
 }

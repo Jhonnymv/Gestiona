@@ -9,6 +9,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Inspecciones.MiembroComiteInspeccion.GetMiembrosComiteInspeccion;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Inspecciones.TipoInspeccion.GetTiposInspeccion;
 using GestionAmbiental.Application.UseCases.Info_SGA;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObservacion;
@@ -22,6 +24,7 @@ using GestionAmbiental.Application.UseCases.Inspecciones.Registro.EliminarObserv
 using GestionAmbiental.Application.UseCases.Inspecciones.Registro.RegistrarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
 using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.UseCases.GestorTablasMaestras.Inspecciones.Model;
 using GestionAmbiental.UseCases.Util.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -54,7 +57,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         private readonly IEliminarObservacion _eliminarObservacion;
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
-        private readonly IEliminarVencidos _eliminarVencidos;
+        private readonly IEliminarVencidos _eliminarVencidos; 
+        private readonly IGetTiposInspeccion _getTiposInspeccion;
+        private readonly IGetMiembrosComiteInspeccion _getMiembrosComiteInspeccion;
 
         public InspeccionesController(
             IGestorArchivos gestorArchivos,
@@ -72,11 +77,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             IAmpliarFechaObservacion ampliarFechaObservacion,
             IConsultarObservacion consultarObservacion,
             IEliminarVencidos eliminarVencidos,
+            IGetTiposInspeccion getTiposInspeccion,
+            IGetMiembrosComiteInspeccion getMiembrosComiteInspeccion,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
         {
             _gestorArchivos = gestorArchivos;
+            _getTiposInspeccion = getTiposInspeccion;
             _gestorEncriptado = gestorEncriptado;
             _consultarCabeceras = consultarCabeceras;
             _selectItems = selectItems;
@@ -90,6 +98,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             _eliminarObservacion = eliminarObservacion;
             _consultarObservacion = consultarObservacion;
             _ampliarFechaObservacion = ampliarFechaObservacion;
+            _getMiembrosComiteInspeccion = getMiembrosComiteInspeccion;
             _eliminarVencidos = eliminarVencidos;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
             _info_SGA = info_SGA;
@@ -315,11 +324,36 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 var asesoresSeguridad = selectItemsResumen.Usuarios.Where(x => x.IdRol.Equals((int)InspeccionRol.AsesorSSO)).OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 asesoresSeguridad.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var tiposInspeccion = new List<SelectListItem>();
-                tiposInspeccion.Insert(0, new SelectListItem("OTRO", "OTRO", false));
-                tiposInspeccion.Insert(0, new SelectListItem("NO PLANEADA", "NO PLANEADA", false));
-                tiposInspeccion.Insert(0, new SelectListItem("PLANEADA", "PLANEADA", false));
-                tiposInspeccion.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+                var miembrosComite = await _getMiembrosComiteInspeccion.Execute();
+                var miembosComiteSelect = miembrosComite.OrderBy(x=>x.Nombres).Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdMiembroComite.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                miembosComiteSelect.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposInspeccionData = await _getTiposInspeccion.Execute();
+                var tiposInspeccion = tiposInspeccionData.Select(g => new SelectListItem() { Value = g.Descripcion, Text = g.Descripcion }).ToList();
+                tiposInspeccion.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                //var tiposInspeccion = new List<SelectListItem>();
+                //tiposInspeccion.Insert(0, new SelectListItem("OTRO", "OTRO", false));
+                //tiposInspeccion.Insert(0, new SelectListItem("NO PLANEADA", "NO PLANEADA", false));
+                //tiposInspeccion.Insert(0, new SelectListItem("PLANEADA", "PLANEADA", false));
+                //tiposInspeccion.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                //CODIGOS AREA FORMATO
+                var codigosFormato = new List<SelectListItem>();
+                var areasFormato = new List<SelectListItem>();
+                string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_inspecciones.json");                
+                if (System.IO.File.Exists(filePath))
+                {
+                    // Leer el contenido del archivo
+                    string jsonString = await System.IO.File.ReadAllTextAsync(filePath);
+                    // Deserializar el contenido JSON a una lista de objetos
+                    var codigosArea = JsonConvert.DeserializeObject<List<CodigoAreaFormatoModel>>(jsonString);
+                    codigosFormato = codigosArea.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Codigo }).ToList();
+                    areasFormato = codigosArea.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Area }).ToList();
+                }
+
+                ViewBag.CodigosFormato = codigosFormato;
+                ViewBag.AreasFormato = areasFormato;
+                ViewBag.MiembrosComite = miembosComiteSelect;
 
                 ViewBag.GerenciaMC = gerenciasEjecutorasMC;
                 ViewBag.EmpresasMC = empresasMC;
@@ -327,12 +361,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 ViewBag.Usuarios = usuarios;
                 ViewBag.Tipo_Inspeccion = tiposInspeccion;
                 ViewBag.AsesoresMA = asesoresMA;
-                ViewBag.AsesoresSeguridad = asesoresSeguridad;
+                ViewBag.AsesoresSeguridad = asesoresSeguridad;                
 
                 ViewBag.TiposActoMA = tiposActoMA;
                 ViewBag.TiposCondicionMA = tiposCondicionMA;
                 ViewBag.TiposActoSEG = tiposActoSEG;
                 ViewBag.TiposCondicionSEG = tiposCondicionSEG;
+
+                ViewBag.PermisosAdmin = userInfo.Rol.Equals(InspeccionRol.Admin);
 
                 return View(new NuevaInspeccionModel());
             }
@@ -346,6 +382,21 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 if (HttpContext.Session.GetString("SessionUser") != null)
                 {
                     var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                    //String de codigo y area del formato
+                    string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_inspecciones.json");
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        // Leer el contenido del archivo
+                        string jsonString = await System.IO.File.ReadAllTextAsync(filePath);
+                        // Deserializar el contenido JSON a una lista de objetos
+                        var codigosArea = JsonConvert.DeserializeObject<List<CodigoAreaFormatoModel>>(jsonString);
+                        var codigoAreaElegido = codigosArea.FirstOrDefault(x => x.Id == Convert.ToInt32(model.Area_Formato));
+                        if (codigoAreaElegido != null)
+                        {
+                            model.Codigo_Formato = codigoAreaElegido.Codigo;
+                            model.Area_Formato = codigoAreaElegido.Area;
+                        }
+                    }
 
                     int idCabecera = await _registrarInspeccionCabecera.Execute(
                         model.Objetivo,
@@ -360,18 +411,17 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         model.Id_Responsable_Lugar,
                         model.Responsable_Inspeccion,
                         model.Inspectores,
-                        model.opcion);
+                        model.opcion,
+                        model.Codigo_Formato,
+                        model.Area_Formato,
+                        model.Id_Miembro_Comite==0?null : model.Id_Miembro_Comite,
+                        model.Participantes_Inspeccion);
                     response = new
                     {
                         success = true,
                         idEncriptado = _protector.Protect(idCabecera.ToString()),
                         idCabecera = idCabecera
                     };
-                    //if (model.opcion.Equals("Observacion")||model.opcion.Equals("GuardarEstado"))
-                    //{
-                    //var IdEncriptado = _protector.Protect(idCabecera.ToString());
-                    //return RedirectToAction("EditarInspeccion", new { IdCabecera = IdEncriptado });
-                    //}
                 }
                 else
                 {
@@ -663,12 +713,41 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                 var asesoresSeguridad = selectItemsResumen.Usuarios.Where(x => x.IdRol.Equals((int)InspeccionRol.AsesorSSO)).OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 asesoresSeguridad.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                
+                var miembrosComite = await _getMiembrosComiteInspeccion.Execute();
+                var miembosComiteSelect = miembrosComite.OrderBy(x => x.Nombres).Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdMiembroComite.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                miembosComiteSelect.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var tiposInspeccion = new List<SelectListItem>();
-                tiposInspeccion.Insert(0, new SelectListItem("OTRO", "OTRO", false));
-                tiposInspeccion.Insert(0, new SelectListItem("NO PLANEADA", "NO PLANEADA", false));
-                tiposInspeccion.Insert(0, new SelectListItem("PLANEADA", "PLANEADA", false));
-                tiposInspeccion.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+                var tiposInspeccionData = await _getTiposInspeccion.Execute();
+                var tiposInspeccion = tiposInspeccionData.Select(g => new SelectListItem() { Value = g.Descripcion, Text = g.Descripcion}).ToList();
+                tiposInspeccion.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                //var tiposInspeccion = new List<SelectListItem>();
+
+                //tiposInspeccion.Insert(0, new SelectListItem("OTRO", "OTRO", false));
+                //tiposInspeccion.Insert(0, new SelectListItem("NO PLANEADA", "NO PLANEADA", false));
+                //tiposInspeccion.Insert(0, new SelectListItem("PLANEADA", "PLANEADA", false));
+                //tiposInspeccion.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                //CODIGOS AREA FORMATO
+                var codigosFormato = new List<SelectListItem>();
+                var areasFormato = new List<SelectListItem>();
+                string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_inspecciones.json");
+                var codigosArea = new List<CodigoAreaFormatoModel>();
+                if (System.IO.File.Exists(filePath))
+                {
+                    // Leer el contenido del archivo
+                    string jsonString = await System.IO.File.ReadAllTextAsync(filePath);
+                    // Deserializar el contenido JSON a una lista de objetos
+                    codigosArea = JsonConvert.DeserializeObject<List<CodigoAreaFormatoModel>>(jsonString);
+                    codigosFormato = codigosArea.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Codigo }).ToList();
+                    areasFormato = codigosArea.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Area }).ToList();
+                }
+
+                ViewBag.CodigosFormato = codigosFormato;
+                ViewBag.AreasFormato = areasFormato;
+                ViewBag.MiembrosComite = miembosComiteSelect;
+
                 var model = new NuevaInspeccionModel();
                 if (IdCabecera.Length != 0)
                 {
@@ -693,6 +772,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         model.Objetivo = cabecera.Objetivo;
                         model.Inspectores = cabecera.Participantes;
                         model.Estado = cabecera.Estado;
+                        model.Area_Formato = codigosArea.FirstOrDefault(x => x.Area == cabecera.Area_Formato)?.Id.ToString();
+                        model.Codigo_Formato = codigosArea.FirstOrDefault(x=> x.Codigo == cabecera.Codigo_Formato)?.Id.ToString();
+                        model.Id_Miembro_Comite = cabecera.Id_Miembro_Comite;
+                        model.Participantes_Inspeccion = cabecera.Participantes_Inspección;
                     }
                     foreach (var observacion in observaciones)
                     {
@@ -779,6 +862,21 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 {
                     var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
+                    string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_inspecciones.json");
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        // Leer el contenido del archivo
+                        string jsonString = await System.IO.File.ReadAllTextAsync(filePath);
+                        // Deserializar el contenido JSON a una lista de objetos
+                        var codigosArea = JsonConvert.DeserializeObject<List<CodigoAreaFormatoModel>>(jsonString);
+                        var codigoAreaElegido = codigosArea.FirstOrDefault(x => x.Id == Convert.ToInt32(model.Area_Formato));
+                        if (codigoAreaElegido != null)
+                        {
+                            model.Codigo_Formato = codigoAreaElegido.Codigo;
+                            model.Area_Formato = codigoAreaElegido.Area;
+                        }
+                    }
+
                     await _editarInspeccionCabecera.Execute(
                     model.Id_Inspeccion_Cabecera,
                     model.Objetivo,
@@ -793,7 +891,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     model.Responsable_Inspeccion,
                     model.Inspectores,
                     model.opcion,
-                    userInfo.NombreUsuario);
+                    userInfo.NombreUsuario,
+                    model.Codigo_Formato,
+                    model.Area_Formato,
+                    model.Id_Miembro_Comite,
+                    model.Participantes_Inspeccion);
                     response = new
                     {
                         success = true
@@ -824,6 +926,20 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             if (ModelState.IsValid)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_inspecciones.json");
+                if (System.IO.File.Exists(filePath))
+                {
+                    // Leer el contenido del archivo
+                    string jsonString = await System.IO.File.ReadAllTextAsync(filePath);
+                    // Deserializar el contenido JSON a una lista de objetos
+                    var codigosArea = JsonConvert.DeserializeObject<List<CodigoAreaFormatoModel>>(jsonString);
+                    var codigoAreaElegido = codigosArea.FirstOrDefault(x => x.Id == Convert.ToInt32(model.Area_Formato));
+                    if (codigoAreaElegido != null)
+                    {
+                        model.Codigo_Formato = codigoAreaElegido.Codigo;
+                        model.Area_Formato = codigoAreaElegido.Area;
+                    }
+                }
 
                 await _editarInspeccionCabecera.Execute(
                 model.Id_Inspeccion_Cabecera,
@@ -839,7 +955,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 model.Responsable_Inspeccion,
                 model.Inspectores,
                 model.opcion,
-                userInfo.NombreUsuario);
+                userInfo.NombreUsuario,
+                model.Codigo_Formato,
+                model.Area_Formato,
+                model.Id_Miembro_Comite,
+                model.Participantes_Inspeccion);
+
                 if (model.opcion.Equals("Observacion"))
                     return RedirectToAction("NuevaObservacion", new { IdCabecera = model.EncryptedId });
                 else if (model.opcion.Equals("Guardar"))
@@ -960,11 +1081,33 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 var asesoresSeguridad = selectItemsResumen.Usuarios.Where(x => x.IdRol.Equals((int)InspeccionRol.AsesorSSO)).OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 asesoresSeguridad.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var tiposInspeccion = new List<SelectListItem>();
-                tiposInspeccion.Insert(0, new SelectListItem("OTRO", "OTRO", false));
-                tiposInspeccion.Insert(0, new SelectListItem("NO PLANEADA", "NO PLANEADA", false));
-                tiposInspeccion.Insert(0, new SelectListItem("PLANEADA", "PLANEADA", false));
-                tiposInspeccion.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+                var miembrosComite = await _getMiembrosComiteInspeccion.Execute();
+                var miembosComiteSelect = miembrosComite.OrderBy(x => x.Nombres).Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdMiembroComite.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                miembosComiteSelect.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposInspeccionData = await _getTiposInspeccion.Execute();
+                var tiposInspeccion = tiposInspeccionData.Select(g => new SelectListItem() { Value = g.Descripcion, Text = g.Descripcion }).ToList();
+                tiposInspeccion.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                //CODIGOS AREA FORMATO
+                var codigosFormato = new List<SelectListItem>();
+                var areasFormato = new List<SelectListItem>();
+                string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_inspecciones.json");
+                var codigosArea = new List<CodigoAreaFormatoModel>();
+                if (System.IO.File.Exists(filePath))
+                {
+                    // Leer el contenido del archivo
+                    string jsonString = await System.IO.File.ReadAllTextAsync(filePath);
+                    // Deserializar el contenido JSON a una lista de objetos
+                    codigosArea = JsonConvert.DeserializeObject<List<CodigoAreaFormatoModel>>(jsonString);
+                    codigosFormato = codigosArea.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Codigo }).ToList();
+                    areasFormato = codigosArea.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Area }).ToList();
+                }
+
+                ViewBag.CodigosFormato = codigosFormato;
+                ViewBag.AreasFormato = areasFormato;
+                ViewBag.MiembrosComite = miembosComiteSelect;
+
                 var model = new NuevaInspeccionModel();
                 if (IdCabecera.Length != 0)
                 {
@@ -988,6 +1131,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         model.Objetivo = cabecera.Objetivo;
                         model.Inspectores = cabecera.Participantes;
                         model.Estado = cabecera.Estado;
+                        model.Tipo_Inspeccion = cabecera.TipoInspeccion;
+                        model.Area_Formato = codigosArea.FirstOrDefault(x => x.Area == cabecera.Area_Formato)?.Id.ToString();
+                        model.Codigo_Formato = codigosArea.FirstOrDefault(x => x.Codigo == cabecera.Codigo_Formato)?.Id.ToString();
+                        model.Id_Miembro_Comite = cabecera.Id_Miembro_Comite;
+                        model.Participantes_Inspeccion = cabecera.Participantes_Inspección;
                     }
                     ViewBag.GerenciaMC = gerenciasEjecutorasMC;
                     ViewBag.EmpresasMC = empresasMC;

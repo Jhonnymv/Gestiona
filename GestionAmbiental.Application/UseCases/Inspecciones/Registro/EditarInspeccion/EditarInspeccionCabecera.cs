@@ -27,7 +27,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarInsp
         }
 
         public async Task Execute(
-            int idCabecera, string objetivo, int gerenciaMarc, int empresaMarc,int gerenciaInspec, string lugar, string tipoInspeccion, int responsableLugar, string hora, string fechaInspeccion, string responsableInpseccion, string inspectores, string opcion, string usuario_red)
+            int idCabecera, string objetivo, int gerenciaMarc, int empresaMarc,int gerenciaInspec, string lugar, string tipoInspeccion, int responsableLugar, string hora, string fechaInspeccion, string responsableInpseccion, string inspectores, string opcion, string usuario_red, string codigoFormato, string areaFormato, int? idMiembroComision, string participantesInspeccion)
         {
             var cabecera = new NuevaInspeccionCabecera
             {
@@ -41,7 +41,11 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarInsp
                 FechaInspeccion = Convert.ToDateTime(fechaInspeccion + " " + hora),
                 ResponsableInspeccion = responsableInpseccion,
                 Inspectores = inspectores,
-                Objetivo = objetivo
+                Objetivo = objetivo,
+                Area_Formato = areaFormato,
+                Codigo_Formato = codigoFormato,
+                Id_Miembro_Comite = idMiembroComision,
+                Participantes_Inspección = participantesInspeccion
             };
 
             var Id_Usuario = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(usuario_red);

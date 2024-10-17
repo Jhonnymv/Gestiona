@@ -17,8 +17,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Threading.Tasks;
+using static Google.Cloud.RecaptchaEnterprise.V1.TransactionData.Types;
+using System.Linq;
+using static NPOI.HSSF.Util.HSSFColor;
 
 namespace GestionAmbiental.UseCases.GestorTablasMaestras.Inspecciones
 {
@@ -343,6 +348,206 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Inspecciones
                         await _agregarMiembroComiteInspeccion.Execute(model.Nombres, model.Apellidos);
                     }
                     return RedirectToAction("AgregarMiembroComite");
+                }
+            }
+        }
+
+        //CodigoAreaFormato
+        [HttpPost]
+        public async Task<IActionResult> FiltrarCodigosAreasFormato(string filtro, int pagina, int rpp)
+        {
+            //var data = await _getTiposInspeccion.Execute(filtro, pagina, rpp);
+            string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "json","propiedades_inspecciones.json");
+            dynamic response;
+            if (System.IO.File.Exists(filePath))
+            {
+                // Leer el contenido del archivo
+                string jsonString = await System.IO.File.ReadAllTextAsync(filePath);
+                // Deserializar el contenido JSON a una lista de objetos
+                var data = JsonConvert.DeserializeObject<List<CodigoAreaFormatoModel>>(jsonString);
+                var tabla = "<table class=\"table\">";
+                tabla += "<thead class=\"thead-mcolor\">";
+                tabla += "<tr>";
+                tabla += "<th>Área</th>";
+                tabla += "<th>Código</th>";
+                tabla += "<th></th>";
+                tabla += "</tr>";
+                tabla += "</thead>";
+                tabla += "<tbody>";
+                var filasTabla = "";
+                var paginador = "";
+                int nPaginas = data.Count % rpp != 0 ? (data.Count / rpp) + 1 : data.Count / rpp;
+                if (data.Count > 0)
+                {
+                    foreach (var fila in data)
+                    {
+
+                        //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
+                        filasTabla += "<tr>";
+                        filasTabla += "<td>" + fila.Area + "</td>";
+                        filasTabla += "<td>" + fila.Codigo + "</td>";
+                        filasTabla += "<td><a href=\"/GestorInspecciones/DetalleCodigoAreaFormato?Id=" + fila.Id + "\">Detalle</a></td>";
+                        filasTabla += "</tr>";
+                    }
+
+                    paginador += "<ul class=\"pagination pagination-sm\">";
+                    if (pagina >= 4 && nPaginas > 5)
+                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarCodigosAreasFormato(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
+
+                    for (int i = pagina - 2; i <= pagina + 2; i++)
+                    {
+                        if (i > 0 && i <= nPaginas)
+                        {
+                            if (i == pagina)
+                                paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarCodigosAreasFormato(" + i + ")\">" + i + "</a></li>";
+                            else
+                                paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarCodigosAreasFormato(" + i + ")\">" + i + "</a></li>";
+                        }
+                    }
+                    if (pagina <= nPaginas - 4 && nPaginas > 5)
+                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarCodigosAreasFormato(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
+                    paginador += "</ul>";
+
+                }
+
+                tabla += filasTabla;
+                tabla += "</tbody>";
+                tabla += "</table>";
+                response = new
+                {
+                    Tabla = tabla,
+                    Paginador = paginador
+                };
+            }
+            else
+            {
+                response = new
+                {
+                    Error = "No se pudo obtener información del archivo de configuración"
+                };
+            }
+
+            return Ok(response);
+
+
+        }
+        public async Task<IActionResult> DetalleCodigoAreaFormato(int Id)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Id=" + Id });
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_inspecciones.json");
+                dynamic response;
+
+                var model = new CodigoAreaFormatoModel();
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    // Leer el contenido del archivo
+                    string jsonString = await System.IO.File.ReadAllTextAsync(filePath);
+                    // Deserializar el contenido JSON a una lista de objetos
+                    var data = JsonConvert.DeserializeObject<List<CodigoAreaFormatoModel>>(jsonString);
+                    
+                    var encontrado = data.FirstOrDefault(data => data.Id == Id);
+
+                    model.Id = encontrado.Id;
+                    model.Codigo = encontrado.Codigo;
+                    model.Area = encontrado.Area;
+                }
+                return View(model);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditarCodigoAreaFormato(CodigoAreaFormatoModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                if (ModelState.IsValid)
+                {
+                    string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_inspecciones.json");
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        // Leer el contenido del archivo
+                        string jsonString = await System.IO.File.ReadAllTextAsync(filePath);
+                        // Deserializar el contenido JSON a una lista de objetos
+                        var data = JsonConvert.DeserializeObject<List<CodigoAreaFormatoModel>>(jsonString);
+
+                        foreach (var encontrado in data)
+                        {
+                            if (encontrado.Id == model.Id)
+                            {
+                                encontrado.Codigo = model.Codigo;
+                                encontrado.Area = model.Area;
+                            }
+                        }
+                        string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+                        System.IO.File.WriteAllText(filePath, json);
+                    }
+                }
+                return RedirectToAction("DetalleCodigoAreaFormato", new { Id = model.Id });
+            }
+        }
+        public IActionResult AgregarCodigoAreaFormato()
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                return View();
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> AgregarCodigoAreaFormato(CodigoAreaFormatoModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+                return RedirectToAction("NoAutorizado", "Home");
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
+                {
+                    if (ModelState.IsValid)
+                    {
+                        string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_inspecciones.json");
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            // Leer el contenido del archivo
+                            string jsonString = await System.IO.File.ReadAllTextAsync(filePath);
+                            // Deserializar el contenido JSON a una lista de objetos
+                            var data = JsonConvert.DeserializeObject<List<CodigoAreaFormatoModel>>(jsonString);
+                            data.Add(new CodigoAreaFormatoModel
+                            {
+                                Codigo = model.Codigo,
+                                Area = model.Area
+                            });
+                            string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+                            System.IO.File.WriteAllText(filePath, json);
+                        }
+                    }
+                    return RedirectToAction("AgregarCodigoAreaFormato");
                 }
             }
         }

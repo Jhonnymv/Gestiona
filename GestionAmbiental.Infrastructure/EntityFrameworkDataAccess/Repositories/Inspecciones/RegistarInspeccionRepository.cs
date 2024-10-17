@@ -26,6 +26,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var cabeceraEntity = new Inspeccion_Cabecera
             {
                 Codigo = cabecera.Codigo,
+                Codigo_Formato = cabecera.Codigo_Formato,
+                Area_Formato = cabecera.Area_Formato,
+                Id_Miembro_Comite = cabecera.Id_Miembro_Comite,
+                Participantes_Inspección = cabecera.Participantes_Inspección,
                 Id_Registrado_Por = cabecera.IdRegistradoPor,
                 Objetivo = cabecera.Objetivo,
                 Fecha_Inspeccion = cabecera.FechaInspeccion,

@@ -1,6 +1,7 @@
 ﻿using GestionAmbiental.Application.Repositories.Inspecciones;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
+using GestionAmbiental.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -126,6 +127,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 IdCabecera = cabeccera.Id_Inspeccion_Cabecera,
                 IdRegistradoPor = cabeccera.Id_Registrado_Por,
                 Codigo = cabeccera.Codigo,
+                Codigo_Formato = cabeccera.Codigo_Formato,
+                Area_Formato = cabeccera.Area_Formato,
+                Id_Miembro_Comite = cabeccera.Id_Miembro_Comite,
+                Participantes_Inspección = cabeccera.Participantes_Inspección,
                 IdGerencia = cabeccera.Id_Gerencia,
                 IdGerenciaInspeccionada = cabeccera.Id_Gerencia_Inspeccionada,
                 IdEmpresa = cabeccera.Id_Empresa,
@@ -243,7 +248,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-
         public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraVerificacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigo)
         {
             var obsPendVer = await _context.Inspecciones_Detalle
@@ -295,7 +299,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return TablaResumen;
         }
-
         public async Task<InspeccionCabecera> GetInspeccionCabeceraVerificacion(int idCabecera)
         {
             var cabecera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
@@ -343,6 +346,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var usuarios = await _context.Usuarios.ToListAsync();
             var usuarios_domain = new List<Domain.ValueObjects.Usuario>();
+            var miembrosComite = await _context.MiembrosComiteInspeccion.ToListAsync();
             foreach (var item in usuarios)
             {
                 usuarios_domain.Add(new Domain.ValueObjects.Usuario(item.Id_Usuario, item.Id_Rol, item.Nombres, item.Apellidos, item.Email));
@@ -367,7 +371,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 FechaInspeccion = cabecera.Fecha_Inspeccion,
                 Participantes = cabecera.Participantes,
                 Estado = cabecera.Estado,
-                TipoInspeccion = cabecera.Tipo_Inspeccion
+                TipoInspeccion = cabecera.Tipo_Inspeccion,
+                Codigo_Formato = cabecera.Codigo_Formato,
+                Area_Formato = cabecera.Area_Formato,
+                Id_Miembro_Comite = cabecera.Id_Miembro_Comite,
+                Miembro_Comite = miembrosComite.Select(x => new { Id = x.Id_Miembro_Comite, Miembro = x.Nombres + " " + x.Apellidos }).FirstOrDefault(x => cabecera.Id_Miembro_Comite.Equals(x.Id))?.Miembro,
+                Participantes_Inspección = cabecera.Participantes_Inspección,
+                Participantes_Inspección_Detalle = new List<Usuario>()
             };
             if (!IsValidJson(cabecera.Responsable_Inspeccion))
                 output.ResponsableInspeccion = cabecera.Responsable_Inspeccion;
@@ -377,7 +387,20 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var lista_usuario = usuarios.Where(x => lista_ids.Contains(x.Id_Usuario)).Select(x => x.Nombres.ToUpper() + " " + x.Apellidos.ToUpper()).ToList();
                 output.ResponsableInspeccion = ConcatUsingComa(lista_usuario);
             }
-            
+            if (IsValidJson(cabecera.Participantes_Inspección))
+            {
+                var lista_ids = JsonConvert.DeserializeObject<List<int>>(cabecera.Participantes_Inspección);
+                var lista_usuario = usuarios.Where(x => lista_ids.Contains(x.Id_Usuario)).ToList();
+                foreach (var x in lista_usuario)
+                {
+                    output.Participantes_Inspección_Detalle.Add(new Usuario
+                    {
+                        IdUsuario = x.Id_Usuario,
+                        Nombres = x.Nombres,
+                        Apellidos = x.Apellidos
+                    });
+                }
+            }
 
             output.Observaciones = new List<InspeccionDetalle>();
             foreach(var observacion in observaciones)

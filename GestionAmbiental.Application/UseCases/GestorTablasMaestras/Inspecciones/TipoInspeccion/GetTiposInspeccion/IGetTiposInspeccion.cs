@@ -10,5 +10,6 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Inspeccione
     public interface IGetTiposInspeccion
     {
         Task<TiposInspeccionOutput> Execute(string filtro, int pagina, int rpp);
+        Task<List<TipoInspeccionOutput>> Execute();
     }
 }

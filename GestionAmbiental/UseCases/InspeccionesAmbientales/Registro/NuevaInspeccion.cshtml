@@ -43,6 +43,21 @@
                     <div class="tab-content" id="pills-tabContent">
                         <div class="tab-pane fade show active" id="pills-step1" role="tabpanel" aria-labelledby="pills-step1-tab">
                             <div class="message"></div>
+                            @* @if (ViewBag.PermisosAdmin)
+                            { *@
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="Area_Formato"></label>
+                                        <span class="text-danger" asp-validation-for="Area_Formato"></span>
+                                        <select class="form-control" asp-items="@ViewBag.AreasFormato" asp-for="Area_Formato"></select>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="Codigo_Formato"></label>
+                                        <span class="text-danger" asp-validation-for="Codigo_Formato"></span>
+                                        <select class="form-control" asp-items="@ViewBag.CodigosFormato" asp-for="Codigo_Formato" disabled></select>
+                                    </div>
+                                </div>
+                            @* } *@
                             <div class="row input_container">
                                 <div class="col-12 col-sm-6 col-lg-6">
                                     <label asp-for="Id_Gerencia_Ejecutora"></label>
@@ -114,6 +129,20 @@
                                     <label asp-for="Objetivo"></label>
                                     <span class="text-danger" asp-validation-for="Objetivo"></span>
                                     <input type="text" class="form-control" asp-for="Objetivo" value="Verificar el cumplimiento de las obligaciones ambientales y de seguridad">
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Participantes_Inspeccion"></label>
+                                    <span class="text-danger" asp-validation-for="Participantes_Inspeccion"></span>
+                                    <select id="Participantes_Inspeccion_List" name="Participantes_Inspeccion_List" asp-items="@ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="--SELECCIONE--" multiple>
+                                    </select>
+                                    <input type="hidden" class="form-control" asp-for="Participantes_Inspeccion">
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6" id="miembros_comite" style="display:none">
+                                    <label asp-for="Id_Miembro_Comite"></label>
+                                    <span class="text-danger" asp-validation-for="Id_Miembro_Comite"></span>
+                                    <select class="form-control" asp-items="@ViewBag.MiembrosComite" asp-for="Id_Miembro_Comite" disabled></select>
                                 </div>
                             </div>
                             <div class="row">
@@ -255,6 +284,22 @@
                 }
             });
         }
+
+    $("#Area_Formato").change(function () {
+        let newValue = $(this).val();
+        $('#Codigo_Formato').val(newValue);
+    });
+    $("#Tipo_Inspeccion").change(function () {
+        if ($(this).val() == "COMITE DE SSO") {
+                $("#miembros_comite").css({ 'display': 'block' })
+                $('#Id_Miembro_Comite').prop('disabled', false);
+        }
+        else {
+                $("#miembros_comite").css({ 'display': 'none' })
+                $("#Id_Miembro_Comite").val('0');
+                $('#Id_Miembro_Comite').prop('disabled', true);
+        }
+    });
     $("#guardar_estado").click(function () {
         $("#opcion").val("GuardarEstado");
         $("#Modal_Enviando_Correo").modal('show');
@@ -277,6 +322,10 @@
                         "Responsable_Inspeccion": $("#Responsable_Inspeccion").val(),
                         "Inspectores": $("#Inspectores").val(),
                         "Objetivo": $("#Objetivo").val(),
+                        "Codigo_Formato": $("#Codigo_Formato").val(),
+                        "Area_Formato": $("#Area_Formato").val(),
+                        "Id_Miembro_Comite": $("#Id_Miembro_Comite").val(),
+                        "Participantes_Inspeccion": $("#Participantes_Inspeccion").val(),
                     },
                     traditional: true,
                     success: (response) => {
@@ -305,6 +354,10 @@
                         "Responsable_Inspeccion": $("#Responsable_Inspeccion").val(),
                         "Inspectores": $("#Inspectores").val(),
                         "Objetivo": $("#Objetivo").val(),
+                        "Codigo_Formato": $("#Codigo_Formato").val(),
+                        "Area_Formato": $("#Area_Formato").val(),
+                        "Id_Miembro_Comite": $("#Id_Miembro_Comite").val(),
+                        "Participantes_Inspeccion": $("#Participantes_Inspeccion").val(),
                     },
                     traditional: true,
                     success: (response) => {
@@ -336,6 +389,10 @@
                         "Responsable_Inspeccion": $("#Responsable_Inspeccion").val(),
                         "Inspectores": $("#Inspectores").val(),
                         "Objetivo": $("#Objetivo").val(),
+                        "Codigo_Formato": $("#Codigo_Formato").val(),
+                        "Area_Formato": $("#Area_Formato").val(),
+                        "Id_Miembro_Comite": $("#Id_Miembro_Comite").val(),
+                        "Participantes_Inspeccion": $("#Participantes_Inspeccion").val(),
                     },
                     traditional: true,
                     success: (response) => {
@@ -387,9 +444,13 @@
                 }
             });
         }
-    $("#Responsable_Inspeccion_List").change(function () {
+        $("#Responsable_Inspeccion_List").change(function () {
             var data = $("#Responsable_Inspeccion_List").val();
             $("#Responsable_Inspeccion").val(JSON.stringify(data));
+        });
+        $("#Participantes_Inspeccion_List").change(function () {
+            var data = $("#Participantes_Inspeccion_List").val();
+            $("#Participantes_Inspeccion").val(JSON.stringify(data));
         });
     </script>
     @*Scripts partial Nueva Observación*@

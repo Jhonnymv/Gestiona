@@ -9,6 +9,12 @@ namespace GestionAmbiental.Domain.Inspecciones
     {
         public int IdCabecera { get; set; }
         public string Codigo { get; set; }
+        public string Codigo_Formato { get; set; }
+        public string Area_Formato { get; set; }
+        public int? Id_Miembro_Comite { get; set; }
+        public string Miembro_Comite { get; set; }
+        public string Participantes_Inspección { get; set; }
+        public List<Usuario> Participantes_Inspección_Detalle { get; set; }
         public int IdRegistradoPor {get;set;}
         public string RegistradoPor {get;set;}
         public string Objetivo { get; set; }

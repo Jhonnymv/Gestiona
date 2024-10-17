@@ -26,6 +26,8 @@ using Microsoft.AspNetCore.DataProtection;
 using NPOI.Util;
 using Serilog;
 using GestionAmbiental.UseCases.Util.Interfaces;
+using NPOI.SS.Formula.Functions;
+using NPOI.HSSF.UserModel;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 {
@@ -228,6 +230,322 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     row.GetCell(24).SetCellValue(observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToString("dd/MM/yyyy") : "");
 
                     row.GetCell(29).SetCellValue(observacion.FechaCierre.HasValue ? observacion.FechaCierre.Value.ToString("dd/MM/yyyy") : "");
+
+                    obsIndex++;
+                    fila++;
+
+                }
+
+                // Force formulas to update with new data we added
+                sheet.ForceFormulaRecalculation = true;
+                // Save the NPOI workbook into a memory stream to be sent to the browser, could have saved to disk.
+                MemoryStream ms = new MemoryStream();
+                templateWorkbook.Write(ms);
+
+                // Send the memory stream to the browser
+                ms.Position = 0;
+                return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteInspección-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
+            }
+        }
+
+        public async Task<IActionResult> DescargaInspeccionV2(int IdCabecera)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdCabecera=" + IdCabecera });
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var cabecera = await _consultarInspeccionDescarga.Execute(IdCabecera);
+
+                string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "Inspecciones");
+                string sFileName = @"JU-MAP-PRO-004.F01_Inspección_V01.xlsx";
+                string sFilePath = Path.Combine(sWebRootFolder, sFileName);
+                FileStream fs = new FileStream(sFilePath, FileMode.Open, FileAccess.Read);
+
+                // Load the template into a NPOI workbook
+                XSSFWorkbook templateWorkbook = new XSSFWorkbook(fs);
+
+                // Load the sheet you are going to use as a template into NPOI
+                ISheet sheet = templateWorkbook.GetSheet("Inspección");
+
+                // Insert data into template
+                //->Codigo
+                //sheet.GetRow(2).GetCell(4).SetCellValue(cabecera.Codigo);
+                //->Fecha Aprobacion
+                //sheet.GetRow(3).GetCell(7).SetCellValue(cabecera.FechaInspec);
+                //->Cell Style
+                XSSFCellStyle customCellStyle = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
+                customCellStyle.WrapText = true;
+                customCellStyle.VerticalAlignment = VerticalAlignment.Center;
+                customCellStyle.BorderTop = BorderStyle.Thin;
+                customCellStyle.BorderBottom = BorderStyle.Thin;
+                customCellStyle.BorderLeft = BorderStyle.Thin;
+                customCellStyle.BorderRight = BorderStyle.Thin;
+                customCellStyle.Alignment = HorizontalAlignment.Center;
+
+                XSSFCellStyle customRigthBorderCellStyle = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
+                customRigthBorderCellStyle.BorderRight = BorderStyle.Thin;
+
+                //->CODIGO FORMATO:
+                sheet.GetRow(1).GetCell(8).SetCellValue(cabecera.Codigo_Formato);
+                //->ÁREA FORMATO:
+                sheet.GetRow(2).GetCell(8).SetCellValue(cabecera.Area_Formato);
+
+                //->ÁREA EJECUTORA:
+                sheet.GetRow(11).GetCell(7).SetCellValue(cabecera.Gerencia);
+                //->LUGAR INSPECCIONADO
+                sheet.GetRow(11).GetCell(15).SetCellValue(cabecera.GerenciaInspeccionada + " - " + cabecera.AreaInspeccionada);
+                //->EMPRESA:   
+                sheet.GetRow(11).GetCell(24).SetCellValue(cabecera.Empresa);
+                //->TIPO DE INSPECCION
+                sheet.GetRow(13).GetCell(7).SetCellValue(cabecera.TipoInspeccion);
+                //->HORA
+                sheet.GetRow(13).GetCell(15).SetCellValue(cabecera.FechaInspeccion.Hour + ":" + cabecera.FechaInspeccion.Minute);
+                //->FECHA  
+                sheet.GetRow(13).GetCell(18).SetCellValue(cabecera.FechaInspeccion.ToString("dd/MM/yyyy"));
+                //->PARTICIPANTES DE LA INSPECCION :
+                var contadorColumnasParticipantes = 0;
+                var contadorFilasParticipantes = 0;
+
+                //sheet.ShiftRows(13 + 1, sheet.LastRowNum, 1);
+                int rowsToShift = cabecera.Participantes_Inspección_Detalle.Count % 2 == 0 ? Convert.ToInt32(cabecera.Participantes_Inspección_Detalle.Count / 2) - 1 : Convert.ToInt32(cabecera.Participantes_Inspección_Detalle.Count / 2);
+                sheet.ShiftRows(14, sheet.LastRowNum, rowsToShift);
+                
+                foreach (var item in cabecera.Participantes_Inspección_Detalle)
+                {
+                    sheet.GetRow(13+ contadorFilasParticipantes).GetCell(24 + (contadorColumnasParticipantes*3)).SetCellValue(item.Nombres + " "+ item.Apellidos);
+                    if (contadorColumnasParticipantes == 1 && rowsToShift>contadorFilasParticipantes)
+                    {
+                        contadorColumnasParticipantes = 0;
+                        contadorFilasParticipantes++;
+
+                        IRow row = sheet.CreateRow(13 + contadorFilasParticipantes);
+                        row.CreateCell(24 + contadorColumnasParticipantes);
+                        row.CreateCell(24 + contadorColumnasParticipantes + 1);
+                        row.CreateCell(24 + contadorColumnasParticipantes + 2);
+                        sheet.AddMergedRegion(new CellRangeAddress(13 + contadorFilasParticipantes, 13 + contadorFilasParticipantes, 24, 26));
+                        row.GetCell(24 + contadorColumnasParticipantes).CellStyle = customCellStyle;
+                        row.GetCell(24 + contadorColumnasParticipantes+1).CellStyle = customCellStyle;
+                        row.GetCell(24 + contadorColumnasParticipantes+2).CellStyle = customCellStyle;
+                    }
+                    else
+                    {
+                        if (contadorColumnasParticipantes == 0)
+                        {
+                            contadorColumnasParticipantes++;
+                            IRow row = sheet.GetRow(13 + contadorFilasParticipantes);
+                            row.CreateCell(24 + (contadorColumnasParticipantes * 3));
+                            row.CreateCell(24 + (contadorColumnasParticipantes * 3) + 1);
+                            row.CreateCell(24 + (contadorColumnasParticipantes * 3) + 2);
+                            row.CreateCell(24 + (contadorColumnasParticipantes * 3) + 3);
+                            sheet.AddMergedRegion(new CellRangeAddress(13 + contadorFilasParticipantes, 13 + contadorFilasParticipantes, 27, 29));
+                            row.GetCell(24 + (contadorColumnasParticipantes * 3)).CellStyle = customCellStyle;
+                            row.GetCell(24 + (contadorColumnasParticipantes * 3) + 1).CellStyle = customCellStyle;
+                            row.GetCell(24 + (contadorColumnasParticipantes * 3) + 2).CellStyle = customCellStyle;
+                            row.GetCell(24 + (contadorColumnasParticipantes * 3) + 3).CellStyle = customRigthBorderCellStyle;
+                        }
+                    }
+                }
+                //->Otros Participantes, en caso aplique:					
+                sheet.GetRow(15 + rowsToShift).GetCell(7).SetCellValue(cabecera.Participantes);
+                sheet.GetRow(15 + rowsToShift).Height = 500;
+                //->Nombre del Representante(s) de los Trabajadores que participó en la inspección, en caso aplique.
+                sheet.GetRow(15+ rowsToShift).GetCell(24).SetCellValue(cabecera.Miembro_Comite);
+                //->RESPONSABLE DEL ÁREA INSPECCIONADA:	
+                sheet.GetRow(17 + rowsToShift).GetCell(7).SetCellValue(cabecera.ResponsableArea.Nombres + " " + cabecera.ResponsableArea.Apellidos);
+                //->RESPONSABLE DE LA INSPECCION:	
+                sheet.GetRow(17 + rowsToShift).GetCell(24).SetCellValue(cabecera.ResponsableInspeccion);
+                sheet.GetRow(17 + rowsToShift).Height = 500;
+                //->OBJETIVO DE LA INSPECCIÓN: 	
+                sheet.GetRow(19 + rowsToShift).GetCell(7).SetCellValue(cabecera.Objetivo);
+                sheet.GetRow(19 + rowsToShift).Height = 500;
+                //->RESPONSALBE DEL REGISTRO: 	
+                //sheet.GetRow(21 + rowsToShift).GetCell(7).SetCellValue(cabecera.RegistradoPor);
+                //->CODIGO INSPECCION: 	
+                sheet.GetRow(21 + rowsToShift).GetCell(23).SetCellValue(cabecera.Codigo);
+                sheet.GetRow(21 + rowsToShift).Height = 500;
+
+                //->Fila observaciones en el formato
+                int fila = 27+ rowsToShift;
+                
+
+
+                //índice de la primera imagen a insertar en la colección de images del workbook
+                int imageIndex = 4;
+                //indice de observacion
+                int obsIndex = 1;
+
+                XSSFCellStyle obsRegistradoStyle = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
+                obsRegistradoStyle.WrapText = true;
+                obsRegistradoStyle.VerticalAlignment = VerticalAlignment.Center;
+                obsRegistradoStyle.BorderTop = BorderStyle.Thin;
+                obsRegistradoStyle.BorderBottom = BorderStyle.Thin;
+                obsRegistradoStyle.BorderLeft = BorderStyle.Thin;
+                obsRegistradoStyle.BorderRight = BorderStyle.Thin;
+                obsRegistradoStyle.Alignment = HorizontalAlignment.Center;
+                obsRegistradoStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.Yellow.Index;
+                obsRegistradoStyle.FillPattern = FillPattern.SolidForeground;
+
+                XSSFCellStyle obsImplementadoStyle = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
+                obsImplementadoStyle.WrapText = true;
+                obsImplementadoStyle.VerticalAlignment = VerticalAlignment.Center;
+                obsImplementadoStyle.BorderTop = BorderStyle.Thin;
+                obsImplementadoStyle.BorderBottom = BorderStyle.Thin;
+                obsImplementadoStyle.BorderLeft = BorderStyle.Thin;
+                obsImplementadoStyle.BorderRight = BorderStyle.Thin;
+                obsImplementadoStyle.Alignment = HorizontalAlignment.Center;
+                obsImplementadoStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.LightBlue.Index;
+                obsImplementadoStyle.FillPattern = FillPattern.SolidForeground;
+
+                XSSFCellStyle obsAprobadoStyle = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
+                obsAprobadoStyle.WrapText = true;
+                obsAprobadoStyle.VerticalAlignment = VerticalAlignment.Center;
+                obsAprobadoStyle.BorderTop = BorderStyle.Thin;
+                obsAprobadoStyle.BorderBottom = BorderStyle.Thin;
+                obsAprobadoStyle.BorderLeft = BorderStyle.Thin;
+                obsAprobadoStyle.BorderRight = BorderStyle.Thin;
+                obsAprobadoStyle.Alignment = HorizontalAlignment.Center;
+                obsAprobadoStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.LightGreen.Index;
+                obsAprobadoStyle.FillPattern = FillPattern.SolidForeground;
+
+                XSSFCellStyle obsVencidoStyle = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
+                obsVencidoStyle.WrapText = true;
+                obsVencidoStyle.VerticalAlignment = VerticalAlignment.Center;
+                obsVencidoStyle.BorderTop = BorderStyle.Thin;
+                obsVencidoStyle.BorderBottom = BorderStyle.Thin;
+                obsVencidoStyle.BorderLeft = BorderStyle.Thin;
+                obsVencidoStyle.BorderRight = BorderStyle.Thin;
+                obsVencidoStyle.Alignment = HorizontalAlignment.Center;
+                obsVencidoStyle.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.Red.Index;
+                obsVencidoStyle.FillPattern = FillPattern.SolidForeground;
+
+                foreach (var observacion in cabecera.Observaciones)
+                {
+                    short rowHeight = 850;
+                    IRow row = sheet.CreateRow(fila);
+
+                    //Aplicar cell style a una fila de observación
+                    for (int i = 0; i <= 30; i++)
+                    {
+                        row.CreateCell(i);
+                        row.GetCell(i).CellStyle = customCellStyle;
+                    }
+                    //Combinar celdas
+                    //Nro
+                    sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 0, 1));
+                    //Acto/Condición subestándar identificada
+                    sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 3, 8));
+                    //Fotografía de la condición subestándar
+                    sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 9, 10));
+                    //Tipo de Condición/Acto Subestándar
+                    sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 11, 13));
+                    //Descripción de Condición/Acto Subestándar
+                    sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 14, 16));
+                    //Acción preventiva/correctiva
+                    sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 18, 21));
+                    //Levantamiento de la Observación
+                    sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(fila, fila, 24, 27));
+                    //Fecha de cierre
+                    //sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(fila, fila, 28, 29));
+                    //Estado
+                    sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(fila, fila, 29, 30));
+                    //Evidencia condición
+                    row.GetCell(9).CellStyle = customCellStyle;
+                    //Evidencia implementación
+                    row.GetCell(25).CellStyle = customCellStyle;
+
+                    ImageProperties evidencia_condicion = new ImageProperties();
+                    ImageProperties evidencia_inspeccion = new ImageProperties();
+
+                    if (observacion.EvidenciaCondicion != "[]" && observacion.EvidenciaCondicion != null)
+                    {
+                        evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 9, rowHeight, imageIndex, "condicion", false);
+                        if (evidencia_condicion != null)
+                        {
+                            rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
+                            imageIndex++;
+                        }
+                    }
+                    if (observacion.EvidenciaImplementacion != "[]" && observacion.EvidenciaImplementacion != null)
+                    {
+
+                        evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 24, rowHeight, imageIndex, "inspeccion", false);
+                        if (evidencia_condicion != null)
+                        {
+                            rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
+                            imageIndex++;
+                        }
+
+                    }
+                    //adaptar el tamaño de la fila al mayor determinado por la imagen
+                    row.Height = rowHeight;
+                    //rezise images
+
+                    if ((evidencia_condicion.extension == ".jpg" ||
+                        evidencia_condicion.extension == ".png" ||
+                        evidencia_condicion.extension == ".jpeg" ||
+                        evidencia_condicion.extension == ".JPG" ||
+                        evidencia_condicion.extension == ".PNG" ||
+                        evidencia_condicion.extension == ".JPEG" &&
+                        evidencia_condicion.extension != null) &&
+                        evidencia_condicion.rowHeight != 0 &&
+                        evidencia_condicion.rowHeight < row.Height)
+                    {
+                        evidencia_condicion.image.Resize(1.0, (double)evidencia_condicion.rowHeight / row.Height);
+                    }
+
+                    if ((evidencia_inspeccion.extension == ".jpg" ||
+                        evidencia_inspeccion.extension == ".png" ||
+                        evidencia_inspeccion.extension == ".jpeg" ||
+                        evidencia_inspeccion.extension == ".JPG" ||
+                        evidencia_inspeccion.extension == ".PNG" ||
+                        evidencia_inspeccion.extension == ".JPEG") &&
+                        evidencia_inspeccion.extension != null &&
+                        evidencia_inspeccion.rowHeight != 0 &&
+                        evidencia_inspeccion.rowHeight < row.Height)
+                    {
+                        evidencia_inspeccion.image.Resize(1.0, (double)evidencia_inspeccion.rowHeight / row.Height);
+                    }
+
+                    //->Index
+                    row.GetCell(0).SetCellValue(obsIndex);
+                    //->TIPO OBSERVACION
+                    row.GetCell(2).SetCellValue(observacion.TipoObservacion);
+                    //->Acto/Condición Subestándar Identificada
+                    row.GetCell(3).SetCellValue(observacion.DescripcionCondicion);
+                    //->Tipo de Condición / Acto Subestándar
+                    row.GetCell(11).SetCellValue(observacion.TipoCondicion?.Descripcion);
+                    //->Descripción de Condición / Acto Subestándar
+                    row.GetCell(14).SetCellValue(observacion.DescripcionActoCondicion);
+                    //->Nivel de Riesgo
+                    row.GetCell(17).SetCellValue(observacion.NivelRiesgo);
+                    //->Acción Preventiva / Correctiva Tomada
+                    row.GetCell(18).SetCellValue(observacion.DescripcionAccion);
+                    //->Responsable del Levanamiento del Acto / Condición Subestándar
+                    row.GetCell(22).SetCellValue(observacion.ResponsableMarcobre2 != null ? (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos + " - " + observacion.ResponsableMarcobre2.Nombres + " " + observacion.ResponsableMarcobre2.Apellidos) : observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos);
+                    //->Fecha Programada
+                    row.GetCell(23).SetCellValue(observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToString("dd/MM/yyyy") : "");
+                    //->Fecha Cierre
+                    row.GetCell(28).SetCellValue(observacion.FechaCierre.HasValue ? observacion.FechaCierre.Value.ToString("dd/MM/yyyy") : "");
+                    //->Estado
+                    var estadoTexto = "";
+                    switch (observacion.Estado)
+                    {
+                        case "Aprobado":
+                            estadoTexto = "Aprobado"; row.GetCell(29).CellStyle = obsAprobadoStyle; break;
+                        case "Vencido":
+                            estadoTexto = "Vencido"; row.GetCell(29).CellStyle = obsVencidoStyle; break;
+                        case "Implementado":
+                            estadoTexto = "Pendiente de Verificación"; row.GetCell(29).CellStyle = obsImplementadoStyle; break;
+                        default:
+                            estadoTexto = "Pendiente de Implementación"; row.GetCell(29).CellStyle = obsRegistradoStyle; break;
+                    }
+                    row.GetCell(29).SetCellValue(estadoTexto);
+
 
                     obsIndex++;
                     fila++;

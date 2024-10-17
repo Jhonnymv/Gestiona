@@ -14,9 +14,18 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         [NotMapped]
         public string EncryptedId { get; set; }
         public int Id_Inspeccion_Cabecera { get; set; }
+        [DisplayName("Código Formato")]
+        public string Codigo_Formato { get; set; }
+        [DisplayName("Área Formato")]
+        public string Area_Formato { get; set; }
+        [DisplayName("Nombre del representante de los trabajadores que participó en la inspección")]
+        public int? Id_Miembro_Comite { get; set; }
+        [DisplayName("Participantes Inspección")]
+        public string Participantes_Inspeccion { get; set; }
+
         [DisplayName("Código")]
         public string Codigo { get; set; }
-        [DisplayName("Área Ejecutora de la Inspección")]
+        [DisplayName("Gerencia Ejecutora de la Inspección")]
         [Range(1,Int32.MaxValue,ErrorMessage ="Debe seleccionar una opción")]
         public int Id_Gerencia_Ejecutora { get; set; }
         [DisplayName("Empresa Inspeccionada")]
@@ -28,7 +37,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         [DisplayName("Hora (24h)")]
         [Required(ErrorMessage = "Debe ingresar una hora")]
         public string Hora_Inspeccion { get; set; }
-        [DisplayName("Área Inspeccionada")]
+        [DisplayName("Área inspeccionada")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Lugar_Inspeccionado { get; set; }
         [DisplayName("Gerencia Inspeccionada")]
@@ -43,7 +52,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         [DisplayName("Responsable de la Inspección")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Responsable_Inspeccion { get; set; }
-        [DisplayName("Participantes de la Inspección")]
+        [DisplayName("Otros Participantes, en caso aplique")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Inspectores { get; set; }
         [DisplayName("Objetivo de la Inspección")]

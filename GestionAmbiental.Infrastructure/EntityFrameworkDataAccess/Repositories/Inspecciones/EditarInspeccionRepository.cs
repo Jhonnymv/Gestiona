@@ -34,6 +34,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             cabeceraEntity.Id_Responsable_Area = cabecera.IdResponsableArea;
             cabeceraEntity.Responsable_Inspeccion = cabecera.ResponsableInspeccion;
             cabeceraEntity.Participantes = cabecera.Inspectores;
+            cabeceraEntity.Codigo_Formato = cabecera.Codigo_Formato;
+            cabeceraEntity.Area_Formato = cabecera.Area_Formato;
+            cabeceraEntity.Id_Miembro_Comite = cabecera.Id_Miembro_Comite;
+            cabeceraEntity.Participantes_Inspección = cabecera.Participantes_Inspección;
+
             if (cabecera.Estado != null)
             {
                 cabeceraEntity.Codigo = cabecera.Codigo;
