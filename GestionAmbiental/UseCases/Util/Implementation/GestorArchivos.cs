@@ -79,6 +79,7 @@ namespace GestionAmbiental.UseCases.Util.Implementation
             }
             if (Directory.Exists(archivePath))
             {
+                var files = Directory.GetFiles(archivePath);
                 Directory.Delete(archivePath, true);
             }
 

@@ -429,9 +429,30 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     var decryptedFileName = archivePath + "desencriptado.zip";
                     await _gestorEncriptado.DecryptFileAsync(encryptedFile, decryptedFileName);
                     /*read decrypted file*/
-                    FileStream stream = new FileStream(decryptedFileName, FileMode.Open);
+                    //FileStream stream = new FileStream(decryptedFileName, FileMode.Open);
 
-                    return File(stream, GetContentType(decryptedFileName), fileName);
+                    //3. Desencriptar archivo
+                    DateTime dateTime = DateTime.UtcNow.Date;
+                    var pathDesencriptado = archivePath + "desencriptado" + dateTime.ToString("dd-MM-yyyy HHmm") + ".zip";
+                    await _gestorEncriptado.DecryptFileAsync(encryptedFile, pathDesencriptado);
+                    // fileStream.Dispose();
+                    //4. descomprimir en carpeta temporal submission
+                    if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                        filePath += Path.DirectorySeparatorChar;
+
+                    using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
+                    {
+                        foreach (ZipArchiveEntry entry in archive.Entries)
+                        {
+                            filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
+                            if (filePath.StartsWith(filePath, StringComparison.Ordinal))
+                                entry.ExtractToFile(filePath);
+                        }
+                    }
+                    byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+                    var newFileName = fileName.Replace(Path.GetExtension(fileName), Path.GetExtension(filePath));
+                    return File(bytes, GetContentType(filePath), newFileName);
+                    //return File(stream, GetContentType(decryptedFileName), fileName);
                 }
                 catch (Exception e)
                 {
