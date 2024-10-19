@@ -17,10 +17,13 @@
         <div class="container pt-4 pb-4">
             <div class="custom-form details-container w-100">
                 <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold text-center">DETALLE DE LA INSPECCIÓN</span>
+                    </div>
                     <div class="message"></div>
                     <div class="row input_container">
                         <div class="col-12 col-sm-6 col-lg-6">
-                            <label>Área Ejecutora de la Inspección</label>
+                            <label>Gerencia Ejecutora de la Inspección</label>
                             <input type="text" class="form-control" value="@ViewBag.Cabecera.Gerencia" readonly="readonly" />
                         </div>
                         <div class="col-12 col-sm-6 col-lg-6">
@@ -60,7 +63,7 @@
                     </div>
                     <div class="row input_container">
                         <div class="col-12 col-sm-6 col-lg-6">
-                            <label>Participantes de la Inspección</label>
+                            <label>Otros Participantes, en caso aplique</label>
                             <input type="text" class="form-control" value="@ViewBag.Cabecera.Participantes" readonly="readonly">
                         </div>
                         <div class="col-12 col-sm-6 col-lg-6">
@@ -68,10 +71,23 @@
                             <input type="text" class="form-control" value="@ViewBag.Cabecera.Objetivo" readonly="readonly">
                         </div>
                     </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label>Participantes de la Inspección</label>
+                            <textarea class="form-control" value="@ViewBag.Cabecera.Participantes_Inspección_Texto" rows="2" readonly>@ViewBag.Cabecera.Participantes_Inspección_Texto</textarea>
+                        </div>
+                        @if (ViewBag.MostrarMiembroComite)
+                        {
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label>Nombre del Representante(s) de los Trabajadores que participó en la inspección, en caso aplique:</label>
+                                <input type="text" class="form-control" value="@ViewBag.Cabecera.Miembro_Comite" readonly="readonly">
+                            </div>
+                        }
+                    </div>
                 </div>
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="d-flex justify-content-center">
-                        <span class="text-mc bold text-center">Observaciones</span>
+                        <span class="text-mc bold text-center">OBSERVACIONES</span>
                     </div>
                     <div class="inspection">
                         <div class="tertiary-content col-12">

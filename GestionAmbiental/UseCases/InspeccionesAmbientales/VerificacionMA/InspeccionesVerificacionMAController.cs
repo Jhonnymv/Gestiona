@@ -181,6 +181,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                     ViewBag.Cabecera = cabecera;
                     ViewBag.Codigo = cabecera.Codigo;
                     ViewBag.IdCabecera = cabecera.IdCabecera;
+                    ViewBag.MostrarMiembroComite = cabecera.TipoInspeccion.Equals("COMITE DE SSO");
                     var filaObservacion = "";
                     var observaciones = await _consultarInspeccionDetalle.ExecuteVerificacion(IdDesencriptado, userInfo.NombreUsuario);
                     foreach (var observacion in observaciones)

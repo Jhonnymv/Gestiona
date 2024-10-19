@@ -209,6 +209,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     ViewBag.Cabecera = cabecera;
                     ViewBag.Codigo = cabecera.Codigo;
                     ViewBag.idCabecera = cabecera.IdCabecera;
+                    ViewBag.MostrarMiembroComite = cabecera.TipoInspeccion.Equals("COMITE DE SSO");
                     var filaObservacion = "";
                     var observaciones = await _consultarInspeccionDetalle.Execute(IdDesencriptado, userInfo.NombreUsuario);
                     foreach (var observacion in observaciones)

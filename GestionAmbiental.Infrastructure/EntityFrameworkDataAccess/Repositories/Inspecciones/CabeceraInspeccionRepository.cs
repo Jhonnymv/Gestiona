@@ -11,6 +11,7 @@ using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.Inspecciones
 {
@@ -120,29 +121,29 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<InspeccionCabecera> GetInspeccionCabecera(int idCabecera)
         {
-            var cabeccera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
+            var cabecera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)&&x.Estado!=EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var output = new InspeccionCabecera
             {
-                IdCabecera = cabeccera.Id_Inspeccion_Cabecera,
-                IdRegistradoPor = cabeccera.Id_Registrado_Por,
-                Codigo = cabeccera.Codigo,
-                Codigo_Formato = cabeccera.Codigo_Formato,
-                Area_Formato = cabeccera.Area_Formato,
-                Id_Miembro_Comite = cabeccera.Id_Miembro_Comite,
-                Participantes_Inspección = cabeccera.Participantes_Inspección,
-                IdGerencia = cabeccera.Id_Gerencia,
-                IdGerenciaInspeccionada = cabeccera.Id_Gerencia_Inspeccionada,
-                IdEmpresa = cabeccera.Id_Empresa,
-                TipoInspeccion = cabeccera.Tipo_Inspeccion,
-                AreaInspeccionada = cabeccera.Area_Inspeccionada,
-                FechaInspeccion = cabeccera.Fecha_Inspeccion,
+                IdCabecera = cabecera.Id_Inspeccion_Cabecera,
+                IdRegistradoPor = cabecera.Id_Registrado_Por,
+                Codigo = cabecera.Codigo,
+                Codigo_Formato = cabecera.Codigo_Formato,
+                Area_Formato = cabecera.Area_Formato,
+                Id_Miembro_Comite = cabecera.Id_Miembro_Comite,
+                Participantes_Inspección = cabecera.Participantes_Inspección,
+                IdGerencia = cabecera.Id_Gerencia,
+                IdGerenciaInspeccionada = cabecera.Id_Gerencia_Inspeccionada,
+                IdEmpresa = cabecera.Id_Empresa,
+                TipoInspeccion = cabecera.Tipo_Inspeccion,
+                AreaInspeccionada = cabecera.Area_Inspeccionada,
+                FechaInspeccion = cabecera.Fecha_Inspeccion,
                 NObservaciones = observaciones.Count,
-                Estado = cabeccera.Estado,
-                IdResponsableArea = cabeccera.Id_Responsable_Area,
-                Objetivo = cabeccera.Objetivo,
-                ResponsableInspeccion = cabeccera.Responsable_Inspeccion,
-                Participantes = cabeccera.Participantes
+                Estado = cabecera.Estado,
+                IdResponsableArea = cabecera.Id_Responsable_Area,
+                Objetivo = cabecera.Objetivo,
+                ResponsableInspeccion = cabecera.Responsable_Inspeccion,
+                Participantes = cabecera.Participantes
             };
 
             return output;
@@ -217,6 +218,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
             var usuarios = await _context.Usuarios.ToListAsync();
+            var miembros_comite = await _context.MiembrosComiteInspeccion.ToListAsync();
             var usuarios_domain = new List<Domain.ValueObjects.Usuario>();
             foreach(var item in usuarios)
             {
@@ -236,8 +238,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 NObservaciones = observaciones.Count,
                 Participantes = cabecera.Participantes,
                 Estado = cabecera.Estado,
-                TipoInspeccion = cabecera.Tipo_Inspeccion
+                TipoInspeccion = cabecera.Tipo_Inspeccion,
+                Codigo_Formato = cabecera.Codigo_Formato,
+                Area_Formato = cabecera.Area_Formato,
+                Id_Miembro_Comite = cabecera.Id_Miembro_Comite,
+                Participantes_Inspección_Detalle = new List<Usuario>()
             };
+            if(cabecera.Id_Miembro_Comite != null)
+            {
+                output.Miembro_Comite = miembros_comite.Select(x => new { x.Id_Miembro_Comite, NombresyApellidos = x.Nombres + " " + x.Apellidos }).FirstOrDefault(x => x.Id_Miembro_Comite.Equals(cabecera.Id_Miembro_Comite)).NombresyApellidos;
+            }
             if (!IsValidJson(cabecera.Responsable_Inspeccion))
                 output.ResponsableInspeccion = cabecera.Responsable_Inspeccion;
             else
@@ -245,6 +255,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var lista_ids = JsonConvert.DeserializeObject<List<int>>(cabecera.Responsable_Inspeccion);
                 var lista_usuario = usuarios.Where(x => lista_ids.Contains(x.Id_Usuario)).Select(x => x.Nombres.ToUpper() + " " + x.Apellidos.ToUpper()).ToList();
                 output.ResponsableInspeccion = ConcatUsingComa(lista_usuario);
+            }
+            if (IsValidJson(cabecera.Participantes_Inspección))
+            {
+                var lista_ids = JsonConvert.DeserializeObject<List<int>>(cabecera.Participantes_Inspección);
+                var lista_usuario = usuarios.Where(x => lista_ids.Contains(x.Id_Usuario)).ToList();
+                foreach (var x in lista_usuario)
+                {
+                    output.Participantes_Inspección_Detalle.Add(new Usuario
+                    {
+                        IdUsuario = x.Id_Usuario,
+                        Nombres = x.Nombres,
+                        Apellidos = x.Apellidos
+                    });
+                    output.Participantes_Inspección_Texto += x.Nombres + " " + x.Apellidos + ", ";
+                }
+                output.Participantes_Inspección_Texto = output.Participantes_Inspección_Texto.Substring(0, output.Participantes_Inspección_Texto.Length - 2);
             }
             return output;
         }
@@ -307,6 +333,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var empresas = await _context.Empresas.ToListAsync();
             var usuarios = await _context.Usuarios.ToListAsync();
             var responsable_area = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(cabecera.Id_Responsable_Area));
+            var miembros_comite = await _context.MiembrosComiteInspeccion.ToListAsync();
 
             var responsable_area_domain = new Domain.ValueObjects.Usuario(responsable_area.Id_Usuario, responsable_area.Id_Rol, responsable_area.Nombres, responsable_area.Apellidos, responsable_area.Email);
 
@@ -324,8 +351,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 NObservaciones = observaciones.Count,
                 Participantes = cabecera.Participantes,
                 Estado = cabecera.Estado,
-                TipoInspeccion = cabecera.Tipo_Inspeccion
-            };
+                TipoInspeccion = cabecera.Tipo_Inspeccion,
+                Codigo_Formato = cabecera.Codigo_Formato,
+                Area_Formato = cabecera.Area_Formato,
+                Id_Miembro_Comite = cabecera.Id_Miembro_Comite,
+                Participantes_Inspección_Detalle = new List<Usuario>()
+            }; if (cabecera.Id_Miembro_Comite != null)
+            {
+                output.Miembro_Comite = miembros_comite.Select(x => new { x.Id_Miembro_Comite, NombresyApellidos = x.Nombres + " " + x.Apellidos }).FirstOrDefault(x => x.Id_Miembro_Comite.Equals(cabecera.Id_Miembro_Comite)).NombresyApellidos;
+            }
             if (!IsValidJson(cabecera.Responsable_Inspeccion))
                 output.ResponsableInspeccion = cabecera.Responsable_Inspeccion;
             else
@@ -333,6 +367,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var lista_ids = JsonConvert.DeserializeObject<List<int>>(cabecera.Responsable_Inspeccion);
                 var lista_usuario = usuarios.Where(x => lista_ids.Contains(x.Id_Usuario)).Select(x => x.Nombres.ToUpper() + " " + x.Apellidos.ToUpper()).ToList();
                 output.ResponsableInspeccion = ConcatUsingComa(lista_usuario);
+            }
+            if (IsValidJson(cabecera.Participantes_Inspección))
+            {
+                var lista_ids = JsonConvert.DeserializeObject<List<int>>(cabecera.Participantes_Inspección);
+                var lista_usuario = usuarios.Where(x => lista_ids.Contains(x.Id_Usuario)).ToList();
+                foreach (var x in lista_usuario)
+                {
+                    output.Participantes_Inspección_Detalle.Add(new Usuario
+                    {
+                        IdUsuario = x.Id_Usuario,
+                        Nombres = x.Nombres,
+                        Apellidos = x.Apellidos
+                    });
+                    output.Participantes_Inspección_Texto += x.Nombres + " " + x.Apellidos + ", ";
+                }
+                output.Participantes_Inspección_Texto = output.Participantes_Inspección_Texto.Substring(0, output.Participantes_Inspección_Texto.Length - 2);
             }
             return output;
         }

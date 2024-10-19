@@ -20,7 +20,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         public string Area_Formato { get; set; }
         [DisplayName("Nombre del representante de los trabajadores que participó en la inspección")]
         public int? Id_Miembro_Comite { get; set; }
-        [DisplayName("Participantes Inspección")]
+        [DisplayName("Participantes de la Inspección")]
         public string Participantes_Inspeccion { get; set; }
 
         [DisplayName("Código")]

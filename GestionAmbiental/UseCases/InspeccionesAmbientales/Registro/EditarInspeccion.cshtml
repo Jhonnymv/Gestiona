@@ -43,7 +43,7 @@
                             <div class="message"></div>
                             @* @if (ViewBag.PermisosAdmin)
                             { *@
-                                <div class="row input_container">
+                                <div class="row input_container" style="display:none">
                                     <div class="col-12 col-sm-6 col-lg-6">
                                         <label asp-for="Area_Formato"></label>
                                         <span class="text-danger" asp-validation-for="Area_Formato"></span>
@@ -136,7 +136,8 @@
                             </div>
                             <div class="row input_container">
                                 <input type="hidden" class="form-control" asp-for="Participantes_Inspeccion">
-                                <div class="col-12 col-sm-6 col-lg-6" id="Participantes_Inspeccion_List_Group" disabled style="display:none">
+                                @* <div class="col-12 col-sm-6 col-lg-6" id="Participantes_Inspeccion_List_Group" disabled style="display:none"> *@
+                                <div class="col-12 col-sm-6 col-lg-6" id="Participantes_Inspeccion_List_Group" disabled>
                                     <label asp-for="Participantes_Inspeccion"></label>
                                     <span class="text-danger" asp-validation-for="Participantes_Inspeccion"></span>
                                     <select id="Participantes_Inspeccion_List" name="Participantes_Inspeccion_List" asp-items="@ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="--SELECCIONE--" multiple style="background-color: #e9ecef;opacity:1;" disabled>
@@ -294,10 +295,13 @@
                 $('#Fecha_Inspeccion').prop('readonly', false);
                 $('#Objetivo').prop('readonly', false);
                 $('#Tipo_Inspeccion').prop('disabled', false);
+
             }
-            if ($('#Tipo_Inspeccion').val() == "COMITE DE SSO"){
+            if ($('#Tipo_Inspeccion').val() == "COMITE DE SSO") {
                 $("#miembros_comite").css({ 'display': 'block' })
-                $('#Id_Miembro_Comite').prop('disabled', false);
+                if (('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower())) || @(ViewBag.PermisosAdmin.ToString().ToLower())) {
+                    $('#Id_Miembro_Comite').prop('disabled', false);
+                }
             }
             dataModulo();
             ConsultarObservaciones();
@@ -319,18 +323,19 @@
 
             var participante_inspeccion = $("#Participantes_Inspeccion").val();
             if (isJson(participante_inspeccion)) {
-                $("#Participantes_Inspeccion_List_Group").show();
-                $("#Participantes_Inspeccion_Text_Group").hide();
+                // $("#Participantes_Inspeccion_List_Group").show();
+                // $("#Participantes_Inspeccion_Text_Group").hide();
                 $("#Participantes_Inspeccion_List").val(JSON.parse(participante_inspeccion));
                 if (('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower())) || @(ViewBag.PermisosAdmin.ToString().ToLower()))
                     $('#Participantes_Inspeccion_List').prop('disabled', false);
             }
             else {
-                $("#Participantes_Inspeccion_List_Group").hide();
-                $("#Participantes_Inspeccion_Text_Group").show();
+                // $("#Participantes_Inspeccion_List_Group").hide();
+                // $("#Participantes_Inspeccion_Text_Group").show();
                 $("#Participantes_Inspeccion_Text").val(participante_inspeccion);
+                console.log(('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower())) || @(ViewBag.PermisosAdmin.ToString().ToLower()))
                 if (('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower())) || @(ViewBag.PermisosAdmin.ToString().ToLower()))
-                    $('#Participantes_Inspeccion_Text').prop('readonly', false);
+                    $('#Participantes_Inspeccion_List').prop('disabled', false);
             }
             $('.selectpicker').selectpicker('refresh');
         });

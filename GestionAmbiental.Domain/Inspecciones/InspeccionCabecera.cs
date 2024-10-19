@@ -15,6 +15,7 @@ namespace GestionAmbiental.Domain.Inspecciones
         public string Miembro_Comite { get; set; }
         public string Participantes_Inspección { get; set; }
         public List<Usuario> Participantes_Inspección_Detalle { get; set; }
+        public string Participantes_Inspección_Texto { get; set; }
         public int IdRegistradoPor {get;set;}
         public string RegistradoPor {get;set;}
         public string Objetivo { get; set; }
