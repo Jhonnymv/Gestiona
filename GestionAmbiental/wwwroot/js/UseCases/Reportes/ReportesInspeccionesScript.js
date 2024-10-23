@@ -57,9 +57,33 @@ var graph_obs_gerencias_estado;
 
 
 $(document).ready(function () {
+    var savedData = localStorage.getItem("ResumenReportesInspecciones");
+
+    if (savedData) {
+        const filtrosData = JSON.parse(savedData);
+        $('#IdGerencia').val(filtrosData.gerencia);
+        $('#IdEmpresa').val(filtrosData.empresa);
+        $('#IdAsesor').val(filtrosData.asesor);
+        $('#IdRespLev').val(filtrosData.respLev);
+        $('#FInicio').val(filtrosData.fechaInicio);
+        $('#FFin').val(filtrosData.fechaFin);
+        $("#UsuarioInvolucrado").val(filtrosData.usuarioInvolucrado);
+        $("#TipoObservacion").val(filtrosData.tipoObservacion);
+    }
     ActualizarInspeccionesFecha();
 });
 function Filtrar() {
+    var filtros = {
+        gerencia : $("#IdGerencia").val(),
+        empresa : $("#IdEmpresa").val(),
+        asesor : $("#IdAsesor").val(),
+        respLev : $("#IdRespLev").val(),
+        fechaInicio : $("#FInicio").val(),
+        fechaFin: $("#FFin").val(),
+        usuarioInvolucrado: $("#UsuarioInvolucrado").val(),
+        tipoObservacion: $("#TipoObservacion").val()
+    };
+    localStorage.setItem("ResumenReportesInspecciones", JSON.stringify(filtros));
     ActualizarInspeccionesFecha();
 }
 
