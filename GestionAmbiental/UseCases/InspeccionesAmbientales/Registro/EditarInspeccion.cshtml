@@ -123,10 +123,11 @@
                                 </div>
                             </div>
                             <div class="row input_container">
-                                <div class="col-12 col-sm-6 col-lg-6">
-                                    <label asp-for="Inspectores"></label>
-                                    <span class="text-danger" asp-validation-for="Inspectores"></span>
-                                    <input type="text" class="form-control" asp-for="Inspectores" readonly>
+                                <div class="col-12 col-sm-6 col-lg-6" id="Participantes_Inspeccion_List_Group" disabled>
+                                    <label asp-for="Participantes_Inspeccion"></label>
+                                    <span class="text-danger" asp-validation-for="Participantes_Inspeccion"></span>
+                                    <select id="Participantes_Inspeccion_List" name="Participantes_Inspeccion_List" asp-items="@ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="--SELECCIONE--" multiple style="background-color: #e9ecef;opacity:1;" disabled>
+                                    </select>
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-6">
                                     <label asp-for="Objetivo"></label>
@@ -136,12 +137,10 @@
                             </div>
                             <div class="row input_container">
                                 <input type="hidden" class="form-control" asp-for="Participantes_Inspeccion">
-                                @* <div class="col-12 col-sm-6 col-lg-6" id="Participantes_Inspeccion_List_Group" disabled style="display:none"> *@
-                                <div class="col-12 col-sm-6 col-lg-6" id="Participantes_Inspeccion_List_Group" disabled>
-                                    <label asp-for="Participantes_Inspeccion"></label>
-                                    <span class="text-danger" asp-validation-for="Participantes_Inspeccion"></span>
-                                    <select id="Participantes_Inspeccion_List" name="Participantes_Inspeccion_List" asp-items="@ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="--SELECCIONE--" multiple style="background-color: #e9ecef;opacity:1;" disabled>
-                                    </select>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Inspectores"></label>
+                                    <span class="text-danger" asp-validation-for="Inspectores"></span>
+                                    <input type="text" class="form-control" asp-for="Inspectores" readonly>
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-6" id="miembros_comite" style="display:none">
                                     <label asp-for="Id_Miembro_Comite"></label>

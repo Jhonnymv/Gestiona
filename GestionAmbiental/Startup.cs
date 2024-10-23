@@ -94,7 +94,7 @@ namespace GestionAmbiental
                 context.Response.Headers.Add("X-Permitted-Cross-Domain-Policies", "none");
                 context.Response.Headers.Add("Referrer-Policy", "no-referrer");
                 //context.Response.Headers.Add("Clear-Site-Data", "\"cache\",\"cookies\",\"storage\"");
-                context.Response.Headers.Add("Clear-Site-Data", "\"storage\"");
+                //context.Response.Headers.Add("Clear-Site-Data", "\"storage\"");
                 context.Response.Headers.Add("Cross-Origin-Embedder-Policy", "require-corp");
                 context.Response.Headers.Add("Cross-Origin-Opener-Policy", "same-origin");
                 context.Response.Headers.Add("Cross-Origin-Resource-Policy", "same-origin");

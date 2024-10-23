@@ -112,7 +112,23 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/selectpicker/js/bootstrap-select.js"></script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function () {//Actualizar campos desde localstorage
+            var savedData = localStorage.getItem("ResumenInspeccionesImplementacion");
+
+            if(savedData){
+                const filtrosData = JSON.parse(savedData);
+                $('#fecha_inicio_filtro').val(filtrosData.fechaInicioFiltro);
+                $('#fecha_fin_filtro').val(filtrosData.fechaFinFiltro);
+                $('#gerencia_filtro').val(filtrosData.gerenciaFiltro);
+                $('#empresa_filtro').val(filtrosData.empresaFiltro);
+                $('#registrado_por_filtro').val(filtrosData.registradoPorFiltro);
+                $('#estado_filtro').val(filtrosData.estadoFiltro);
+                $('#responsable_filtro').val(filtrosData.responsableFiltro);
+                $("#asesor_filtro").val(filtrosData.asesorFiltro);
+                $("#codigo_filtro").val(filtrosData.codigoFiltro);
+                $("#tipo_inspeccion_filtro").val(filtrosData.tipo_inspeccion_filtro);
+                $("#tipo_observacion_filtro").val(filtrosData.tipo_observacion_filtro);
+            }
             filtrar(1);
         });
         function dataModulo() {
@@ -135,6 +151,20 @@
             });
         }
         function filtrar(pag) {
+            var filtros = {
+                "fechaInicioFiltro": $('#fecha_inicio_filtro').val(),
+                "fechaFinFiltro": $('#fecha_fin_filtro').val(),
+                "gerenciaFiltro": $('#gerencia_filtro').val(),
+                "empresaFiltro": $('#empresa_filtro').val(),
+                "registradoPorFiltro": $('#registrado_por_filtro').val(),
+                "estadoFiltro": $('#estado_filtro').val(),
+                "responsableFiltro": $('#responsable_filtro').val(),
+                "asesorFiltro": $("#asesor_filtro").val(),
+                "codigoFiltro": $("#codigo_filtro").val(),
+                "tipo_inspeccion_filtro": $("#tipo_inspeccion_filtro").val(),
+                "tipo_observacion_filtro": $("#tipo_observacion_filtro").val()
+            };
+                localStorage.setItem("ResumenInspeccionesImplementacion", JSON.stringify(filtros));
             $.ajax({
                 type: "POST",
                 url: "/InspeccionesImplementacion/GetTablaResumenFiltrada",

@@ -63,8 +63,8 @@
                     </div>
                     <div class="row input_container">
                         <div class="col-12 col-sm-6 col-lg-6">
-                            <label>Otros Participantes, en caso aplique</label>
-                            <input type="text" class="form-control" value="@ViewBag.Cabecera.Participantes" readonly="readonly">
+                            <label>Participantes de la Inspección</label>
+                            <textarea class="form-control" value="@ViewBag.Cabecera.Participantes_Inspección_Texto" rows="2" readonly>@ViewBag.Cabecera.Participantes_Inspección_Texto</textarea>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-6">
                             <label>Objetivo de Inspección</label>
@@ -73,8 +73,8 @@
                     </div>
                     <div class="row input_container">
                         <div class="col-12 col-sm-6 col-lg-6">
-                            <label>Participantes de la Inspección</label>
-                            <textarea class="form-control" value="@ViewBag.Cabecera.Participantes_Inspección_Texto" rows="2" readonly>@ViewBag.Cabecera.Participantes_Inspección_Texto</textarea>
+                            <label>Otros Participantes, en caso aplique</label>
+                            <input type="text" class="form-control" value="@ViewBag.Cabecera.Participantes" readonly="readonly">
                         </div>
                         @if (ViewBag.MostrarMiembroComite)
                         {
