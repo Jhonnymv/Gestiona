@@ -49,7 +49,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         [DisplayName("Responsable del Área Inspeccionada")]
         [Range(1,Int32.MaxValue,ErrorMessage = "Debe seleccionar una opción")]
         public int Id_Responsable_Lugar { get; set; }
-        [DisplayName("Responsable de la Inspección")]
+        [DisplayName("Lider de la inspección")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Responsable_Inspeccion { get; set; }
         [DisplayName("Otros Participantes, en caso aplique")]

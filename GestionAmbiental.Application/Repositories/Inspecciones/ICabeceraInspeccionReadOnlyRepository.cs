@@ -8,11 +8,11 @@ namespace GestionAmbiental.Application.Repositories.Inspecciones
 {
     public interface ICabeceraInspeccionReadOnlyRepository
     {
-        Task<List<InspeccionCabecera>> GetInspeccionCabecera(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, List<string> estadoFiltro, int[] responsableFiltro, int[] asesorFiltro,string codigo);
+        Task<List<InspeccionCabecera>> GetInspeccionCabecera(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, List<string> estadoFiltro, int[] responsableFiltro, int[] asesorFiltro,string codigo, string[] tipo_inspeccion_filtro, string[] tipo_observacion_filtro);
         Task<InspeccionCabecera> GetInspeccionCabecera(int idCabecera);
-        Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigo);
+        Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigo, string[] tipo_inspeccion_filtro, string[] tipo_observacion_filtro);
         Task<InspeccionCabecera> GetInspeccionCabeceraImplementacion(int idCabecera);
-        Task<List<InspeccionCabecera>> GetInspeccionCabeceraVerificacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigo);
+        Task<List<InspeccionCabecera>> GetInspeccionCabeceraVerificacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigo, string[] tipo_inspeccion_filtro, string[] tipo_observacion_filtro);
         Task<InspeccionCabecera> GetInspeccionCabeceraVerificacion(int idCabecera);
         Task<InspeccionCabecera> GetInspeccionCabeceraDescarga(int idCabecera);
         Task EliminarVencidos(DateTime fechaInicio, DateTime fechaFin);

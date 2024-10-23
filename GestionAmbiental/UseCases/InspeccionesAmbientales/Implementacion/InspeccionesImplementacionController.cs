@@ -91,6 +91,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
 
                 var usuariosAgrupados = selectItemsResumen.Usuarios.GroupBy(x => x.IdRol).ToList();
                 var asesores = new List<SelectListItem>();
+
+                var tiposInspeccion = selectItemsResumen.TiposInspeccion.Select(g => new SelectListItem() { Value = g.Descripcion, Text = g.Descripcion }).ToList();
+
                 foreach (var grupo in usuariosAgrupados)
                 {
                     if (grupo.Key.Equals((int)InspeccionRol.AsesorMAP))
@@ -109,11 +112,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 ViewBag.Gerencias = filtroGerencias;
                 ViewBag.Usuarios = filtroUsuarios;
                 ViewBag.Asesores = asesores;
+                ViewBag.Tipo_Inspeccion = tiposInspeccion;
 
                 return View();
             }
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string fechaInicioFiltro, string fechaFinFiltro, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string fechaInicioFiltro, string fechaFinFiltro, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro, int pagina, int rpp, string[] tipo_inspeccion_filtro, string[] tipo_observacion_filtro)
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             DateTime fechaInicio;
@@ -126,7 +130,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 fechaFin = Convert.ToDateTime(fechaFinFiltro);
             else
                 fechaFin = DateTime.Now;
-            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, responsableFiltro, asesorFiltro, codigoFiltro);
+            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, responsableFiltro, asesorFiltro, codigoFiltro,tipo_inspeccion_filtro,tipo_observacion_filtro);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NCabeceras % rpp != 0 ? (datosTabla.NCabeceras / rpp) + 1 : datosTabla.NCabeceras / rpp;

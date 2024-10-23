@@ -62,6 +62,19 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
+        public async Task<List<Tipo_Inspeccion>> GetTiposInspeccion()
+        {
+            var tiposInspeccion = await _context.TiposInspeccion.ToListAsync();
+            var output = new List<Tipo_Inspeccion>();
+            foreach (var item in tiposInspeccion)
+            {
+                output.Add(new Tipo_Inspeccion{
+                     Id_Tipo_Inspeccion = item.Id_Tipo_Inspeccion,
+                     Descripcion = item.Descripcion,
+                });
+            }
+            return output;
+        }
         public async Task<List<Gerencia>> GetGerencias()
         {
             var gerencias = await _context.Gerencias.ToListAsync();

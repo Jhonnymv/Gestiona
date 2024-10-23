@@ -59,6 +59,20 @@
                             <input id="codigo_filtro" type="text" class="form-control">
                         </div>
                     </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-4">
+                            <label>Tipo Inspección</label>
+                            <select id="tipo_inspeccion_filtro" asp-items="@ViewBag.Tipo_Inspeccion" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label>Tipo Observacion</label>
+                            <select id="tipo_observacion_filtro" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
+                                <option value="MAP">MA</option>
+                                <option value="SSO">SSO</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-12 col-lg-3">
                     <div class="row ms-1 me-1">
@@ -135,7 +149,9 @@
                     "estadoFiltro": $('#estado_filtro').val(),
                     "responsableFiltro": $('#responsable_filtro').val(),
                     "asesorFiltro": $("#asesor_filtro").val(),
-                    "codigoFiltro": $("#codigo_filtro").val()
+                    "codigoFiltro": $("#codigo_filtro").val(),
+                    "tipo_inspeccion_filtro": $("#tipo_inspeccion_filtro").val(),
+                    "tipo_observacion_filtro": $("#tipo_observacion_filtro").val()
                 },
                 traditional: true,
                 success: (response) => {

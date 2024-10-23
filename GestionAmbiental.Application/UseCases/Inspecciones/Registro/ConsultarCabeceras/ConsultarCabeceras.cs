@@ -16,7 +16,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarC
         {
             _cabeceraInspeccionReadOnlyRepository = cabeceraInspeccionReadOnlyRepository;
         }
-        public async Task<InspeccionesCabeceraOutput> Execute(int pagina, int fpp, DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro,string codigo)
+        public async Task<InspeccionesCabeceraOutput> Execute(int pagina, int fpp, DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro,string codigo, string[] tipo_inspeccion_filtro, string[] tipo_observacion_filtro)
         {
             var estados= new List<string>();
             if (estadoFiltro.Length > 0)
@@ -37,7 +37,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarC
                 if (estadoFiltro.Contains("Aprobados"))
                     estados.Add(EstadosInspeccion.Aprobado.ToString());
             }
-            var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabecera(fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, estados, responsableFiltro, asesorFiltro,codigo);
+            var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabecera(fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, estados, responsableFiltro, asesorFiltro,codigo,tipo_inspeccion_filtro,tipo_observacion_filtro);
             var tbd = cabeceras.Where(x => x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())).OrderByDescending(x=>x.FechaInspeccion).ToList();
             var noTbd = cabeceras.Where(x => !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())).OrderByDescending(x=>x.Codigo).ToList();
             cabeceras = tbd;

@@ -63,9 +63,11 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.SelectItems
             var gerencias = await _getItemsReadOnlyRepository.GetGerencias();
             var usuarios = await _getItemsReadOnlyRepository.GetUsuarios();
             var empresas = await _getItemsReadOnlyRepository.GetEmpresaContratistas();
+            var tiposInspeccion = await _getItemsReadOnlyRepository.GetTiposInspeccion();
             var output = new ItemsSelectResumen();
             output.GerenciaEjecutora = gerencias;
             output.EmpContratMarcobre = empresas;
+            output.TiposInspeccion = tiposInspeccion;
 
             output.Usuarios = usuarios; 
             return output;

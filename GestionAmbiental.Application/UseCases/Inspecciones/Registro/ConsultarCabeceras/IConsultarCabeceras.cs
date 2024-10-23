@@ -8,7 +8,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarC
 {
     public interface IConsultarCabeceras
     {
-        Task<InspeccionesCabeceraOutput> Execute(int pagina, int fpp, DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro,string codigo);
+        Task<InspeccionesCabeceraOutput> Execute(int pagina, int fpp, DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro,string codigo, string[] tipo_inspeccion_filtro, string[] tipo_observacion_filtro);
 
     }
 }

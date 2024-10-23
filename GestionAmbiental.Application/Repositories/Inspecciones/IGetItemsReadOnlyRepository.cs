@@ -14,5 +14,6 @@ namespace GestionAmbiental.Application.Repositories.Inspecciones
         Task<List<Gerencia>> GetGerencias();
         Task<List<TipoCondicion>> GetTiposCondicion();
         Task<List<Usuario>> GetUsuarios();
+        Task<List<Tipo_Inspeccion>> GetTiposInspeccion();
     }
 }
