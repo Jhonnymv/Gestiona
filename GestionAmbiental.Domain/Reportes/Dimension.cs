@@ -6,6 +6,7 @@ namespace GestionAmbiental.Domain.Reportes
 {
     public class Dimension
     {
+        public string NombrePadre { get; set; }
         public string Nombre { get; set; }
         public double Valor { get; set; }
         public int Index { get; set; }

@@ -9,7 +9,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetItemsFi
     {
         public List<Usuario> AsesoresMAP { get; set; }
         public List<Usuario> AsesoresSSO { get; set; }
-        public List<Usuario> RespLevObs { get; set; }
+        public List<Usuario> Usuarios { get; set; }
         public List<Gerencia> Gerencias { get; set; }
         public List<Empresa> Empresas { get; set; }
     }

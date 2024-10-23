@@ -89,7 +89,7 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
                 var filtroGerencias = itemsFiltroInspecciones.Gerencias.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var filtroRespLevObs = itemsFiltroInspecciones.RespLevObs.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var filtroRespLevObs = itemsFiltroInspecciones.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 filtroRespLevObs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var grupoMA = new SelectListGroup() { Name = "Asesores MA", Disabled = false };

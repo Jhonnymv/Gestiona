@@ -563,18 +563,18 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteInspección-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
             }
         }
-        public async Task<IActionResult> DescargarFechas(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> DescargarFechas(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada, bool incluirEvidencias,int usuarioInvolucrado, string tipoObservacion)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?empresa=" + empresa + "&gerencia=" + gerencia + "&respLevObs=" + respLevObs + "&asesor=" + asesor + "&FechaInicio=" + FechaInicio + "&FechaFin=" + FechaFin });
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?empresa=" + empresa + "&gerencia=" + gerencia + "&respLevObs=" + respLevObs + "&asesor=" + asesor + "&FechaInicio=" + FechaInicio + "&FechaFin=" + FechaFin + "&estado=" + estado + "&idGerenciaInspeccionada=" + idGerenciaInspeccionada + "&incluirEvidencias=" + incluirEvidencias + "&usuarioInvolucrado=" + usuarioInvolucrado + "&tipoObservacion=" + tipoObservacion });
             }
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
-                var inspecciones = await _consultarInspeccionDescarga.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada);
+                var inspecciones = await _consultarInspeccionDescarga.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
                 inspecciones = inspecciones.OrderBy(x => x.FechaInspeccion).ToList();
                 var observaciones = new List<ObservacionReporte>();
                 string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "Inspecciones");
@@ -645,7 +645,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                         observaciones.Add(new ObservacionReporte
                         {
                             IdInspeccion = inspeccion.IdCabecera.ToString(),
-                            SSO_MA = observacion.TipoObservacion,
+                            SSO_MA = observacion.TipoObservacion.Equals("MAP")?"MA": observacion.TipoObservacion,
                             ActoCondicion = observacion.DescripcionCondicion,
                             EvidenciaCondicion = observacion.EvidenciaCondicion,
                             DescripcionActoCondicion = observacion.DescripcionActoCondicion,
@@ -666,7 +666,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                             GerenciaInspeccion = inspeccion.Gerencia,
                             ParticipantesInspeccion = inspeccion.Participantes,
                             Asesor = observacion.Asesor.Nombres + " " + observacion.Asesor.Apellidos,
-                            Codigo = inspeccion.Codigo
+                            Codigo = inspeccion.Codigo,
+                            AreaInspeccionada = inspeccion.AreaInspeccionada
                         });
                     }
                 observaciones = observaciones.OrderBy(x => x.FechaInspeccion).ToList();
@@ -676,76 +677,105 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 //indice de observacion
                 int obsIndex = 1;
 
+                //1. Vaciar carpeta temporal del usuario 
+                var tempPath = Path.GetTempPath();
+                var SGATempPath = tempPath + "SGA-Marcobre-v2\\";
+                if (!Directory.Exists(SGATempPath))
+                {
+                    Directory.CreateDirectory(SGATempPath);
+                }
+                var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                if (Directory.Exists(filePath))
+                {
+                    Directory.Delete(filePath, true);
+                    Directory.CreateDirectory(filePath);
+                }
+                var archiveFile = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\archive.zip";
+                if (Directory.Exists(archiveFile))
+                {
+                    Directory.Delete(archiveFile, true);
+                    Directory.CreateDirectory(archiveFile);
+                }
+                var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
+                if (Directory.Exists(archivePath))
+                {
+                    Directory.Delete(archivePath, true);
+                    Directory.CreateDirectory(archivePath);
+                }
+
                 foreach (var observacion in observaciones)
                 {
                     short rowHeight = 850;
                     IRow row = sheet.CreateRow(fila);
 
                     //Aplicar cell style a una fila de observación
-                    for (int i = 1; i <= 21; i++)
+                    for (int i = 1; i <= 22; i++)
                     {
                         row.CreateCell(i);
                         row.GetCell(i).CellStyle = estiloNormal;
                     }
-
-                    ImageProperties evidencia_condicion = new ImageProperties();
-                    ImageProperties evidencia_inspeccion = new ImageProperties();
-
-                    //adaptar el tamaño de la fila al mayor determinado por la imagen
-                    row.Height = rowHeight;
-
-                    if (observacion.EvidenciaCondicion != "[]" && observacion.EvidenciaCondicion != null)
+                    if (incluirEvidencias)
                     {
 
-                        evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 4, rowHeight, imageIndex, "condicion", true);
+                        ImageProperties evidencia_condicion = new ImageProperties();
+                        ImageProperties evidencia_inspeccion = new ImageProperties();
+
+                        //adaptar el tamaño de la fila al mayor determinado por la imagen
+                        row.Height = rowHeight;
+
+                        if (observacion.EvidenciaCondicion != "[]" && observacion.EvidenciaCondicion != null)
+                        {
+
+                            evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 4, rowHeight, imageIndex, "condicion", true);
+                            if (evidencia_condicion != null)
+                            {
+                                rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
+                                imageIndex++;
+                            }
+                        }
+                        if (observacion.EvidenciaImplementacion != "[]" && observacion.EvidenciaImplementacion != null)
+                        {
+                            evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 11, rowHeight, imageIndex, "inspeccion", true);
+                            if (evidencia_inspeccion != null)
+                            {
+                                rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
+                                imageIndex++;
+                            }
+                        }
+                        //adaptar el tamaño de la fila al mayor determinado por la imagen
+                        row.Height = rowHeight;
+                        //rezise images
                         if (evidencia_condicion != null)
                         {
-                            rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
-                            imageIndex++;
+                            if ((evidencia_condicion.extension == ".jpg" ||
+                                evidencia_condicion.extension == ".png" ||
+                                evidencia_condicion.extension == ".jpeg" ||
+                                evidencia_condicion.extension == ".JPG" ||
+                                evidencia_condicion.extension == ".PNG" ||
+                                evidencia_condicion.extension == ".JPEG" &&
+                                evidencia_condicion.extension != null) &&
+                                evidencia_condicion.rowHeight != 0 &&
+                                evidencia_condicion.rowHeight < row.Height)
+                            {
+                                //evidencia_condicion.image.Resize(1.0, (double)evidencia_condicion.rowHeight / row.Height);
+                                evidencia_condicion.image.Resize(0.5, 1.0);
+                            }
                         }
-                    }
-                    if (observacion.EvidenciaImplementacion != "[]" && observacion.EvidenciaImplementacion != null)
-                    {
-                        evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 11, rowHeight, imageIndex, "inspeccion", true);
                         if (evidencia_inspeccion != null)
                         {
-                            rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
-                            imageIndex++;
-                        }
-                    }
-                    //adaptar el tamaño de la fila al mayor determinado por la imagen
-                    row.Height = rowHeight;
-                    //rezise images
-                    if (evidencia_condicion != null)
-                    {
-                        if ((evidencia_condicion.extension == ".jpg" ||
-                            evidencia_condicion.extension == ".png" ||
-                            evidencia_condicion.extension == ".jpeg" ||
-                            evidencia_condicion.extension == ".JPG" ||
-                            evidencia_condicion.extension == ".PNG" ||
-                            evidencia_condicion.extension == ".JPEG" &&
-                            evidencia_condicion.extension != null) &&
-                            evidencia_condicion.rowHeight != 0 &&
-                            evidencia_condicion.rowHeight < row.Height)
-                        {
-                            //evidencia_condicion.image.Resize(1.0, (double)evidencia_condicion.rowHeight / row.Height);
-                            evidencia_condicion.image.Resize(0.5, 1.0);
-                        }
-                    }
-                    if (evidencia_inspeccion != null)
-                    {
-                        if ((evidencia_inspeccion.extension == ".jpg" ||
-                            evidencia_inspeccion.extension == ".png" ||
-                            evidencia_inspeccion.extension == ".jpeg" ||
-                            evidencia_inspeccion.extension == ".JPG" ||
-                            evidencia_inspeccion.extension == ".PNG" ||
-                            evidencia_inspeccion.extension == ".JPEG") &&
-                            evidencia_inspeccion.extension != null &&
-                            evidencia_inspeccion.rowHeight != 0 &&
-                            evidencia_inspeccion.rowHeight < row.Height)
-                        {
-                            //evidencia_inspeccion.image.Resize(1.0, (double)evidencia_inspeccion.rowHeight / row.Height);
-                            evidencia_inspeccion.image.Resize(0.5, 1.0);
+                            if ((evidencia_inspeccion.extension == ".jpg" ||
+                                evidencia_inspeccion.extension == ".png" ||
+                                evidencia_inspeccion.extension == ".jpeg" ||
+                                evidencia_inspeccion.extension == ".JPG" ||
+                                evidencia_inspeccion.extension == ".PNG" ||
+                                evidencia_inspeccion.extension == ".JPEG") &&
+                                evidencia_inspeccion.extension != null &&
+                                evidencia_inspeccion.rowHeight != 0 &&
+                                evidencia_inspeccion.rowHeight < row.Height)
+                            {
+                                //evidencia_inspeccion.image.Resize(1.0, (double)evidencia_inspeccion.rowHeight / row.Height);
+                                evidencia_inspeccion.image.Resize(0.5, 1.0);
+                            }
                         }
                     }
                     int startIndex = 1;
@@ -778,24 +808,26 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     row.GetCell(startIndex + 13).SetCellValue(observacion.ResponsableInspeccion);
                     //-> Fecha Inspección
                     row.GetCell(startIndex + 14).SetCellValue(observacion.FechaInspeccion);
+                    //-> Área Inspeccionada
+                    row.GetCell(startIndex + 15).SetCellValue(observacion.AreaInspeccionada);
                     //-> Riesgo de Fatalidad
-                    row.GetCell(startIndex + 15).SetCellValue(observacion.RiesgoFatalidad);
+                    row.GetCell(startIndex + 16).SetCellValue(observacion.RiesgoFatalidad);
                     //-> Gerencia Responsable Levantamiento
-                    row.GetCell(startIndex + 16).SetCellValue(observacion.GerenciaLevantamiento);
+                    row.GetCell(startIndex + 17).SetCellValue(observacion.GerenciaLevantamiento);
                     //-> Gerencia Responsable de la Inspección
-                    row.GetCell(startIndex + 17).SetCellValue(observacion.GerenciaInspeccion);
+                    row.GetCell(startIndex + 18).SetCellValue(observacion.GerenciaInspeccion);
                     //-> Gerencia Responsable de la Inspección
-                    row.GetCell(startIndex + 18).SetCellValue(observacion.ParticipantesInspeccion);
+                    row.GetCell(startIndex + 19).SetCellValue(observacion.ParticipantesInspeccion);
                     //-> Gerencia Responsable de la Inspección
-                    row.GetCell(startIndex + 19).SetCellValue(observacion.Asesor);
+                    row.GetCell(startIndex + 20).SetCellValue(observacion.Asesor);
                     //-> N° Inspección GESTIONA
-                    row.GetCell(startIndex + 20).SetCellValue(observacion.Codigo);
+                    row.GetCell(startIndex + 21).SetCellValue(observacion.Codigo);
                     XSSFHyperlink UrlLinkLugReg = new XSSFHyperlink(HyperlinkType.Url)
                     {
                         //Address = "https://gestiona.marcobre.com:9190/Inspecciones/DetalleInspeccion?IdCabecera="+(_protector.Protect(observacion.IdInspeccion))
                         Address = "https://gestiona.marcobre.com:9190/Inspecciones/DetalleInspeccionNotificacion?IdCabecera=" + observacion.IdInspeccion
                     };
-                    row.GetCell(startIndex + 20).Hyperlink = (UrlLinkLugReg);
+                    row.GetCell(startIndex + 21).Hyperlink = (UrlLinkLugReg);
 
                     obsIndex++;
                     fila++;
@@ -869,11 +901,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 Directory.Delete(archivePath, true);
                 Directory.CreateDirectory(archivePath);
             }
-            // if (Directory.Exists(filePath))
-            // {
-            //     Directory.Delete(filePath, true);
-            // }
-            // Directory.CreateDirectory(filePath);
 
             //2. Descargar .zip de ftp y guardar en carpeta temporal zip
             Tipo_Info_SGA directorio;
@@ -1045,6 +1072,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             public string ParticipantesInspeccion { get; set; }
             public string Asesor { get; set; }
             public string Codigo { get; set; }
+            public string AreaInspeccionada { get; set; }
+
         }
         private class Estilo
         {

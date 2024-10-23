@@ -15,7 +15,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetDetalle
         {
             _getReportesInspeccionesReadOnlyRepository = getReportesInspeccionesReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesInspeccionesReadOnlyRepository));
         }
-        public async Task<List<DetalleObsxEstadoOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string estado)
+        public async Task<List<DetalleObsxEstadoOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string estado, int usuarioInvolucrado, string tipoObservacion)
         {
             //Dar formato a fechas
             DateTime fInicio, fFinal;
@@ -44,7 +44,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetDetalle
                 case "BRechazadas": enum_estado = EstadosInspeccion.Rechazado; buenaPractica = true; break; 
             }      
 
-            var data =  await _getReportesInspeccionesReadOnlyRepository.GetDetalleObsxEstado(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, enum_estado,buenaPractica);
+            var data =  await _getReportesInspeccionesReadOnlyRepository.GetDetalleObsxEstado(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, enum_estado,buenaPractica, usuarioInvolucrado, tipoObservacion);
             var output = new List<DetalleObsxEstadoOutput>();
             foreach(var item in data)
             {

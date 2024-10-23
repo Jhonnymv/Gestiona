@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetNInspec
 {
     public interface IGetNInspecciones
     {
-        Task<List<DimensionOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin);
+        Task<List<DimensionOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, int usuarioInvolucrado, string tipoObservacion);
     }
 }

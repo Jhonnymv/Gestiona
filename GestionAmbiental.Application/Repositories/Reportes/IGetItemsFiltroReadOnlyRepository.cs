@@ -12,6 +12,6 @@ namespace GestionAmbiental.Application.Repositories.Reportes
         Task<List<Gerencia>> GetGerencias();
         Task<List<Usuario>> GetAsesoresMA();
         Task<List<Usuario>> GetAsesorSSO();
-        Task<List<Usuario>> GetRespLevObs();
+        Task<List<Usuario>> GetUsuarios();
     }
 }

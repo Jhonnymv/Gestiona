@@ -19,6 +19,44 @@ namespace GestionAmbiental.UseCases.Util.Implementation
             _info_SGA = info_SGA;
         }
 
+        //public async Task EncryptFileAsync(string inputFile, string outputFile)
+        //{
+        //    var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
+
+        //    var key = new byte[32];
+        //    var IV = new byte[16];
+
+        //    foreach (var item in dataToEncrypt.Info)
+        //    {
+        //        switch (item.Key)
+        //        {
+        //            case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
+        //            case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
+        //        }
+        //    }
+
+        //    string cryptFile = outputFile;
+        //    FileStream fsCrypt = new FileStream(cryptFile, FileMode.Create);
+
+        //    System.Security.Cryptography.RijndaelManaged RMCrypto = new System.Security.Cryptography.RijndaelManaged();
+
+        //    System.Security.Cryptography.CryptoStream cs = new System.Security.Cryptography.CryptoStream(fsCrypt,
+        //        RMCrypto.CreateEncryptor(key, IV),
+        //        System.Security.Cryptography.CryptoStreamMode.Write);
+
+        //    FileStream fsIn = new FileStream(inputFile, FileMode.Open);
+
+        //    int data;
+        //    while ((data = fsIn.ReadByte()) != -1)
+        //        cs.WriteByte((byte)data);
+
+        //    //fsOut.Close();
+        //    fsIn.Dispose();
+        //    //cs.Close();
+        //    cs.Dispose();
+        //    //fsCrypt.Close();
+        //    fsCrypt.Dispose();
+        //}
         public async Task EncryptFileAsync(string inputFile, string outputFile)
         {
             var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
@@ -35,25 +73,63 @@ namespace GestionAmbiental.UseCases.Util.Implementation
                 }
             }
 
-            string cryptFile = outputFile;
-            FileStream fsCrypt = new FileStream(cryptFile, FileMode.Create);
-
-            System.Security.Cryptography.RijndaelManaged RMCrypto = new System.Security.Cryptography.RijndaelManaged();
-
-            System.Security.Cryptography.CryptoStream cs = new System.Security.Cryptography.CryptoStream(fsCrypt,
-                RMCrypto.CreateEncryptor(key, IV),
-                System.Security.Cryptography.CryptoStreamMode.Write);
-
-            FileStream fsIn = new FileStream(inputFile, FileMode.Open);
-
-            int data;
-            while ((data = fsIn.ReadByte()) != -1)
-                cs.WriteByte((byte)data);
-
-            fsIn.Close();
-            cs.Close();
-            fsCrypt.Close();
+            using (var RMCrypto = new System.Security.Cryptography.RijndaelManaged())
+            {
+                using (var fsCrypt = new FileStream(outputFile, FileMode.Create))
+                {
+                    using (var cs = new System.Security.Cryptography.CryptoStream(fsCrypt,
+                        RMCrypto.CreateEncryptor(key, IV),
+                        System.Security.Cryptography.CryptoStreamMode.Write))
+                    {
+                        using (var fsIn = new FileStream(inputFile, FileMode.Open))
+                        {
+                            int data;
+                            while ((data = fsIn.ReadByte()) != -1)
+                            {
+                                cs.WriteByte((byte)data);
+                            }
+                        } // fsIn.Dispose() se llama automáticamente aquí
+                    } // cs.Dispose() se llama automáticamente aquí
+                } // fsCrypt.Dispose() se llama automáticamente aquí
+            } // RMCrypto.Dispose() se llama automáticamente aquí
         }
+        //public async Task DecryptFileAsync(string inputFile, string outputFile)
+        //{
+        //    var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
+
+        //    var key = new byte[32];
+        //    var IV = new byte[16];
+
+        //    foreach (var item in dataToEncrypt.Info)
+        //    {
+        //        switch (item.Key)
+        //        {
+        //            case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
+        //            case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
+        //        }
+        //    }
+        //    System.Security.Cryptography.RijndaelManaged RMCrypto = new System.Security.Cryptography.RijndaelManaged();
+
+        //    FileStream fsCrypt = new FileStream(inputFile, FileMode.Open);
+
+        //    System.Security.Cryptography.CryptoStream cs = new System.Security.Cryptography.CryptoStream(fsCrypt,
+        //        RMCrypto.CreateDecryptor(key, IV),
+        //        System.Security.Cryptography.CryptoStreamMode.Read);
+
+        //    FileStream fsOut = new FileStream(outputFile, FileMode.Create);
+
+        //    int data;
+        //    while ((data = cs.ReadByte()) != -1)
+        //        fsOut.WriteByte((byte)data);
+
+        //    //fsOut.Close();
+        //    fsOut.Dispose();
+        //    //cs.Close();
+        //    cs.Dispose();
+        //    //fsCrypt.Close();
+        //    fsCrypt.Dispose();
+
+        //}
         public async Task DecryptFileAsync(string inputFile, string outputFile)
         {
             var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
@@ -69,24 +145,26 @@ namespace GestionAmbiental.UseCases.Util.Implementation
                     case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
                 }
             }
-            System.Security.Cryptography.RijndaelManaged RMCrypto = new System.Security.Cryptography.RijndaelManaged();
 
-            FileStream fsCrypt = new FileStream(inputFile, FileMode.Open);
-
-            System.Security.Cryptography.CryptoStream cs = new System.Security.Cryptography.CryptoStream(fsCrypt,
-                RMCrypto.CreateDecryptor(key, IV),
-                System.Security.Cryptography.CryptoStreamMode.Read);
-
-            FileStream fsOut = new FileStream(outputFile, FileMode.Create);
-
-            int data;
-            while ((data = cs.ReadByte()) != -1)
-                fsOut.WriteByte((byte)data);
-
-            fsOut.Close();
-            cs.Close();
-            fsCrypt.Close();
-
+            using (var RMCrypto = new System.Security.Cryptography.RijndaelManaged())
+            {
+                using (var fsCrypt = new FileStream(inputFile, FileMode.Open))
+                {
+                    using (var cs = new System.Security.Cryptography.CryptoStream(fsCrypt,
+                        RMCrypto.CreateDecryptor(key, IV),
+                        System.Security.Cryptography.CryptoStreamMode.Read))
+                    {
+                        using (var fsOut = new FileStream(outputFile, FileMode.Create))
+                        {
+                            int data;
+                            while ((data = cs.ReadByte()) != -1)
+                            {
+                                fsOut.WriteByte((byte)data);
+                            }
+                        } // fsOut.Dispose() se llama automáticamente aquí
+                    } // cs.Dispose() se llama automáticamente aquí
+                } // fsCrypt.Dispose() se llama automáticamente aquí
+            } // RMCrypto.Dispose() se llama automáticamente aquí
         }
     }
 }

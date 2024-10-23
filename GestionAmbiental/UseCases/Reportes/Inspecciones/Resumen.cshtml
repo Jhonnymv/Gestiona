@@ -41,8 +41,8 @@
                         </div>
                         <div class="row input_container">
                             <div class="col-12 col-md-6">
-                                <label asp-for="IdGerenciaInspeccionada"></label>
-                                <select class="form-control" asp-for="IdGerenciaInspeccionada" asp-items="@ViewBag.FiltroGerencias"></select>
+                                <label asp-for="UsuarioInvolucrado"></label>
+                                <select class="form-control" asp-for="UsuarioInvolucrado" asp-items="@ViewBag.FiltroUsuarios"></select>
                             </div>
                         </div>
                     </div>
@@ -64,6 +64,16 @@
                             <div class="col-12 col-md-6">
                                 <label asp-for="Estado"></label>
                                 <select class="form-control" asp-for="Estado" asp-items="@ViewBag.FiltroEstados"></select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label asp-for="TipoObservacion"></label>
+                                <select class="form-control" asp-for="TipoObservacion" asp-items="@ViewBag.FiltroTipoObservacion"></select>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6">
+                                <label asp-for="IncluirEvidencias"></label>
+                                <input type="checkbox" class="form-check" asp-for="IncluirEvidencias" />
                             </div>
                         </div>
                     </div>
@@ -196,6 +206,40 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="dashboard-section col-12 col-lg-12">
+            <div class="dashboard-header">
+                <h5>Estado de Observaciones por Gerencia Inspeccionada</h5>
+            </div>
+            <div class="row">
+                <div class="custom-form justify-content-start w-100 p-0">
+                    <div class="row input_container col-12 col-lg-6">
+                        <div class="col-12">
+                            @*<select id="sel_frec_obs_estado" class="form-control">
+                            <option value="Tod" selected>TODOS</option>
+                            <option value="Reg">Registrado</option>
+                            <option value="Imp">Implementado</option>
+                            <option value="Ven">Vencido</option>
+                            <option value="Apr">Aprobado</option>
+                            <option value="Rec">Rechazado</option>
+                            </select>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area resizable-div" style="height:550px;" id="container_char_estado_observaciones_x_gerencia">
+                                <canvas id="char_estado_observaciones_x_gerencia" style="display: block; height: 100%; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="dashboard-section">
         <div class="dashboard-header">
             <h5>Cantidad de Observaciones</h5>
@@ -638,7 +682,9 @@
             var fechaInicio = $("#FInicio").val();
             var fechaFin = $("#FFin").val();
             var estado = $("#Estado").val();
-            window.location.assign("@Url.Action("DetalleObservacionEstado","ReportesInspecciones")" + "?empresa=" + empresa + "&gerencia=" + gerencia + "&respLevObs=" + respLevObs + "&asesor=" + asesor + "&FechaInicio=" + fechaInicio + "&FechaFin=" + fechaFin + "&estado=" + estado);
+            var usuarioInvolucrado = $("#UsuarioInvolucrado").val();
+            var tipoObservacion = $("#TipoObservacion").val();
+            window.location.assign("@Url.Action("DetalleObservacionEstado", "ReportesInspecciones")" + "?empresa=" + empresa + "&gerencia=" + gerencia + "&respLevObs=" + respLevObs + "&asesor=" + asesor + "&FechaInicio=" + fechaInicio + "&FechaFin=" + fechaFin + "&estado=" + estado + "&usuarioInvolucrado=" + usuarioInvolucrado + "&tipoObservacion=" + tipoObservacion);
         }
         function DescargarObservaciones() {
             Filtrar();
@@ -652,10 +698,25 @@
             var fechaFin = $("#FFin").val();
             var estado = $("#Estado").val();
             var IdGerenciaInspeccionada = $("#IdGerenciaInspeccionada").val();
-            window.location.assign("@Url.Action("DescargarFechas", "DescargaInspeccion")" + "?empresa=" + empresa + "&gerencia=" + gerencia + "&respLevObs=" + respLevObs + "&asesor=" + asesor + "&FechaInicio=" + fechaInicio + "&FechaFin=" + fechaFin + "&estado=" + estado + "&idGerenciaInspeccionada=" + IdGerenciaInspeccionada);
+            var usuarioInvolucrado = $("#UsuarioInvolucrado").val();
+            var IncluirEvidencias = $("#IncluirEvidencias").is(':checked');
+            var tipoObservacion = $("#TipoObservacion").val();
+            window.location.assign("@Url.Action("DescargarFechas", "DescargaInspeccion")" + "?empresa=" + empresa + "&gerencia=" + gerencia + "&respLevObs=" + respLevObs + "&asesor=" + asesor + "&FechaInicio=" + fechaInicio + "&FechaFin=" + fechaFin + "&estado=" + estado + "&idGerenciaInspeccionada=" + IdGerenciaInspeccionada + "&incluirEvidencias=" + IncluirEvidencias + "&usuarioInvolucrado=" + usuarioInvolucrado + "&tipoObservacion=" + tipoObservacion);
             setTimeout(function () {
                 $("#btnAceptarSettings").show();
             }, 5000);
         }
     </script>
+    <style>
+        .resizable-div {
+            height: 150px;
+            min-height: 50px; /* Altura mínima */
+            max-height: 1000px; /* Altura máxima */
+            padding: 10px;
+            border: 1px solid #ccc;
+            overflow: auto;
+            resize: vertical; /* Permite redimensionar solo en la dirección vertical */
+            box-sizing: border-box; /* Asegura que el padding esté dentro del ancho y alto */
+        }
+    </style>
 }

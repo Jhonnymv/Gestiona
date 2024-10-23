@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetBPMAPvsSSO;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetBPMAPvsSSO_Estado;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetDetalleObsxEstado;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetGerenciaInspeccionadaxEstadoObs;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetInspeccionesXFecha;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetItemsFiltro;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetNInspecciones;
@@ -47,6 +48,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         private readonly IGetObsTipoCondicionxNivelRiesgoMA _getObsTipoCondicionxNivelRiesgoMA;
         private readonly IGetObsTipoCondicionxNivelRiesgoSSO _getObsTipoCondicionxNivelRiesgoSSO;
         private readonly IGetDetalleObsxEstado _getDetalleObsxEstado;
+        private readonly IGetGerenciaInspeccionadaxEstadoObs _getGerenciaInspeccionadaxEstadoObs;
 
         private readonly IDataProtector _protector;
 
@@ -67,6 +69,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             IGetObsTipoCondicionxNivelRiesgoMA getObsTipoCondicionxNivelRiesgoMA,
             IGetObsTipoCondicionxNivelRiesgoSSO getObsTipoCondicionxNivelRiesgoSSO,
             IGetDetalleObsxEstado getDetalleObsxEstado,
+            IGetGerenciaInspeccionadaxEstadoObs getGerenciaInspeccionadaxEstadoObs,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
@@ -86,6 +89,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             _getObsTipoCondicionxNivelRiesgoMA = getObsTipoCondicionxNivelRiesgoMA;
             _getObsTipoCondicionxNivelRiesgoSSO = getObsTipoCondicionxNivelRiesgoSSO;
             _getDetalleObsxEstado = getDetalleObsxEstado;
+            _getGerenciaInspeccionadaxEstadoObs = getGerenciaInspeccionadaxEstadoObs;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
         }
 
@@ -109,7 +113,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
                 var filtroGerencias = itemsFiltro.Gerencias.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var filtroRespLevObs = itemsFiltro.RespLevObs.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var filtroRespLevObs = itemsFiltro.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 filtroRespLevObs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var grupoMA = new SelectListGroup() { Name = "Asesores MA", Disabled = false };
@@ -128,144 +132,155 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
                     new SelectListItem("Rechazado (Buenas Prácticas)", "Rechazado", false)
                 };
 
+                var filtroUsuarios = itemsFiltro.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                filtroUsuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var filtroTipoObservacion = new List<SelectListItem> {
+                    new SelectListItem("--SELECCIONE--", "", true),
+                    new SelectListItem("MA", "MAP", false),
+                    new SelectListItem("SSO", "SSO", false),
+                };
+
                 ViewBag.FiltroEmpresas = filtroEmpresas;
                 ViewBag.FiltroGerencias = filtroGerencias;
                 ViewBag.FiltroRespLevObs = filtroRespLevObs;
                 ViewBag.FiltroAsesor = filtroAsesor;
                 ViewBag.FiltroEstados = filtroEstados;
+                ViewBag.FiltroUsuarios = filtroUsuarios;
+                ViewBag.FiltroTipoObservacion = filtroTipoObservacion;
                 ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
                 ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
 
                 return View();
             }
         }
-        public async Task<IActionResult> ActualizarContadorInspecciones(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin,string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> ActualizarContadorInspecciones(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin,string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
-            var nInspecciones = await _getNInspecciones.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin);
+            var nInspecciones = await _getNInspecciones.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, usuarioInvolucrado, tipoObservacion);
             dynamic response = new
             {
                 nInspecciones = nInspecciones
             };
             return Ok(response);
         }
-        public async Task<IActionResult> ActualizarInspeccionesXFecha(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string frecuencia, string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> ActualizarInspeccionesXFecha(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string frecuencia, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
-            var inspeccionesXFecha = await _getInspeccionesXFecha.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, frecuencia, estado, idGerenciaInspeccionada);
+            var inspeccionesXFecha = await _getInspeccionesXFecha.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, frecuencia, estado, idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
             dynamic response = new
             {
                 inspeccionesXFecha = inspeccionesXFecha
             };
             return Ok(response);
         }
-        public async Task<IActionResult> ActualizarObservacionesXFecha(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string frecuencia, string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> ActualizarObservacionesXFecha(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string frecuencia, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
-            var observacionesXFecha = await _getObservacionesXFecha.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, frecuencia, estado, idGerenciaInspeccionada);
+            var observacionesXFecha = await _getObservacionesXFecha.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, frecuencia, estado, idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
             dynamic response = new
             {
                 observacionesXFecha = observacionesXFecha
             };
             return Ok(response);
         }
-        public async Task<IActionResult> ActualizarContadorObservaciones(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> ActualizarContadorObservaciones(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
-            var nObservaciones = await _getNObservaciones.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada);
+            var nObservaciones = await _getNObservaciones.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
             dynamic response = new
             {
                 nObservaciones = nObservaciones
             };
             return Ok(response);
         }
-        public async Task<IActionResult> ActualizarObsMAPvsSSO(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> ActualizarObsMAPvsSSO(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
-            var mapvssso = await _getObsMAPvsSSO.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada);
+            var mapvssso = await _getObsMAPvsSSO.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
             dynamic response = new
             {
                 mapvssso = mapvssso
             };
             return Ok(response);
         }
-        public async Task<IActionResult> ActualizarObsMAPvsSSO_x_Estado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> ActualizarObsMAPvsSSO_x_Estado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
-            var mapvssso = await _getObsMAPvsSSO_Estado.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada);
+            var mapvssso = await _getObsMAPvsSSO_Estado.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
             dynamic response = new
             {
                 mapvssso = mapvssso
             };
             return Ok(response);
         }
-        public async Task<IActionResult> ActualizarBPMAPvsSSO(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> ActualizarBPMAPvsSSO(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
-            var mapvssso = await _getBPMAPvsSSO.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada);
+            var mapvssso = await _getBPMAPvsSSO.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
             dynamic response = new
             {
                 mapvssso = mapvssso
             };
             return Ok(response);
         }
-        public async Task<IActionResult> ActualizarBPMAPvsSSO_x_Estado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> ActualizarBPMAPvsSSO_x_Estado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
-            var mapvssso = await _getBPMAPvsSSO_Estado.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado,idGerenciaInspeccionada);
+            var mapvssso = await _getBPMAPvsSSO_Estado.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado,idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
             dynamic response = new
             {
                 mapvssso = mapvssso
             };
             return Ok(response);
         }
-        public async Task<IActionResult> ActualizarObsNivelRiesgoMA(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> ActualizarObsNivelRiesgoMA(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
-            var nivelRiesgoMA = await _getObsNivelRiesgoMA.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada);
+            var nivelRiesgoMA = await _getObsNivelRiesgoMA.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
             dynamic response = new
             {
                 nivelRiesgoMA = nivelRiesgoMA
             };
             return Ok(response);
         }
-        public async Task<IActionResult> ActualizarObsNivelRiesgoSSO(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> ActualizarObsNivelRiesgoSSO(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
-            var nivelRiesgoSSO = await _getObsNivelRiesgoSSO.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada);
+            var nivelRiesgoSSO = await _getObsNivelRiesgoSSO.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
             dynamic response = new
             {
                 nivelRiesgoSSO = nivelRiesgoSSO
             };
             return Ok(response);
         }
-        public async Task<IActionResult> ActualizarObsClasificacionMA(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> ActualizarObsClasificacionMA(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
-            var clasificacionMA = await _getObsClasificacionMA.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado,idGerenciaInspeccionada);
+            var clasificacionMA = await _getObsClasificacionMA.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado,idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
             dynamic response = new
             {
                 clasificacionMA = clasificacionMA
             };
             return Ok(response);
         }
-        public async Task<IActionResult> ActualizarObsClasificacionSSO(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> ActualizarObsClasificacionSSO(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
-            var clasificacionSSO = await _getObsClasificacionSSO.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado,idGerenciaInspeccionada);
+            var clasificacionSSO = await _getObsClasificacionSSO.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado,idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
             dynamic response = new
             {
                 clasificacionSSO = clasificacionSSO
             };
             return Ok(response);
         }
-        public async Task<IActionResult> ActualizarObsTipoCondicionxNivelRiesgoMA(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> ActualizarObsTipoCondicionxNivelRiesgoMA(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
-            var tipoNivelRiesgoMA = await _getObsTipoCondicionxNivelRiesgoMA.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado,idGerenciaInspeccionada);
+            var tipoNivelRiesgoMA = await _getObsTipoCondicionxNivelRiesgoMA.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado,idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
             dynamic response = new
             {
                 tipoNivelRiesgoMA = tipoNivelRiesgoMA
             };
             return Ok(response);
         }
-        public async Task<IActionResult> ActualizarObsTipoCondicionxNivelRiesgoSSO(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> ActualizarObsTipoCondicionxNivelRiesgoSSO(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
-            var tipoNivelRiesgoSSO = await _getObsTipoCondicionxNivelRiesgoSSO.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada);
+            var tipoNivelRiesgoSSO = await _getObsTipoCondicionxNivelRiesgoSSO.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
             dynamic response = new
             {
                 tipoNivelRiesgoSSO = tipoNivelRiesgoSSO
             };
             return Ok(response);
         }
-        public IActionResult DetalleObservacionEstado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
+        public IActionResult DetalleObservacionEstado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int usuarioInvolucrado, string tipoObservacion)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -287,9 +302,9 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             }
         }
         [HttpPost]
-        public async Task<IActionResult> GetTablaObservacionesxEstado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado,int pag,int rpp)
+        public async Task<IActionResult> GetTablaObservacionesxEstado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado,int pag,int rpp, int usuarioInvolucrado, string tipoObservacion)
         {
-            var data = await _getDetalleObsxEstado.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado);
+            var data = await _getDetalleObsxEstado.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, usuarioInvolucrado, tipoObservacion);
             data = data.OrderByDescending(x => x.Codigo).ToList();
             var nObs = data.Count();
             int nPaginas = nObs % rpp != 0 ? (nObs / rpp) + 1 : nObs / rpp;
@@ -350,6 +365,40 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
                 paginador = paginador
             };
             return Ok(response);
+        }
+        public async Task<IActionResult> ActualizarGerenciaInspeccionadaxEstadoObs(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
+        {
+            var gerenciaInspeccionadaxEstadoObs = await _getGerenciaInspeccionadaxEstadoObs.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
+            List<GerenciayObsxEstado> datosOrganizados = new List<GerenciayObsxEstado>();
+            
+
+            foreach (var dato in gerenciaInspeccionadaxEstadoObs)
+            {
+                datosOrganizados.Add(new GerenciayObsxEstado
+                {
+                    GerenciaInspeccionada = dato.FirstOrDefault(x=>x.Index.Equals(0)).NombrePadre,
+                    Total = dato.FirstOrDefault(x => x.Index.Equals(0)).Valor,
+                    Pendientes = dato.FirstOrDefault(x => x.Index.Equals(1)).Valor,
+                    Verificacion = dato.FirstOrDefault(x => x.Index.Equals(2)).Valor,
+                    Vencido = dato.FirstOrDefault(x => x.Index.Equals(3)).Valor,
+                    Aprobado = dato.FirstOrDefault(x => x.Index.Equals(4)).Valor,
+                });
+            }
+            datosOrganizados = datosOrganizados.Where(x=>x.Total>0).OrderByDescending(x => x.Total).ToList();
+            dynamic response = new
+            {
+                GerenciaInspeccionadaxEstadoObs = datosOrganizados
+            };
+            return Ok(response);
+        }
+        private class GerenciayObsxEstado
+        {
+            public string GerenciaInspeccionada { get; set; }
+            public double Pendientes { get; set; }
+            public double Verificacion { get; set; }
+            public double Vencido { get; set; }
+            public double Aprobado { get; set; }
+            public double Total { get; set; }
         }
     }
 }

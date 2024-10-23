@@ -24,7 +24,13 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         public int IdRespLev { get; set; }
         [DisplayName("Gerencia Inspeccionada:")]
         public int IdGerenciaInspeccionada { get; set; }
+        [DisplayName("Responsable de la Inspección o Participantes de la Inspección:")]
+        public int UsuarioInvolucrado { get; set; }
         [DisplayName("Estado:")]
         public string Estado { get; set; }
+        [DisplayName("Tipo Observación:")]
+        public string TipoObservacion { get; set; }
+        [DisplayName("¿Inluir Evidencias?")]
+        public bool IncluirEvidencias { get; set; }
     }
 }

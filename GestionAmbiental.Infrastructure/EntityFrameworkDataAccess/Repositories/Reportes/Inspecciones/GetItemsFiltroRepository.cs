@@ -66,7 +66,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
-        public async Task<List<Usuario>> GetRespLevObs()
+        public async Task<List<Usuario>> GetUsuarios()
         {
             var usuarios = await _context.Usuarios.Where(x => !x.Id_Rol.Equals((int)InspeccionRol.Admin) && x.Estado.Equals("ACT")).ToListAsync();
             var output = new List<Usuario>();

@@ -19,7 +19,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetItemsFi
 
             output.AsesoresMAP = await _filtroReadOnlyRepository.GetAsesoresMA();
             output.AsesoresSSO = await _filtroReadOnlyRepository.GetAsesorSSO();
-            output.RespLevObs = await _filtroReadOnlyRepository.GetRespLevObs();
+            output.Usuarios = await _filtroReadOnlyRepository.GetUsuarios();
             output.Empresas = await _filtroReadOnlyRepository.GetEmpresas();
             output.Gerencias = await _filtroReadOnlyRepository.GetGerencias();
 

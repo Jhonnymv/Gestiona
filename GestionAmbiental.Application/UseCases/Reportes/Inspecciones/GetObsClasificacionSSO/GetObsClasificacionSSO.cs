@@ -16,7 +16,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsClas
             _getReportesInspeccionesReadOnlyRepository = getReportesInspeccionesReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesInspeccionesReadOnlyRepository));
         }
 
-        public async Task<List<DimensionOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<List<DimensionOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             //Dar formato a fechas
             DateTime fInicio, fFinal;
@@ -39,7 +39,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsClas
             //    case "Apr": enum_estado = EstadosInspeccion.Aprobado; break;
             //    case "Rec": enum_estado = EstadosInspeccion.Rechazado; break;
             //}
-            var data = await _getReportesInspeccionesReadOnlyRepository.GetObsClasificacionSSO(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, estado,idGerenciaInspeccionada);
+            var data = await _getReportesInspeccionesReadOnlyRepository.GetObsClasificacionSSO(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, estado,idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
 
             var output = new List<DimensionOutput>();
             foreach (var item in data)

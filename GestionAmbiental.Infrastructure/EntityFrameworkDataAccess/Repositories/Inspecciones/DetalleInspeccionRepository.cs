@@ -113,7 +113,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return detalle;
         }
-        public async Task<List<InspeccionCabecera>> GetInspeccionesYObservaciones(int empresa, int gerencia, int respLevObs, int asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<List<InspeccionCabecera>> GetInspeccionesYObservaciones(int empresa, int gerencia, int respLevObs, int asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             var output = new List<InspeccionCabecera>();
             var usuarios = await _context.Usuarios.ToListAsync();
@@ -132,18 +132,30 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 empresa != 0 ? x.Id_Empresa.Equals(empresa) : x.Id_Empresa.Equals(x.Id_Empresa) &&
                 gerencia != 0 ? x.Id_Gerencia.Equals(gerencia) : x.Id_Gerencia.Equals(x.Id_Gerencia)
             ).ToList();
+
             if (idGerenciaInspeccionada != 0)
-                cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();                       
+                cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
+
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x =>
+                (x.Responsable_Inspeccion != null && x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"')) ||
+                (x.Participantes_Inspección != null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
 
             var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
+            if (tipoObservacion != null)
+            {
+                observaciones = observaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
             observaciones = observaciones.Where(x =>
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera)).ToList();
+
             observaciones = observaciones.Where(x =>
                 (respLevObs != 0 ? x.Id_Responsable_Marcobre.Equals(respLevObs) : x.Id_Responsable_Marcobre.Equals(x.Id_Responsable_Marcobre) ||
                 respLevObs != 0 ? x.Id_Responsable_Marcobre2.Equals(respLevObs) : x.Id_Responsable_Marcobre2.Equals(x.Id_Responsable_Marcobre2)) && 
                 asesor != 0 ? x.Id_Asesor.Equals(asesor) : x.Id_Asesor.Equals(x.Id_Asesor)
             ).ToList();
+
 
             if (estado != "")
             {

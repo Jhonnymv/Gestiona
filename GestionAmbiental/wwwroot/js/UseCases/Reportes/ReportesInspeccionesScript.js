@@ -2,6 +2,8 @@
 var empresa = $("#IdEmpresa").val();
 var asesor = $("#IdAsesor").val();
 var respLev = $("#IdRespLev").val();
+var usuarioInvolucrado = $("#UsuarioInvolucrado").val();
+var tipoObservacion = $("#TipoObservacion").val();
 var fechaInicio = "";
 var fechaFin = "";
 
@@ -49,6 +51,10 @@ var graph_sso_med_tipo;
 var graph_sso_alt_tipo;
 var graph_sso_noaplica_tipo;
 
+//Variables gráfico Gerencias Inspeccionadas por Estado de Observaciones
+var data_obs_gerencias_estado = [];
+var graph_obs_gerencias_estado;
+
 
 $(document).ready(function () {
     ActualizarInspeccionesFecha();
@@ -74,7 +80,9 @@ function ActualizarInspeccionesFecha() {
                 "asesor": $("#IdAsesor").val(),
                 "respLevObs": $("#IdRespLev").val(),
                 "FechaInicio": $("#FInicio").val(),
-                "FechaFin": $("#FFin").val()
+                "FechaFin": $("#FFin").val(),
+                "usuarioInvolucrado": $("#UsuarioInvolucrado").val(),
+                "tipoObservacion": $("#TipoObservacion").val()
             },
             success: (response) => {
                 var nObs = response.nInspecciones;
@@ -91,6 +99,7 @@ function ActualizarInspeccionesFecha() {
                 ActualizarDatosGraficoSSO_NR();
                 ActualizarDatosGraficoMA_Clas();
                 ActualizarDatosGraficoSSO_Clas();
+                ActualizarDatosGraficoGerenciasInspeccionadaxEstadoObservaciones();
             }
         });
 
@@ -122,7 +131,9 @@ function ActualizarInspeccionesXFecha() {
             "FechaFin": $("#FFin").val(),
             "frecuencia": $("#sel_frec_insp_fecha").val(),
             "estado": $("#Estado").val(),
-            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val(),
+            "usuarioInvolucrado": $("#UsuarioInvolucrado").val(),
+            "tipoObservacion": $("#TipoObservacion").val()
         },
         traditional: true,
         success: (response) => {
@@ -224,8 +235,9 @@ function ActualizarContadorOxFecha() {
             "FechaFin": $("#FFin").val(),
             "frecuencia": $("#sel_frec_insp_fecha").val(),
             "estado": $("#Estado").val(),
-            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
-
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val(),
+            "usuarioInvolucrado": $("#UsuarioInvolucrado").val(),
+            "tipoObservacion": $("#TipoObservacion").val()
         },
         traditional: true,
         success: (response) => {
@@ -337,7 +349,9 @@ function GetDataContadorOxE() {
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
             "estado": $("#Estado").val(),
-            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val(),
+            "usuarioInvolucrado": $("#UsuarioInvolucrado").val(),
+            "tipoObservacion": $("#TipoObservacion").val()
         },
         success: (response) => {
             var nObs = response.nObservaciones;
@@ -386,7 +400,9 @@ function ActualizaMAPvsSSO() {
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
             "estado": $("#Estado").val(),
-            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val(),
+            "usuarioInvolucrado": $("#UsuarioInvolucrado").val(),
+            "tipoObservacion": $("#TipoObservacion").val()
         },
         traditional: true,
         success: (response) => {
@@ -476,7 +492,9 @@ function ActualizarDatosGraficoMAP_SSO_Estado() {
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
             "estado": $("#Estado").val(),
-            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val(),
+            "usuarioInvolucrado": $("#UsuarioInvolucrado").val(),
+            "tipoObservacion": $("#TipoObservacion").val()
         },
         traditional: true,
         success: (response) => {
@@ -572,7 +590,9 @@ function ActualizaBPMAPvsSSO() {
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
             "estado": $("#Estado").val(),
-            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val(),
+            "usuarioInvolucrado": $("#UsuarioInvolucrado").val(),
+            "tipoObservacion": $("#TipoObservacion").val()
         },
         traditional: true,
         success: (response) => {
@@ -662,7 +682,9 @@ function ActualizarDatosGraficoBPMAP_SSO_Estado() {
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
             "estado": $("#Estado").val(),
-            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val(),
+            "usuarioInvolucrado": $("#UsuarioInvolucrado").val(),
+            "tipoObservacion": $("#TipoObservacion").val()
         },
         traditional: true,
         success: (response) => {
@@ -769,7 +791,9 @@ function ActualizarDatosGraficoMA_NR() {
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
             "estado": $("#Estado").val(),
-            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val(),
+            "usuarioInvolucrado": $("#UsuarioInvolucrado").val(),
+            "tipoObservacion": $("#TipoObservacion").val()
         },
         traditional: true,
         success: (response) => {
@@ -860,7 +884,9 @@ function ActualizarDatosGraficoSSO_NR() {
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
             "estado": $("#Estado").val(),
-            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val(),
+            "usuarioInvolucrado": $("#UsuarioInvolucrado").val(),
+            "tipoObservacion": $("#TipoObservacion").val()
         },
         traditional: true,
         success: (response) => {
@@ -951,7 +977,9 @@ function ActualizarDatosGraficoMA_Clas() {
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
             "estado": $("#Estado").val(),
-            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val(),
+            "usuarioInvolucrado": $("#UsuarioInvolucrado").val(),
+            "tipoObservacion": $("#TipoObservacion").val()
         },
         traditional: true,
         success: (response) => {
@@ -1042,7 +1070,9 @@ function ActualizarDatosGraficoSSO_Clas() {
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
             "estado": $("#Estado").val(),
-            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val(),
+            "usuarioInvolucrado": $("#UsuarioInvolucrado").val(),
+            "tipoObservacion": $("#TipoObservacion").val()
         },
         traditional: true,
         success: (response) => {
@@ -1134,7 +1164,9 @@ function ActualizarDatosGraficoMA_NR_Tipo() {
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
             "estado": $("#Estado").val(),
-            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val(),
+            "usuarioInvolucrado": $("#UsuarioInvolucrado").val(),
+            "tipoObservacion": $("#TipoObservacion").val()
         },
         traditional: true,
         success: (response) => {
@@ -1391,7 +1423,9 @@ function ActualizarDatosGraficoSSO_NR_Tipo() {
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
             "estado": $("#Estado").val(),
-            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val(),
+            "usuarioInvolucrado": $("#UsuarioInvolucrado").val(),
+            "tipoObservacion": $("#TipoObservacion").val()
         },
         traditional: true,
         success: (response) => {
@@ -1635,3 +1669,159 @@ function CrearGraficoSSO_Noaplica_Tipo(labels, data) {
             }
         });
 }
+
+//Para gráfico Gerencias Inspeccionada x estado de observaciones
+function ActualizarDatosGraficoGerenciasInspeccionadaxEstadoObservaciones() {
+    $.ajax({
+        type: "POST",
+        url: "/ReportesInspecciones/ActualizarGerenciaInspeccionadaxEstadoObs",
+        data: {
+            "gerencia": $("#IdGerencia").val(),
+            "empresa": $("#IdEmpresa").val(),
+            "asesor": $("#IdAsesor").val(),
+            "respLevObs": $("#IdRespLev").val(),
+            "FechaInicio": $("#FInicio").val(),
+            "FechaFin": $("#FFin").val(),
+            "estado": $("#Estado").val(),
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val(),
+            "usuarioInvolucrado": $("#UsuarioInvolucrado").val(),
+            "tipoObservacion": $("#TipoObservacion").val()
+        },
+        traditional: true,
+        success: (response) => {
+            console.log(response)
+            if (data_obs_gerencias_estado.length > 0) {
+                //Actualizar contador
+                data_obs_gerencias_estado = response.gerenciaInspeccionadaxEstadoObs;
+                var labels = [];
+                var dataTotal = [];
+                var dataPendiente = [];
+                var dataVerificacion = [];
+                var dataVencido = [];
+                var dataAprobado = [];
+
+                for (var i = 0; i < data_obs_gerencias_estado.length; i++) {
+                    labels.push(data_obs_gerencias_estado[i].gerenciaInspeccionada);
+                    dataTotal.push(data_obs_gerencias_estado[i].total);
+                    dataPendiente.push(data_obs_gerencias_estado[i].pendientes);
+                    dataVerificacion.push(data_obs_gerencias_estado[i].verificacion);
+                    dataVencido.push(data_obs_gerencias_estado[i].vencido);
+                    //dataAprobado.push(data_obs_gerencias_estado[i].aprobado);
+                }
+                //Actualizar gráfica
+                graph_obs_gerencias_estado.data.labels = labels;
+                //graph_obs_gerencias_estado.data.datasets[0].data = dataTotal;
+                graph_obs_gerencias_estado.data.datasets[0].data = dataPendiente;
+                graph_obs_gerencias_estado.data.datasets[1].data = dataVerificacion;
+                graph_obs_gerencias_estado.data.datasets[2].data = dataVencido;
+                //graph_obs_gerencias_estado.data.datasets[3].data = dataAprobado;
+                graph_obs_gerencias_estado.options.scales.yAxes[0].ticks.stepSize = Math.max(dataTotal) / 10;
+                graph_obs_gerencias_estado.update();
+            }
+            else {
+                //Actualizar contador
+                data_obs_gerencias_estado = response.gerenciaInspeccionadaxEstadoObs;
+                var labels = [];
+                var dataTotal = [];
+                var dataPendiente = [];
+                var dataVerificacion = [];
+                var dataVencido = [];
+                var dataAprobado = [];
+
+
+                for (var i = 0; i < data_obs_gerencias_estado.length; i++) {
+                    labels.push(data_obs_gerencias_estado[i].gerenciaInspeccionada);
+                    dataTotal.push(data_obs_gerencias_estado[i].total);
+                    dataPendiente.push(data_obs_gerencias_estado[i].pendientes);
+                    dataVerificacion.push(data_obs_gerencias_estado[i].verificacion);
+                    dataVencido.push(data_obs_gerencias_estado[i].vencido);
+                    dataAprobado.push(data_obs_gerencias_estado[i].aprobado);
+                }
+                //Crear gráfica
+                CrearGraficoGerenciasInspeccionadaxEstadoObservaciones(labels, Math.max(dataTotal) / 10, dataTotal, dataPendiente, dataVerificacion, dataVencido, dataAprobado);
+            }
+        }
+    });
+}
+function CrearGraficoGerenciasInspeccionadaxEstadoObservaciones(labels, stepSize, total, pendientes, verificacion, vencidos,aprobados) {
+    graph_obs_gerencias_estado = new Chart(
+        document.getElementById("char_estado_observaciones_x_gerencia"),
+        {
+            "type": "horizontalBar",
+            "data": {
+                "labels": labels,
+                "datasets": [
+                    //{
+                    //    "label": "Totales",
+                    //    "data": total,
+                    //    "fill": false,
+                    //    "backgroundColor": "#36b9cc",
+                    //    "borderColor": "#36b9cc",
+                    //    "lineTension": 0.1
+                    //},
+                    {
+                        "label": "Pendientes de Implementación",
+                        "data": pendientes,
+                        "fill": false,
+                        "backgroundColor": "#00caca",
+                        "borderColor": "#00caca",
+                        "lineTension": 0.1
+                    },
+                    {
+                        "label": "Pendientes de Verificación",
+                        "data": verificacion,
+                        "fill": false,
+                        "backgroundColor": "#0050ca",
+                        "borderColor": "#0050ca",
+                        "lineTension": 0.1
+                    },
+                    {
+                        "label": "Vencidos",
+                        "data": vencidos,
+                        "fill": false,
+                        "backgroundColor": "#ff0000",
+                        "borderColor": "#ff0000",
+                        "lineTension": 0.1
+                    },
+                    //{
+                    //    "label": "Aprobados",
+                    //    "data": aprobados,
+                    //    "fill": false,
+                    //    "backgroundColor": "#00ca15",
+                    //    "borderColor": "#00ca15",
+                    //    "lineTension": 0.1
+                    //},
+                ]
+            },
+            "options": {
+                responsive: true, // Habilita la respuesta dinámica
+                maintainAspectRatio: false, // Permite cambiar el tamaño sin mantener la relación de aspecto
+                "scales": {
+                    'yAxes': [{
+                        //stacked: true,
+                        'ticks': {
+                            'stepSize': stepSize,
+                            'beginAtZero': true
+                        }
+                    }]
+                },
+                "legend": {
+                    "labels": {
+                        // This more specific font property overrides the global property
+                        fontColor: 'black'
+                    }
+                },
+                "plugins": {
+                    datalabels: {
+                        color: 'white',
+                        defaultFontSize: 15
+                    }
+                }
+            }
+        });
+    //console.log(graph_obs_gerencias_estado)
+}
+const resizeObserver_Chart_estado_observaciones_x_gerencia = new ResizeObserver(() => {
+    graph_obs_gerencias_estado.resize();
+});
+resizeObserver_Chart_estado_observaciones_x_gerencia.observe(document.getElementById('container_char_estado_observaciones_x_gerencia'));

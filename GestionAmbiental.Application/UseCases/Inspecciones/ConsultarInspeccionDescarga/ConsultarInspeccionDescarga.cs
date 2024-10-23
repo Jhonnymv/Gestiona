@@ -24,7 +24,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.ConsultarInspeccion
             return cabecera;
         }
 
-        public async Task<List<InspeccionCabecera>> Execute(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<List<InspeccionCabecera>> Execute(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             DateTime fInicio, fFinal;
             if (FechaInicio != null)
@@ -37,7 +37,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.ConsultarInspeccion
             else
                 fFinal = DateTime.MaxValue;
             //Obtener valores
-            return await _detalleInspeccionReadOnlyRepository.GetInspeccionesYObservaciones(empresa, gerencia, respLevObs, asesor, fInicio, fFinal,estado,idGerenciaInspeccionada);
+            return await _detalleInspeccionReadOnlyRepository.GetInspeccionesYObservaciones(empresa, gerencia, respLevObs, asesor, fInicio, fFinal,estado,idGerenciaInspeccionada,usuarioInvolucrado, tipoObservacion);
         }
     }
 }

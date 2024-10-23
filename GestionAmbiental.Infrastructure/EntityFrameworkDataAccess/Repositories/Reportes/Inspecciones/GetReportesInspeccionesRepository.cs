@@ -2,6 +2,7 @@
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Reportes;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -18,19 +19,31 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-        public async Task<List<Dimension>> GetNInspecciones(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin)
+        public async Task<List<Dimension>> GetNInspecciones(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, int usuarioInvolucrado, string tipoObservacion)
         {
-            var observaciones = await _context.Inspecciones_Detalle.Where(x =>
+            var tempObservaciones = await _context.Inspecciones_Detalle.Where(x =>
                 x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
                 x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor) &&
                 !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString())))
-                .Select(x => x.Id_Inspeccion_Cabecera)
+                .ToListAsync();
+            
+            if (tipoObservacion != null)
+            {
+                tempObservaciones = tempObservaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
+
+            var observaciones = tempObservaciones.Select(x => x.Id_Inspeccion_Cabecera)
                 .Distinct()
+                .ToList();
+            var temp_cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
+                !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())))
                 .ToListAsync();
 
-            var temp_cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
-                !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString())|| x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())))
-                .ToListAsync();
+            if (usuarioInvolucrado != 0)
+                temp_cabeceras = temp_cabeceras.Where(x =>
+                (x.Responsable_Inspeccion!=null &&   x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
+
             var cabeceras = temp_cabeceras.Where(x =>
                 observaciones.Contains(x.Id_Inspeccion_Cabecera) &&
                 x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
@@ -39,6 +52,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Inspeccion <= FechaFin)
                 .GroupBy(x => x.Estado)
                 .ToList();
+
 
             var output = new List<Dimension>
             {
@@ -53,11 +67,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Dimension>> GetInspeccionesXFecha(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string frecuencia, string estado, int idGerenciaInspeccionada)
+        public async Task<List<Dimension>> GetInspeccionesXFecha(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string frecuencia, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             var output = new List<Dimension>();
 
             var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+
+           if (tipoObservacion != null)
+            {
+                tempObservaciones = tempObservaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
+
             if (estado != null && estado != "")
             {
 
@@ -112,6 +132,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             if (idGerenciaInspeccionada != 0)
                 cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
+
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x =>
+                (x.Responsable_Inspeccion!=null && x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
 
             if (frecuencia.Equals("Diario"))
             {
@@ -288,7 +313,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<List<Dimension>>> GetObservacionesXFecha(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string frecuencia, string estado, int idGerenciaInspeccionada)
+        public async Task<List<List<Dimension>>> GetObservacionesXFecha(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string frecuencia, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             var output = new List<List<Dimension>>();
             var outputObs = new List<Dimension>();
@@ -304,8 +329,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             if (idGerenciaInspeccionada != 0)
                 cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x =>
+                (x.Responsable_Inspeccion!=null &&   x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
 
             var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
+
+           if (tipoObservacion != null)
+            {
+                observaciones = observaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
 
             if (estado != null && estado != "")
             {
@@ -349,7 +383,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 //x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
                 x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
                 x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor)).ToList();
-            observaciones = observaciones.Where(x => 
+            observaciones = observaciones.Where(x =>
                 !x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
@@ -380,7 +414,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     var diaAnio = FechaFin.AddDays(-i).DayOfYear;
                     lstDiasSinValor.Add(new Dimension(FechaFin.AddDays(-i).ToString("dd MMMM").Substring(0, 6), 0, (FechaFin.AddDays(-i).Year * 1000) + diaAnio));
                 }
-                if (obsXInsp.Count > 0||bpXInsp.Count>0)
+                if (obsXInsp.Count > 0 || bpXInsp.Count > 0)
                 {
                     var frec_obs_x_fecha = new List<ObsXFecha>();
                     var frec_bp_x_fecha = new List<ObsXFecha>();
@@ -419,9 +453,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             else if (frecuencia.Equals("Semanal"))
             {
                 CultureInfo cul = CultureInfo.CurrentCulture;
-                var data = cabeceras.Select(x => new {
+                var data = cabeceras.Select(x => new
+                {
                     woy = cul.Calendar.GetWeekOfYear(x.Fecha_Inspeccion, CalendarWeekRule.FirstDay, DayOfWeek.Monday).ToString().PadLeft(2, '0') + " " + x.Fecha_Inspeccion.ToString("yyyy"),
-                    cabecera = x.Id_Inspeccion_Cabecera }).ToList();
+                    cabecera = x.Id_Inspeccion_Cabecera
+                }).ToList();
                 var frec_cabeceras = data.GroupBy(x => x.woy).ToList();
 
                 //var frec_cabeceras = cabeceras.GroupBy(x => cul.Calendar.GetWeekOfYear(x.Fecha_Inspeccion, CalendarWeekRule.FirstDay, DayOfWeek.Monday)).ToList();
@@ -625,9 +661,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             output.Add(outputObs);
             output.Add(outputBP);
-            return output; 
+            return output;
         }
-        public async Task<List<Dimension>> GetNObservaciones(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<List<Dimension>> GetNObservaciones(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                 !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
@@ -640,10 +676,20 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             if (idGerenciaInspeccionada != 0)
                 cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
 
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x =>
+                (x.Responsable_Inspeccion!=null &&   x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
+
             var tempObservaciones = await _context.Inspecciones_Detalle.Where(x =>
                 cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()))
                 .ToListAsync();
+
+           if (tipoObservacion != null)
+            {
+                tempObservaciones = tempObservaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
 
             if (estado != null && estado != "")
             {
@@ -722,7 +768,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Dimension>> GetObsMAPvsSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<List<Dimension>> GetObsMAPvsSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                 x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
@@ -734,7 +780,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             if (idGerenciaInspeccionada != 0)
                 cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
 
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x =>
+                (x.Responsable_Inspeccion!=null &&   x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
+
             var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+
+           if (tipoObservacion != null)
+            {
+                tempObservaciones = tempObservaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
+
             if (estado != null && estado != "")
             {
 
@@ -789,7 +846,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<List<Dimension>>> GetObsMAPvsSSO_Estado(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<List<List<Dimension>>> GetObsMAPvsSSO_Estado(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                 !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
@@ -798,10 +855,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Inspeccion >= FechaInicio &&
                 x.Fecha_Inspeccion <= FechaFin)
                 .ToListAsync();
+
             if (idGerenciaInspeccionada != 0)
                 cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
 
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x =>
+                (x.Responsable_Inspeccion!=null &&   x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
+
             var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+
+           if (tipoObservacion != null)
+            {
+                tempObservaciones = tempObservaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
             if (estado != null && estado != "")
             {
 
@@ -909,7 +977,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-        public async Task<List<Dimension>> GetBPMAPvsSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<List<Dimension>> GetBPMAPvsSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                 x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
@@ -918,10 +986,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Inspeccion >= FechaInicio &&
                 x.Fecha_Inspeccion <= FechaFin)
                 .ToListAsync();
+
             if (idGerenciaInspeccionada != 0)
                 cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
+            
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x =>
+                (x.Responsable_Inspeccion!=null &&   x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
 
             var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+
+           if (tipoObservacion != null)
+            {
+                tempObservaciones = tempObservaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
+
             if (estado != null && estado != "")
             {
 
@@ -976,7 +1056,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<List<Dimension>>> GetBPMAPvsSSO_Estado(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<List<List<Dimension>>> GetBPMAPvsSSO_Estado(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                 !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
@@ -988,7 +1068,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             if (idGerenciaInspeccionada != 0)
                 cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
 
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x =>
+                (x.Responsable_Inspeccion!=null &&   x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
+
             var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+
+           if (tipoObservacion != null)
+            {
+                tempObservaciones = tempObservaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
             if (estado != null && estado != "")
             {
 
@@ -1078,7 +1168,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-        public async Task<List<Dimension>> GetObsNivelRiesgoMA(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<List<Dimension>> GetObsNivelRiesgoMA(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                 !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
@@ -1086,10 +1176,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Gerencia.Equals(gerencia > 0 ? gerencia : x.Id_Gerencia) &&
                 x.Fecha_Inspeccion >= FechaInicio &&
                 x.Fecha_Inspeccion <= FechaFin)
-                .ToListAsync(); if (idGerenciaInspeccionada != 0)
+                .ToListAsync(); 
+            
+            if (idGerenciaInspeccionada != 0)
                 cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
 
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x =>
+                (x.Responsable_Inspeccion!=null &&   x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
+
             var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+
+           if (tipoObservacion != null)
+            {
+                tempObservaciones = tempObservaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
             if (estado != null && estado != "")
             {
 
@@ -1154,7 +1256,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Dimension>> GetObsNivelRiesgoSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<List<Dimension>> GetObsNivelRiesgoSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                 !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
@@ -1163,10 +1265,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Inspeccion >= FechaInicio &&
                 x.Fecha_Inspeccion <= FechaFin)
                 .ToListAsync();
+
             if (idGerenciaInspeccionada != 0)
                 cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
 
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x =>
+                (x.Responsable_Inspeccion!=null &&   x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
+
             var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+
+           if (tipoObservacion != null)
+            {
+                tempObservaciones = tempObservaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
             if (estado != null && estado != "")
             {
 
@@ -1231,7 +1344,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Dimension>> GetObsClasificacionMA(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<List<Dimension>> GetObsClasificacionMA(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
@@ -1240,10 +1353,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                x.Fecha_Inspeccion >= FechaInicio &&
                x.Fecha_Inspeccion <= FechaFin)
                .ToListAsync();
+
             if (idGerenciaInspeccionada != 0)
                 cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
 
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x =>
+                (x.Responsable_Inspeccion!=null &&   x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
+
             var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+
+           if (tipoObservacion != null)
+            {
+                tempObservaciones = tempObservaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
             if (estado != null && estado != "")
             {
 
@@ -1308,7 +1432,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Dimension>> GetObsClasificacionSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<List<Dimension>> GetObsClasificacionSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
@@ -1320,7 +1444,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             if (idGerenciaInspeccionada != 0)
                 cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
 
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x =>
+                (x.Responsable_Inspeccion!=null &&   x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
+
             var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+
+           if (tipoObservacion != null)
+            {
+                tempObservaciones = tempObservaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
             if (estado != null && estado != "")
             {
 
@@ -1385,7 +1519,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<List<Dimension>>> GetObsTipoCondicionxNivelRiesgoMA(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<List<List<Dimension>>> GetObsTipoCondicionxNivelRiesgoMA(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
@@ -1398,7 +1532,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             if (idGerenciaInspeccionada != 0)
                 cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
 
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x =>
+                (x.Responsable_Inspeccion!=null &&   x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
+
             var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+
+           if (tipoObservacion != null)
+            {
+                tempObservaciones = tempObservaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
             if (estado != null && estado != "")
             {
 
@@ -1498,7 +1642,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-        public async Task<List<List<Dimension>>> GetObsTipoCondicionxNivelRiesgoSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada)
+        public async Task<List<List<Dimension>>> GetObsTipoCondicionxNivelRiesgoSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
@@ -1511,7 +1655,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             if (idGerenciaInspeccionada != 0)
                 cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
 
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x =>
+                (x.Responsable_Inspeccion!=null &&   x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
+
             var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+
+           if (tipoObservacion != null)
+            {
+                tempObservaciones = tempObservaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
             if (estado != null && estado != "")
             {
 
@@ -1557,7 +1711,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Tipo_Observacion.Equals("SSO"))
                 .GroupBy(x => x.Nivel_Riesgo)
                 .ToList();
-            
+
             var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
 
             var output = new List<List<Dimension>>();
@@ -1612,26 +1766,36 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-        public async Task<List<Domain.Inspecciones.InspeccionCabecera>> GetDetalleObsxEstado(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion estado, bool buenaPractica)
+        public async Task<List<Domain.Inspecciones.InspeccionCabecera>> GetDetalleObsxEstado(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion estado, bool buenaPractica, int usuarioInvolucrado, string tipoObservacion)
         {
             var output = new List<Domain.Inspecciones.InspeccionCabecera>();
 
             var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
             observaciones = observaciones.Where(x =>
-                (buenaPractica?x.Descripcion_Condicion.Equals("Buenas Prácticas"): !x.Descripcion_Condicion.Equals("Buenas Prácticas")) &&
+                (buenaPractica ? x.Descripcion_Condicion.Equals("Buenas Prácticas") : !x.Descripcion_Condicion.Equals("Buenas Prácticas")) &&
                 x.Estado.Equals(estado.ToString()) &&
                 x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
                 x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor))
                 .ToList();
 
+           if (tipoObservacion != null)
+            {
+                observaciones = observaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
+
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
-                observaciones.Select(y=>y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+                observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
                 x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
                 x.Id_Gerencia.Equals(gerencia > 0 ? gerencia : x.Id_Gerencia) &&
                 x.Fecha_Inspeccion >= FechaInicio &&
                 x.Fecha_Inspeccion <= FechaFin)
                 .ToListAsync();
+
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x =>
+                (x.Responsable_Inspeccion!=null &&   x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
 
             var empresas = await _context.Empresas.ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
@@ -1652,8 +1816,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 foreach (var subitem in obs_item)
                 {
                     var obs = new Domain.Inspecciones.InspeccionDetalle();
-                    
-                    var responsable_obj = usuarios.FirstOrDefault(x=>x.Id_Usuario.Equals(subitem.Id_Responsable_Marcobre));
+
+                    var responsable_obj = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(subitem.Id_Responsable_Marcobre));
                     var asesor_obj = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(subitem.Id_Asesor));
                     var tipo_condicion_obj = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(subitem.Id_Tipo_Condicion));
 
@@ -1662,7 +1826,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     obs.FechaProgramada = subitem.Fecha_Programada;
                     obs.NivelRiesgo = subitem.Nivel_Riesgo;
                     obs.TipoObservacion = subitem.Tipo_Observacion;
-                    if(tipo_condicion_obj!=null)
+                    if (tipo_condicion_obj != null)
                         obs.TipoCondicion = new Domain.ValueObjects.TipoCondicion(tipo_condicion_obj.Id_Tipo_Condicion, tipo_condicion_obj.Descripcion, tipo_condicion_obj.Grupo);
 
                     outputItem.Observaciones.Add(obs);
@@ -1680,10 +1844,162 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
+        public async Task<List<List<Dimension>>> GetGerenciaInspeccionadaxEstadoObs(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
+        {
+            var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
+                !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
+                x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
+                x.Id_Gerencia.Equals(gerencia > 0 ? gerencia : x.Id_Gerencia) &&                
+                x.Fecha_Inspeccion >= FechaInicio &&
+                x.Fecha_Inspeccion <= FechaFin)
+                .ToListAsync();
+
+            if (idGerenciaInspeccionada != 0)
+                cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
+
+            if (usuarioInvolucrado != 0)
+                cabeceras = cabeceras.Where(x => 
+                (x.Responsable_Inspeccion!=null &&   x.Responsable_Inspeccion.Contains('\"' + usuarioInvolucrado.ToString() + '\"') )||
+                (x.Participantes_Inspección!= null && x.Participantes_Inspección.Contains('\"' + usuarioInvolucrado.ToString() + '\"'))).ToList();
+
+            var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();if (tipoObservacion != null)
+            {
+                tempObservaciones = tempObservaciones.Where(x => x.Tipo_Observacion.Equals(tipoObservacion)).ToList();
+            }
+            if (estado != null && estado != "")
+            {
+
+                /*"Pendiente de Implementación", "Pendiente"
+                  "Pendiente de Verificación", "Verificacion"
+                  "Vencido", "Vencido"
+                  "Aprobado", "Aprobado"*/
+                switch (estado)
+                {
+                    case "Pendiente":
+                        tempObservaciones = tempObservaciones.Where(x =>
+                        !x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Ampliado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                    case "Verificacion":
+                        tempObservaciones = tempObservaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Implementado.ToString())).ToList();
+                        break;
+                    case "Vencido":
+                        tempObservaciones = tempObservaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Vencido.ToString())).ToList();
+                        break;
+                    case "Aprobado":
+                        tempObservaciones = tempObservaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Aprobado.ToString())).ToList();
+                        break;
+                    case "Rechazado":
+                        tempObservaciones = tempObservaciones.Where(x =>
+                        x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                }
+            }
+
+            var observaciones = tempObservaciones.Where(x =>
+                !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
+                cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+                //x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
+                x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
+                x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor))
+                .ToList();
+
+            var output = new List<List<Dimension>>();
+
+            var gerenciasInspeccionada = await _context.Gerencias.ToListAsync();
+            List<ObsxGerenciaInspeccinadaxEstado> GerenciasInspeccionadasConObservaciones = new List<ObsxGerenciaInspeccinadaxEstado>();
+            foreach (var gerenciaInspeccionada in gerenciasInspeccionada)
+            {               
+                var idsCabecerasGerencia = cabeceras.Where(x=>x.Id_Gerencia_Inspeccionada.Equals(gerenciaInspeccionada.Id_Gerencia)).Select(x=>x.Id_Inspeccion_Cabecera).ToList();
+                var observacionesGerencia = observaciones.Where(x=>idsCabecerasGerencia.Contains(x.Id_Inspeccion_Cabecera)).ToList();
+
+                GerenciasInspeccionadasConObservaciones.Add(new ObsxGerenciaInspeccinadaxEstado
+                {
+                    IdGerenciaInspeccionada = gerenciaInspeccionada.Id_Gerencia,
+                    GerenciaInspeccionada = gerenciaInspeccionada.Descripcion,
+                    Total = observacionesGerencia.Count(),
+                    Pendientes = observacionesGerencia.Count(x=> 
+                        x.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Ampliado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())),
+                    Vencido = observacionesGerencia.Count(x =>
+                        x.Estado.Equals(EstadosInspeccion.Vencido.ToString())),
+                    Verificacion = observacionesGerencia.Count(x =>
+                        x.Estado.Equals(EstadosInspeccion.Implementado.ToString())),
+                    Aprobado = observacionesGerencia.Count(x =>
+                        x.Estado.Equals(EstadosInspeccion.Aprobado.ToString()))
+                });
+            }
+
+            foreach (var item in GerenciasInspeccionadasConObservaciones)
+            {
+                output.Add(new List<Dimension>
+                {
+                    new Dimension
+                    {
+                        Nombre = "Total",
+                        Valor = item.Total,
+                        Index = 0,
+                        NombrePadre = item.GerenciaInspeccionada
+                    },
+                    new Dimension
+                    {
+                        Nombre = "Pendiente",
+                        Valor = item.Pendientes,
+                        Index = 1,
+                        NombrePadre = item.GerenciaInspeccionada
+                    },
+                    new Dimension
+                    {
+                        Nombre = "Verificacion",
+                        Valor = item.Verificacion,
+                        Index = 2,
+                        NombrePadre = item.GerenciaInspeccionada
+                    },
+                    new Dimension
+                    {
+                        Nombre = "Vencido",
+                        Valor = item.Vencido,
+                        Index = 3,
+                        NombrePadre = item.GerenciaInspeccionada
+                    },
+                    new Dimension
+                    {
+                        Nombre = "Aprobado",
+                        Valor = item.Aprobado,
+                        Index = 4,
+                        NombrePadre = item.GerenciaInspeccionada
+                    }
+                });
+            }
+            return output;
+        }
+
         private class ObsXFecha
         {
             public DateTime Fecha { get; set; }
             public int Cantidad { get; set; }
+        }
+        private class ObsxEstado
+        {
+            public int IdObs { get; set; }
+            public string Estado { get; set; }
+        }
+        private class ObsxGerenciaInspeccinadaxEstado
+        {
+            public int IdGerenciaInspeccionada { get; set; }
+            public string GerenciaInspeccionada { get; set; }
+            public int Pendientes {  get; set; }
+            public int Verificacion { get; set; }
+            public int Vencido { get; set; }
+            public int Aprobado { get; set; }
+            public int Total { get; set; }
         }
     }
 }

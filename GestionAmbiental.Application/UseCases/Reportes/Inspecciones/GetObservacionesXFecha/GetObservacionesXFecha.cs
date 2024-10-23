@@ -14,7 +14,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObserva
         {
             _getReportesInspeccionesReadOnlyRepository = getReportesInspeccionesReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesInspeccionesReadOnlyRepository));
         }
-        public async Task<List<List<DimensionOutput>>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string frecuencia, string estado, int idGerenciaInspeccionada)
+        public async Task<List<List<DimensionOutput>>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string frecuencia, string estado, int idGerenciaInspeccionada, int usuarioInvolucrado, string tipoObservacion)
         {
             //Dar formato a fechas
             DateTime fInicio, fFinal;
@@ -37,7 +37,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObserva
             //    case "Apr": enum_estado = EstadosInspeccion.Aprobado; break;
             //    case "Rec": enum_estado = EstadosInspeccion.Rechazado; break;
             //}
-            var data = await _getReportesInspeccionesReadOnlyRepository.GetObservacionesXFecha(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, frecuencia,estado,idGerenciaInspeccionada);
+            var data = await _getReportesInspeccionesReadOnlyRepository.GetObservacionesXFecha(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, frecuencia,estado,idGerenciaInspeccionada, usuarioInvolucrado, tipoObservacion);
 
             var output = new List<List<DimensionOutput>>();
             var outputObs = new List<DimensionOutput>();

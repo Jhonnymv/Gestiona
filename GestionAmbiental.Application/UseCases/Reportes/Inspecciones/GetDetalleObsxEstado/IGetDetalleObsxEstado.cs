@@ -6,6 +6,6 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetDetalle
 {
     public interface IGetDetalleObsxEstado
     {
-        Task<List<DetalleObsxEstadoOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string estado);
+        Task<List<DetalleObsxEstadoOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string estado, int usuarioInvolucrado, string tipoObservacion);
     }
 }
