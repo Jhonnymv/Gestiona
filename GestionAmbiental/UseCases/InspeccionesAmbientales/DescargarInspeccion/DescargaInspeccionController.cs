@@ -313,7 +313,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                 //sheet.ShiftRows(13 + 1, sheet.LastRowNum, 1);
                 int rowsToShift = cabecera.Participantes_Inspección_Detalle.Count % 2 == 0 ? Convert.ToInt32(cabecera.Participantes_Inspección_Detalle.Count / 2) - 1 : Convert.ToInt32(cabecera.Participantes_Inspección_Detalle.Count / 2);
-                sheet.ShiftRows(14, sheet.LastRowNum, rowsToShift);
+                if(rowsToShift>0)
+                    sheet.ShiftRows(14, sheet.LastRowNum, rowsToShift);
                 
                 foreach (var item in cabecera.Participantes_Inspección_Detalle)
                 {
@@ -514,7 +515,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     //->Index
                     row.GetCell(0).SetCellValue(obsIndex);
                     //->TIPO OBSERVACION
-                    row.GetCell(2).SetCellValue(observacion.TipoObservacion);
+                    row.GetCell(2).SetCellValue(observacion.TipoObservacion.Equals("MAP")?"MA": observacion.TipoObservacion);
                     //->Acto/Condición Subestándar Identificada
                     row.GetCell(3).SetCellValue(observacion.DescripcionCondicion);
                     //->Tipo de Condición / Acto Subestándar

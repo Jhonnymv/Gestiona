@@ -261,7 +261,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         //    filaObservacion += "<td></td>";        
 
                         filaObservacion += "<td style=\"display: none; \">" + observacion.IdInspeccionDetalle + "</td>";
-                        filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
+                        filaObservacion += "<td>" + (observacion.TipoInspeccion.Equals("MAP") ? "MA" : observacion.TipoInspeccion) + "</td>";
                         filaObservacion += "<td>" + observacion.AsesorMASeguridad + "</td>";
                         filaObservacion += "<td>" + observacion.DescripcionCondicion + "</td>";
                         filaObservacion += "<td>" + observacion.DescripcionActoCondicion + "</td>";

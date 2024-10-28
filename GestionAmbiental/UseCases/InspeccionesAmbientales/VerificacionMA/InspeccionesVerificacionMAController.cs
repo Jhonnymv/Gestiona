@@ -206,7 +206,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         else
                             filaObservacion += "<td></td>";
                         filaObservacion += "<td style=\"display: none; \">" + observacion.IdInspeccionDetalle + "</td>";
-                        filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
+                        filaObservacion += "<td>" + (observacion.TipoInspeccion.Equals("MAP") ? "MA" : observacion.TipoInspeccion) + "</td>";
                         filaObservacion += "<td>" + observacion.AsesorMASeguridad + "</td>";
                         filaObservacion += "<td>" + observacion.DescripcionCondicion + "</td>";
                         filaObservacion += "<td>" + observacion.DescripcionActoCondicion + "</td>";
@@ -301,7 +301,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 
                 if (model.Accion.Equals("Rechazar")) {
-                    await _verificarObservacion.Execute(model.idObs, model.ComentarioVerificacionMA, EstadosInspeccion.Rechazado.ToString(), userInfo.NombreUsuario);
+                    if (Convert.ToDateTime(model.FechaProgramada) > DateTime.Now)
+                    {
+                        await _verificarObservacion.Execute(model.idObs, model.ComentarioVerificacionMA, EstadosInspeccion.Rechazado.ToString(), userInfo.NombreUsuario);
+                    }
+                    else
+                    {
+                        await _verificarObservacion.Execute(model.idObs, model.ComentarioVerificacionMA, EstadosInspeccion.Vencido.ToString(), userInfo.NombreUsuario);
+                    }
                     return RedirectToAction("NotificarObservacionRechazada", "NotificacionesInspecciones", new { IdObservacion = _protector.Protect(model.idObs.ToString()) });
                 }
                 else

@@ -353,8 +353,15 @@ function CrearGraficaContardorOxFecha(labels, dataObs, dataBP, stepSize) {
                 },
                 "plugins": {
                     datalabels: {
-                        color: 'white',
-                        defaultFontSize: 15
+                        color: '#242424',
+                        defaultFontSize: 15,
+                        anchor: 'end',
+                        align: 'end',
+                        //offset: 2,
+                        display: function (context) {
+                            // Retorna false si el valor es 0, así no se muestra la etiqueta
+                            return context.dataset.data[context.dataIndex] !== 0;
+                        }
                     }
                 }
             }
@@ -594,7 +601,13 @@ function CrearGraficoMAP_SSO_Estado(labels, dataset1, dataset2) {
                     datalabels: {
                         color: '#242424',
                         defaultFontSize: 15,
-                        anchor:'end'
+                        anchor: 'end',
+                        align: 'end',
+                        offset: 5,
+                        display: function (context) {
+                            // Retorna false si el valor es 0, así no se muestra la etiqueta
+                            return context.dataset.data[context.dataIndex] !== 0;
+                        }
                     }
                 }
             }
@@ -794,7 +807,13 @@ function CrearGraficoBPMAP_SSO_Estado(labels, dataset1, dataset2) {
                     datalabels: {
                         color: '#242424',
                         defaultFontSize: 15,
-                        anchor: 'end'
+                        anchor: 'end',
+                        align: 'end',
+                        offset: 5,
+                        display: function (context) {
+                            // Retorna false si el valor es 0, así no se muestra la etiqueta
+                            return context.dataset.data[context.dataIndex] !== 0;
+                        }
                     }
                 }
             }
@@ -888,7 +907,11 @@ function CrearGraficoMA_NR(labels, data) {
                             let percentage = (value * 100 / sum).toFixed(2) + "%";
                             return percentage;
                         },
-                        defaultFontSize: 15
+                        defaultFontSize: 15,
+                        display: function (context) {
+                            // Retorna false si el valor es 0, así no se muestra la etiqueta
+                            return context.dataset.data[context.dataIndex] !== 0;
+                        }
                     }
                 }
             }
@@ -981,7 +1004,11 @@ function CrearGraficoSSO_NR(labels, data) {
                             let percentage = (value * 100 / sum).toFixed(2) + "%";
                             return percentage;
                         },
-                        defaultFontSize: 15
+                        defaultFontSize: 15,
+                        display: function (context) {
+                            // Retorna false si el valor es 0, así no se muestra la etiqueta
+                            return context.dataset.data[context.dataIndex] !== 0;
+                        }
                     }
                 }
             }
@@ -1074,7 +1101,11 @@ function CrearGraficoMA_Clas(labels, data) {
                             let percentage = (value * 100 / sum).toFixed(2) + "%";
                             return percentage;
                         },
-                        defaultFontSize: 15
+                        defaultFontSize: 15,
+                        display: function (context) {
+                            // Retorna false si el valor es 0, así no se muestra la etiqueta
+                            return context.dataset.data[context.dataIndex] !== 0;
+                        }
                     }
                 }
             }
@@ -1837,8 +1868,15 @@ function CrearGraficoGerenciasInspeccionadaxEstadoObservaciones(labels, stepSize
                 },
                 "plugins": {
                     datalabels: {
-                        color: 'white',
-                        defaultFontSize: 15
+                        color: '#242424',
+                        defaultFontSize: 15,
+                        anchor: 'end',
+                        align: 'end',
+                        offset: 5,
+                        display: function (context) {
+                            // Retorna false si el valor es 0, así no se muestra la etiqueta
+                            return context.dataset.data[context.dataIndex] !== 0;
+                        }
                     }
                 }
             }

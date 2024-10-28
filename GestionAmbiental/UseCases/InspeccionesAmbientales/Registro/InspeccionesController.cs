@@ -606,7 +606,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                                 filaObservacion += observacion.DescripcionCondicion.Equals("Buenas Prácticas") ? (observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ? "<td><span class=\"badge bg-info\">Pendiente de <br/>Verificación</span></td>" : "<td><span class=\"badge bg-danger\">Rechazado</span></td>") : "<td><span class=\"badge bg-warning\">Pendiente de<br/>Implementación</span></td>"; break;
                         }
 
-                        filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
+                        filaObservacion += "<td>" + (observacion.TipoInspeccion.Equals("MAP")?"MA": observacion.TipoInspeccion) + "</td>";
                         filaObservacion += "<td>" + observacion.AsesorMASeguridad + "</td>";
                         filaObservacion += "<td>" + observacion.DescripcionCondicion + "</td>";
                         filaObservacion += "<td>" + observacion.TipoCondicion + "</td>";
