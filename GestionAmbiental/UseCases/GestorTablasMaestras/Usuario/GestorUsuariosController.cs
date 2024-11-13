@@ -242,23 +242,31 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                             DirectoryEntry deUser;
                             if (user != "" || password != "")
                             {
+                                
                                 deUser = new DirectoryEntry(@"LDAP://" + ldap_domain + "/" + propertyCollection["member"][j].ToString(), user, password, AuthenticationTypes.Secure);
-                                var info_usuario = new ADUserModel();
-                                info_usuario.UsuarioRed = GetValidProperty(deUser, "samaccountname");
-                                info_usuario.Email = GetValidProperty(deUser, "mail");
-                                info_usuario.Nombres = GetValidProperty(deUser, "givenName");
-                                info_usuario.Apellidos = GetValidProperty(deUser, "sn");
-                                info_usuario.Celular = GetValidProperty(deUser, "mobilePhone");
-                                info_usuario.Puesto = GetValidProperty(deUser, "title");
-                                info_usuario.Jefe = GetValidProperty(deUser, "manager");
-                                info_usuario.Area = GetValidProperty(deUser, "department");
-                                info_usuario.Empresa = GetValidProperty(deUser, "company");
-                                info_usuario.DNI = GetValidProperty(deUser, "facsimileTelephoneNumber");
-                                linePerLine.Add(JsonConvert.SerializeObject(info_usuario));
-                                rst.Add(info_usuario);
-
-                                // linePerLine.Add("Usuario: " + JsonConvert.SerializeObject(info_usuario));
-                                deUser.Close();
+                                try
+                                {
+                                    var info_usuario = new ADUserModel();
+                                    info_usuario.UsuarioRed = GetValidProperty(deUser, "samaccountname");
+                                    info_usuario.Email = GetValidProperty(deUser, "mail");
+                                    info_usuario.Nombres = GetValidProperty(deUser, "givenName");
+                                    info_usuario.Apellidos = GetValidProperty(deUser, "sn");
+                                    info_usuario.Celular = GetValidProperty(deUser, "mobilePhone");
+                                    info_usuario.Puesto = GetValidProperty(deUser, "title");
+                                    info_usuario.Jefe = GetValidProperty(deUser, "manager");
+                                    info_usuario.Area = GetValidProperty(deUser, "department");
+                                    info_usuario.Empresa = GetValidProperty(deUser, "company");
+                                    info_usuario.DNI = GetValidProperty(deUser, "facsimileTelephoneNumber");
+                                    linePerLine.Add(JsonConvert.SerializeObject(info_usuario));
+                                    rst.Add(info_usuario);
+                                    // linePerLine.Add("Usuario: " + JsonConvert.SerializeObject(info_usuario));
+                                    deUser.Close();
+                                }
+                                catch (Exception ex)
+                                {
+                                    linePerLine.Add("deUser-ERROR: " + JsonConvert.SerializeObject(deUser));
+                                    continue;
+                                }
                             }
                             else
                             {
