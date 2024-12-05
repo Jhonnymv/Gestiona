@@ -21,7 +21,7 @@
                 <div class="menu-modal-separator"></div>
                 <div class="modal-body">
                     <div class="modal-menu-options">
-                        @if (ViewBag.Rol == "AsesorMAP")
+                        @if (ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Admin")
                         {
                             <a class="modal-menu-option" asp-controller="IngresoSalidaRS" asp-action="Resumen">
                                 <div class="icon-modal-menu-red">
@@ -91,26 +91,6 @@
                                 </div>
                                 <div class="text-modal-menu-option">
                                     <span>Reportes Estadísticos de Manifiestos</span>
-                                </div>
-                            </a>
-                        }
-                        @if (ViewBag.Rol == "Admin")
-                        {
-                            <a class="modal-menu-option" asp-controller="IngresoSalidaRS" asp-action="Resumen">
-                                <div class="icon-modal-menu-red">
-
-                                </div>
-                                <div class="text-modal-menu-option">
-                                    <span>Ingreso y Salida de Residuos Sólidos</span>
-                                </div>
-                            </a>
-
-                            <a class="modal-menu-option" asp-controller="CompletarManifiesto" asp-action="Resumen">
-                                <div class="icon-modal-menu-green">
-
-                                </div>
-                                <div class="text-modal-menu-option">
-                                    <span>Control de Manifiestos de Residuos Sólidos</span>
                                 </div>
                             </a>
                         }

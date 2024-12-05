@@ -29,35 +29,31 @@
                                 <span>Inspecciones</span>
                             </div>
                         </a>
-                        @if (ViewBag.Rol != "Admin")
+                        <a class="modal-menu-option" asp-controller="InspeccionesImplementacion" asp-action="Resumen">
+                            <div class="icon-modal-menu-green">
+                            </div>
+                            <div class="text-modal-menu-option">
+                                <span>Obs. Pendientes de Implementación y Vencidas</span>
+                            </div>
+                        </a>
+                        @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Admin")
                         {
-                            <a class="modal-menu-option" asp-controller="InspeccionesImplementacion" asp-action="Resumen">
-                                <div class="icon-modal-menu-green">
+                            <a class="modal-menu-option" asp-controller="InspeccionesVerificacionMA" asp-action="Resumen">
+                                <div class="icon-modal-menu-yellow">
 
                                 </div>
                                 <div class="text-modal-menu-option">
-                                    <span>Obs. Pendientes de Implementación y Vencidas</span>
+                                    <span>Obs. Pendientes de Verificación</span>
                                 </div>
                             </a>
-                            @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP")
-                            {
-                                <a class="modal-menu-option" asp-controller="InspeccionesVerificacionMA" asp-action="Resumen">
-                                    <div class="icon-modal-menu-yellow">
+                            <a class="modal-menu-option" asp-controller="ReportesInspecciones" asp-action="Resumen">
+                                <div class="icon-modal-menu-bluesky">
 
-                                    </div>
-                                    <div class="text-modal-menu-option">
-                                        <span>Obs. Pendientes de Verificación</span>
-                                    </div>
-                                </a>
-                                <a class="modal-menu-option" asp-controller="ReportesInspecciones" asp-action="Resumen">
-                                    <div class="icon-modal-menu-bluesky">
-
-                                    </div>
-                                    <div class="text-modal-menu-option">
-                                        <span>Reportes Estadísticos</span>
-                                    </div>
-                                </a>
-                            }
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Reportes Estadísticos</span>
+                                </div>
+                            </a>
                         }
                     </div>
                 </div>

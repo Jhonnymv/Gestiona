@@ -17,44 +17,7 @@
                 <div class="menu-modal-separator"></div>
                 <div class="modal-body">
                     <div class="modal-menu-options">
-                        @if (ViewBag.Rol == "Admin")
-                        {
-                            <a class="modal-menu-option" asp-controller="SGADocumentacion" asp-action="Resumen">
-                                <div class="icon-modal-menu-green">
-
-                                </div>
-                                <div class="text-modal-menu-option">
-                                    <span>Documentación</span>
-                                </div>
-                            </a>
-
-                            <a class="modal-menu-option" asp-controller="SGAAdministracion" asp-action="Resumen">
-                                <div class="icon-modal-menu-green">
-
-                                </div>
-                                <div class="text-modal-menu-option">
-                                    <span>Administración</span>
-                                </div>
-                            </a>
-
-                            @*<a class="modal-menu-option" asp-controller="SGADocumentos" asp-action="Resumen">
-                                <div class="icon-modal-menu-green">
-
-                                </div>
-                                <div class="text-modal-menu-option">
-                                    <span>Indicadores</span>
-                                </div>
-                            </a>
-
-                            <a class="modal-menu-option" asp-controller="SGADocumentos" asp-action="Resumen">
-                                <div class="icon-modal-menu-green">
-
-                                </div>
-                                <div class="text-modal-menu-option">
-                                    <span>Auditoría</span>
-                                </div>
-                            </a>*@
-                        }else if(ViewBag.Rol == "AsesorMAP")
+                        if (ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Admin")
                         {
                             <a class="modal-menu-option" asp-controller="SGADocumentacion" asp-action="Resumen">
                                 <div class="icon-modal-menu-green">

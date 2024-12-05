@@ -49,7 +49,7 @@
                             </a>
                         }
 
-                        @if (ViewBag.Rol == "AsesorMAP")
+                        @if (ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Admin")
                         {
                             <a class="modal-menu-option" asp-controller="ReportePreliminar" asp-action="Resumen">
                                 <div class="icon-modal-menu-yellow">
@@ -92,28 +92,6 @@
                                 </div>
                             </a>
                         }
-
-                        @if (ViewBag.Rol == "Admin")
-                        {
-                            <a class="modal-menu-option" asp-controller="ReportePreliminar" asp-action="Resumen">
-                                <div class="icon-modal-menu-bluesky">
-
-                                </div>
-                                <div class="text-modal-menu-option">
-                                    <span>Reporte Preliminar</span>
-                                </div>
-                            </a>
-
-                            <a class="modal-menu-option" asp-controller="InvestigacionFinal" asp-action="Resumen">
-                                <div class="icon-modal-menu-bluesky">
-
-                                </div>
-                                <div class="text-modal-menu-option">
-                                    <span>Informe Investigación Final</span>
-                                </div>
-                            </a>
-                        }
-
                     </div>
                 </div>
             </div>

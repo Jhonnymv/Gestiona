@@ -21,7 +21,7 @@
                 <div class="menu-modal-separator"></div>
                 <div class="modal-body">
                     <div class="modal-menu-options">
-                        @if (ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "OperadorAgua")
+                        @if (ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "OperadorAgua" || ViewBag.Rol == "Admin")
                         {
                             <a class="modal-menu-option" asp-controller="ConsumoAguaMar" asp-action="Resumen">
                                 <div class="icon-modal-menu-green">
@@ -56,35 +56,6 @@
                                 </div>
                                 <div class="text-modal-menu-option">
                                     <span>Reportes Estadísitcos Agua Subterránea</span>
-                                </div>
-                            </a>
-
-                            <a class="modal-menu-option" asp-controller="GestorConsumoAgua" asp-action="CargaDataExcel">
-                                <div class="icon-modal-menu-green">
-
-                                </div>
-                                <div class="text-modal-menu-option">
-                                    <span>Cargar Datos desde Excel</span>
-                                </div>
-                            </a>
-                        }
-                        @if (ViewBag.Rol == "Admin")
-                        {
-                            <a class="modal-menu-option" asp-controller="ConsumoAguaMar" asp-action="Resumen">
-                                <div class="icon-modal-menu-green">
-
-                                </div>
-                                <div class="text-modal-menu-option">
-                                    <span>Agua de Mar</span>
-                                </div>
-                            </a>
-
-                            <a class="modal-menu-option" asp-controller="ConsumoAguaSubterranea" asp-action="Resumen">
-                                <div class="icon-modal-menu-green">
-
-                                </div>
-                                <div class="text-modal-menu-option">
-                                    <span>Agua Subterránea</span>
                                 </div>
                             </a>
 

@@ -31,36 +31,32 @@
                                 <span>RAC</span>
                             </div>
                         </a>
-                        @if (ViewBag.Rol != "Admin")
+                        <a class="modal-menu-option" asp-controller="ImplementacionRAC" asp-action="Resumen">
+                            <div class="icon-modal-menu-green">
+                            </div>
+                            <div class="text-modal-menu-option">
+                                <span>Pendientes de Implementación</span>
+                            </div>
+                        </a>
+                        @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Admin")
                         {
-                            <a class="modal-menu-option" asp-controller="ImplementacionRAC" asp-action="Resumen">
-                                <div class="icon-modal-menu-green">
+                            <a class="modal-menu-option" asp-controller="VerificacionRAC" asp-action="Resumen">
+                                <div class="icon-modal-menu-yellow">
 
                                 </div>
                                 <div class="text-modal-menu-option">
-                                    <span>Pendientes de Implementación</span>
+                                    <span>Pendientes de Verificación</span>
                                 </div>
                             </a>
-                            @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP")
-                            {
-                                <a class="modal-menu-option" asp-controller="VerificacionRAC" asp-action="Resumen">
-                                    <div class="icon-modal-menu-yellow">
+                            <a class="modal-menu-option" asp-controller="ReportesRAC" asp-action="Resumen">
+                                <div class="icon-modal-menu-bluesky">
 
-                                    </div>
-                                    <div class="text-modal-menu-option">
-                                        <span>Pendientes de Verificación</span>
-                                    </div>
-                                </a>
-                                <a class="modal-menu-option" asp-controller="ReportesRAC" asp-action="Resumen">
-                                    <div class="icon-modal-menu-bluesky">
-
-                                    </div>
-                                    <div class="text-modal-menu-option">
-                                        <span>Reportes Estadísticos</span>
-                                    </div>
-                                </a>
-                            }
-                        }
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Reportes Estadísticos</span>
+                                </div>
+                            </a>
+                        }                       
                     </div>
                 </div>
             </div>
