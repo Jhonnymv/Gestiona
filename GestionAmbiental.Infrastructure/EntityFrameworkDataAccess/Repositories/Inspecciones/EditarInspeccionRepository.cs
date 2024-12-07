@@ -36,13 +36,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             cabeceraEntity.Participantes = cabecera.Inspectores;
             cabeceraEntity.Codigo_Formato = cabecera.Codigo_Formato;
             cabeceraEntity.Area_Formato = cabecera.Area_Formato;
-            cabeceraEntity.Id_Miembro_Comite = cabecera.Id_Miembro_Comite;
             cabeceraEntity.Participantes_Inspección = cabecera.Participantes_Inspección;
 
             if (cabecera.Estado != null)
             {
                 cabeceraEntity.Codigo = cabecera.Codigo;
                 cabeceraEntity.Estado = cabecera.Estado;
+            }
+            if (cabecera.Id_Miembro_Comite!=0)
+            {
+                cabeceraEntity.Id_Miembro_Comite = cabecera.Id_Miembro_Comite;
             }
             _context.Inspecciones_Cabecera.Update(cabeceraEntity);
             await _context.SaveChangesAsync();
