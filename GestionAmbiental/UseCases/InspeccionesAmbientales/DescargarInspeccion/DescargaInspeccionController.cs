@@ -28,6 +28,10 @@ using Serilog;
 using GestionAmbiental.UseCases.Util.Interfaces;
 using NPOI.SS.Formula.Functions;
 using NPOI.HSSF.UserModel;
+using static GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion.DescargaInspeccionController;
+using Microsoft.Extensions.Hosting;
+using NPOI.HPSF;
+using static Google.Cloud.RecaptchaEnterprise.V1.TransactionData.Types;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 {
@@ -646,6 +650,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                         observaciones.Add(new ObservacionReporte
                         {
                             IdInspeccion = inspeccion.IdCabecera.ToString(),
+                            IdObservacion = observacion.IdInspeccionDetalle,
                             SSO_MA = observacion.TipoObservacion.Equals("MAP")?"MA": observacion.TipoObservacion,
                             ActoCondicion = observacion.DescripcionCondicion,
                             EvidenciaCondicion = observacion.EvidenciaCondicion,
@@ -678,6 +683,47 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 //indice de observacion
                 int obsIndex = 1;
 
+                //Primer recorrido para descargar todas las imágenes en la carpeta temporal
+                var listaEvidenciasxObservacion = new List<Evidencia>();
+                foreach (var observacion in observaciones)
+                {
+                    var item = new Evidencia();
+                    item.IdObservacion = observacion.IdObservacion;
+
+
+                    if (observacion.EvidenciaCondicion != "[]" && observacion.EvidenciaCondicion != null)
+                    {
+                        Tipo_Info_SGA directorio = Tipo_Info_SGA.FTPConnectionEvidenciaR;
+                        item.NombreEvidenciaRegistro = (string)JArray.Parse(observacion.EvidenciaCondicion)[0];
+                        ////Descargar
+                        //var downloadedFile = await _gestorArchivos.DownloadFTPFileAsync(item.NombreEvidenciaRegistro, userInfo.NombreUsuario, directorio);
+                        ////Desencriptar
+                        //var pathDesencriptado = archivePath+ item.NombreEvidenciaRegistro + "_desencriptado.zip";
+                        //await _gestorEncriptado.DecryptFileAsync(downloadedFile, pathDesencriptado);
+                        ////Descomprimir
+                        //if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                        //    filePath += Path.DirectorySeparatorChar;
+
+                        //using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
+                        //{
+                        //    foreach (ZipArchiveEntry entry in archive.Entries)
+                        //    {
+                        //        filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
+                        //        if (filePath.StartsWith(filePath, StringComparison.Ordinal))
+                        //            entry.ExtractToFile(filePath);
+                        //    }
+                        //}
+
+                    }
+                    if (observacion.EvidenciaImplementacion != "[]" && observacion.EvidenciaImplementacion != null)
+                    {
+                        Tipo_Info_SGA directorio = Tipo_Info_SGA.FTPConnectionEvidenciaI;
+                        item.NombreEvidenciaImplementacion = (string)JArray.Parse(observacion.EvidenciaImplementacion)[0];
+                        //var downloadedFile = await _gestorArchivos.DownloadFTPFileAsync(item.NombreEvidenciaImplementacion, userInfo.NombreUsuario, directorio);
+                    }
+                    listaEvidenciasxObservacion.Add(item);
+                }
+
                 //1. Vaciar carpeta temporal del usuario 
                 var tempPath = Path.GetTempPath();
                 var SGATempPath = tempPath + "SGA-Marcobre-v2\\";
@@ -703,6 +749,120 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     Directory.Delete(archivePath, true);
                     Directory.CreateDirectory(archivePath);
                 }
+                //2. Abrir conexiones SFTP para Evidencias Registro e Implementacion
+                var serverInfoRegistro = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaR);
+                var serverInfoImplementacion = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaI);
+                
+                string hostRegistro = "", portRegistro = "", userRegistro = "", passRegistro = "", dirRegistro = "";
+                foreach (var item in serverInfoRegistro.Info)
+                {
+                    switch (item.Key)
+                    {
+                        case "host": hostRegistro = item.Value; break;
+                        case "port": portRegistro = item.Value; break;
+                        case "user": userRegistro = item.Value; break;
+                        case "password": passRegistro = item.Value; break;
+                        case "directory": dirRegistro = item.Value; break;
+                    }
+                }
+                /*New file downloaded name*/
+                /*Copy data to new temp file*/
+                using (SftpClient sftp = new SftpClient(hostRegistro, Convert.ToInt32(portRegistro), userRegistro, passRegistro))
+                {
+                    
+                    sftp.Connect();
+                    sftp.ChangeDirectory(dirRegistro);
+
+                    //Descargar archivo de sftp a nuevo archivo temporal creado
+                    foreach(var item in listaEvidenciasxObservacion)
+                    {
+                        if (item.NombreEvidenciaRegistro != null)
+                        {
+                            var downloadedFilePath = archivePath + item.NombreEvidenciaRegistro;
+                            var fileStream = System.IO.File.Create(downloadedFilePath);
+                            sftp.DownloadFile(item.NombreEvidenciaRegistro, fileStream);
+                            fileStream.Dispose();
+
+                            //Desencriptar
+                            var pathDesencriptado = archivePath + item.NombreEvidenciaRegistro + "_desencriptado.zip";
+                            await _gestorEncriptado.DecryptFileAsync(downloadedFilePath, pathDesencriptado);
+
+                            //Descomprimir
+                            var pathDescomprimido = filePath;
+                            if (!pathDescomprimido.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                                pathDescomprimido += Path.DirectorySeparatorChar;
+
+                            using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
+                            {
+                                foreach (ZipArchiveEntry entry in archive.Entries)
+                                {
+                                    pathDescomprimido = Path.GetFullPath(Path.Combine(pathDescomprimido, "EvInspReg_" +item.IdObservacion+"_" + entry.FullName));
+                                    if (pathDescomprimido.StartsWith(pathDescomprimido, StringComparison.Ordinal))
+                                        entry.ExtractToFile(pathDescomprimido);
+                                }
+                            }
+                            item.RutaEvidenciaRegistro = pathDescomprimido;
+                        }
+                    }
+
+                    sftp.Dispose();
+                }
+
+                string hostImplementacion = "", portImplementacion = "", userImplementacion = "", passImplementacion = "", dirImplementacion = "";
+                foreach (var item in serverInfoImplementacion.Info)
+                {
+                    switch (item.Key)
+                    {
+                        case "host": hostImplementacion = item.Value; break;
+                        case "port": portImplementacion = item.Value; break;
+                        case "user": userImplementacion = item.Value; break;
+                        case "password": passImplementacion = item.Value; break;
+                        case "directory": dirImplementacion = item.Value; break;
+                    }
+                }
+
+                using (SftpClient sftp = new SftpClient(hostImplementacion, Convert.ToInt32(portImplementacion), userImplementacion, passImplementacion))
+                {
+
+                    sftp.Connect();
+                    sftp.ChangeDirectory(dirImplementacion);
+
+                    //Descargar archivo de sftp a nuevo archivo temporal creado
+                    foreach (var item in listaEvidenciasxObservacion)
+                    {
+                        if (item.NombreEvidenciaImplementacion != null)
+                        {
+                            var downloadedFilePath = archivePath + item.NombreEvidenciaImplementacion;
+                            var fileStream = System.IO.File.Create(downloadedFilePath);
+                            sftp.DownloadFile(item.NombreEvidenciaImplementacion, fileStream);
+                            fileStream.Dispose();
+
+                            //Desencriptar
+                            var pathDesencriptado = archivePath + item.NombreEvidenciaImplementacion + "_desencriptado.zip";
+                            await _gestorEncriptado.DecryptFileAsync(downloadedFilePath, pathDesencriptado);
+
+                            //Descomprimir
+                            var pathDescomprimido = filePath;
+                            if (!pathDescomprimido.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                                pathDescomprimido += Path.DirectorySeparatorChar;
+
+                            using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
+                            {
+                                foreach (ZipArchiveEntry entry in archive.Entries)
+                                {
+                                    pathDescomprimido = Path.GetFullPath(Path.Combine(pathDescomprimido, "EvInspImpl_" + item.IdObservacion + "_" + entry.FullName));
+                                    if (pathDescomprimido.StartsWith(pathDescomprimido, StringComparison.Ordinal))
+                                        entry.ExtractToFile(pathDescomprimido);
+                                }
+                            }
+                            item.RutaEvidenciaImplementacion = pathDescomprimido;
+                        }
+                    }
+
+                    sftp.Dispose();
+                }
+
+
 
                 foreach (var observacion in observaciones)
                 {
@@ -727,7 +887,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                         if (observacion.EvidenciaCondicion != "[]" && observacion.EvidenciaCondicion != null)
                         {
 
-                            evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 4, rowHeight, imageIndex, "condicion", true);
+                            //evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 4, rowHeight, imageIndex, "condicion", true);
+                            evidencia_condicion = await AddImageToCellAsyncWithoutDownload(templateWorkbook, sheet, listaEvidenciasxObservacion.Find(x=>x.IdObservacion.Equals(observacion.IdObservacion)).RutaEvidenciaRegistro, fila, 4, rowHeight, imageIndex, "condicion", true);
                             if (evidencia_condicion != null)
                             {
                                 rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
@@ -736,7 +897,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                         }
                         if (observacion.EvidenciaImplementacion != "[]" && observacion.EvidenciaImplementacion != null)
                         {
-                            evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 11, rowHeight, imageIndex, "inspeccion", true);
+                            //evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 11, rowHeight, imageIndex, "inspeccion", true);
+                            evidencia_inspeccion = await AddImageToCellAsyncWithoutDownload(templateWorkbook, sheet, listaEvidenciasxObservacion.Find(x => x.IdObservacion.Equals(observacion.IdObservacion)).RutaEvidenciaImplementacion, fila, 11, rowHeight, imageIndex, "inspeccion", true);
                             if (evidencia_inspeccion != null)
                             {
                                 rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
@@ -1019,6 +1181,99 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             // Directory.CreateDirectory(archivePath);
             return output;
         }
+        private async Task<ImageProperties> AddImageToCellAsyncWithoutDownload(XSSFWorkbook templateWorkbook, ISheet sheet, string filePath, int row, int column, short rowHeight, int imageIndex, string tipoEvidencia, bool reporte)
+        {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+            var output = new ImageProperties();
+
+            var imgNCol = 0;
+            if (tipoEvidencia == "condicion" )
+            {
+                if (!reporte)
+                    imgNCol = 2;
+            }
+            else
+            {
+                if (!reporte)
+                    imgNCol = 4;
+            }
+            //5. validar extension y cargar en una celda
+            var extension = Path.GetExtension(filePath);
+            if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".png") || extension.ToLower().Equals(".jpeg"))
+            {
+                byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+                PictureType pType;
+                if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".jpeg"))
+                    pType = PictureType.JPEG;
+                else
+                {
+                    pType = PictureType.PNG;
+                }
+
+                templateWorkbook.AddPicture(bytes, pType);
+
+                XSSFClientAnchor anchor = new XSSFClientAnchor();
+                anchor.Col1 = column;
+                anchor.Row1 = row;
+                anchor.Col2 = column + imgNCol;
+
+                IDrawing drawing = sheet.CreateDrawingPatriarch();
+
+                IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
+
+                var image_dim = picture.GetImageDimension();
+                var mergedCellWidth = 0.0;
+                for (int i = column; i <= column + imgNCol; i++)
+                {
+                    mergedCellWidth += sheet.GetColumnWidth(i);
+                }
+
+                rowHeight = Convert.ToInt16(GetRowHeight(image_dim.Width, image_dim.Height, mergedCellWidth));
+                picture.Resize(1.0);
+
+                output.rowHeight = rowHeight;
+                output.image = picture;
+            }
+            else
+            {
+                var pType = PictureType.PNG;
+                byte[] bytes;
+                switch (Path.GetExtension(filePath))
+                {
+                    case ".pdf": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "pdf.png")); ; break;
+                    case ".doc": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "word.png")); break;
+                    case ".docx": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "word.png")); break;
+                    case ".xls": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
+                    case ".xlsx": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
+                    case ".csv": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
+                    default: bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "other-file.png")); break;
+                }
+                templateWorkbook.AddPicture(bytes, pType);
+
+                XSSFClientAnchor anchor = new XSSFClientAnchor();
+                anchor.Col1 = column;
+                anchor.Row1 = row;
+                anchor.Col2 = column + imgNCol;
+
+                IDrawing drawing = sheet.CreateDrawingPatriarch();
+
+                IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
+                var image_dim = picture.GetImageDimension();
+                var mergedCellWidth = 0.0;
+                for (int i = column; i <= column + imgNCol; i++)
+                {
+                    mergedCellWidth += sheet.GetColumnWidthInPixels(i);
+                }
+                rowHeight = 2000;
+                picture.Resize(1.0);
+
+                output.rowHeight = rowHeight;
+                output.image = picture;
+            }
+
+            output.extension = extension;
+            return output;
+        }
         private class ImageProperties
         {
             public short rowHeight { get; set; }
@@ -1052,6 +1307,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
         private class ObservacionReporte
         {
             public string IdInspeccion { get; set; }
+            public int IdObservacion { get; set; }
             public string SSO_MA { get; set; }
             public string DescripcionActoCondicion { get; set; }
             public string ActoCondicion { get; set; }
@@ -1110,6 +1366,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             public string FilePath { get; set; }
             public bool Success { get; set; }
             public string ErroMessage { get; set; }
+        }
+        public class Evidencia
+        {
+            public int IdObservacion { get; set; }
+            public string NombreEvidenciaRegistro { get; set; }
+            public string RutaEvidenciaRegistro { get; set; }
+            public string NombreEvidenciaImplementacion { get; set; }
+            public string RutaEvidenciaImplementacion { get; set; }
         }
     }
 }
