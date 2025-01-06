@@ -671,6 +671,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                             GerenciaLevantamiento = inspeccion.GerenciaInspeccionada,
                             GerenciaInspeccion = inspeccion.Gerencia,
                             ParticipantesInspeccion = inspeccion.Participantes,
+                            Participantes = inspeccion.Participantes_Inspección_Texto,
                             Asesor = observacion.Asesor.Nombres + " " + observacion.Asesor.Apellidos,
                             Codigo = inspeccion.Codigo,
                             AreaInspeccionada = inspeccion.AreaInspeccionada
@@ -767,101 +768,103 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 }
                 /*New file downloaded name*/
                 /*Copy data to new temp file*/
-                using (SftpClient sftp = new SftpClient(hostRegistro, Convert.ToInt32(portRegistro), userRegistro, passRegistro))
+                if (incluirEvidencias)
                 {
-                    
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dirRegistro);
-
-                    //Descargar archivo de sftp a nuevo archivo temporal creado
-                    foreach(var item in listaEvidenciasxObservacion)
+                    using (SftpClient sftp = new SftpClient(hostRegistro, Convert.ToInt32(portRegistro), userRegistro, passRegistro))
                     {
-                        if (item.NombreEvidenciaRegistro != null)
+
+                        sftp.Connect();
+                        sftp.ChangeDirectory(dirRegistro);
+
+                        //Descargar archivo de sftp a nuevo archivo temporal creado
+                        foreach (var item in listaEvidenciasxObservacion)
                         {
-                            var downloadedFilePath = archivePath + item.NombreEvidenciaRegistro;
-                            var fileStream = System.IO.File.Create(downloadedFilePath);
-                            sftp.DownloadFile(item.NombreEvidenciaRegistro, fileStream);
-                            fileStream.Dispose();
-
-                            //Desencriptar
-                            var pathDesencriptado = archivePath + item.NombreEvidenciaRegistro + "_desencriptado.zip";
-                            await _gestorEncriptado.DecryptFileAsync(downloadedFilePath, pathDesencriptado);
-
-                            //Descomprimir
-                            var pathDescomprimido = filePath;
-                            if (!pathDescomprimido.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
-                                pathDescomprimido += Path.DirectorySeparatorChar;
-
-                            using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
+                            if (item.NombreEvidenciaRegistro != null)
                             {
-                                foreach (ZipArchiveEntry entry in archive.Entries)
+                                var downloadedFilePath = archivePath + item.NombreEvidenciaRegistro;
+                                var fileStream = System.IO.File.Create(downloadedFilePath);
+                                sftp.DownloadFile(item.NombreEvidenciaRegistro, fileStream);
+                                fileStream.Dispose();
+
+                                //Desencriptar
+                                var pathDesencriptado = archivePath + item.NombreEvidenciaRegistro + "_desencriptado.zip";
+                                await _gestorEncriptado.DecryptFileAsync(downloadedFilePath, pathDesencriptado);
+
+                                //Descomprimir
+                                var pathDescomprimido = filePath;
+                                if (!pathDescomprimido.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                                    pathDescomprimido += Path.DirectorySeparatorChar;
+
+                                using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
                                 {
-                                    pathDescomprimido = Path.GetFullPath(Path.Combine(pathDescomprimido, "EvInspReg_" +item.IdObservacion+"_" + entry.FullName));
-                                    if (pathDescomprimido.StartsWith(pathDescomprimido, StringComparison.Ordinal))
-                                        entry.ExtractToFile(pathDescomprimido);
+                                    foreach (ZipArchiveEntry entry in archive.Entries)
+                                    {
+                                        pathDescomprimido = Path.GetFullPath(Path.Combine(pathDescomprimido, "EvInspReg_" + item.IdObservacion + "_" + entry.FullName));
+                                        if (pathDescomprimido.StartsWith(pathDescomprimido, StringComparison.Ordinal))
+                                            entry.ExtractToFile(pathDescomprimido);
+                                    }
                                 }
+                                item.RutaEvidenciaRegistro = pathDescomprimido;
                             }
-                            item.RutaEvidenciaRegistro = pathDescomprimido;
+                        }
+
+                        sftp.Dispose();
+                    }
+
+                    string hostImplementacion = "", portImplementacion = "", userImplementacion = "", passImplementacion = "", dirImplementacion = "";
+                    foreach (var item in serverInfoImplementacion.Info)
+                    {
+                        switch (item.Key)
+                        {
+                            case "host": hostImplementacion = item.Value; break;
+                            case "port": portImplementacion = item.Value; break;
+                            case "user": userImplementacion = item.Value; break;
+                            case "password": passImplementacion = item.Value; break;
+                            case "directory": dirImplementacion = item.Value; break;
                         }
                     }
 
-                    sftp.Dispose();
-                }
-
-                string hostImplementacion = "", portImplementacion = "", userImplementacion = "", passImplementacion = "", dirImplementacion = "";
-                foreach (var item in serverInfoImplementacion.Info)
-                {
-                    switch (item.Key)
+                    using (SftpClient sftp = new SftpClient(hostImplementacion, Convert.ToInt32(portImplementacion), userImplementacion, passImplementacion))
                     {
-                        case "host": hostImplementacion = item.Value; break;
-                        case "port": portImplementacion = item.Value; break;
-                        case "user": userImplementacion = item.Value; break;
-                        case "password": passImplementacion = item.Value; break;
-                        case "directory": dirImplementacion = item.Value; break;
-                    }
-                }
 
-                using (SftpClient sftp = new SftpClient(hostImplementacion, Convert.ToInt32(portImplementacion), userImplementacion, passImplementacion))
-                {
+                        sftp.Connect();
+                        sftp.ChangeDirectory(dirImplementacion);
 
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dirImplementacion);
-
-                    //Descargar archivo de sftp a nuevo archivo temporal creado
-                    foreach (var item in listaEvidenciasxObservacion)
-                    {
-                        if (item.NombreEvidenciaImplementacion != null)
+                        //Descargar archivo de sftp a nuevo archivo temporal creado
+                        foreach (var item in listaEvidenciasxObservacion)
                         {
-                            var downloadedFilePath = archivePath + item.NombreEvidenciaImplementacion;
-                            var fileStream = System.IO.File.Create(downloadedFilePath);
-                            sftp.DownloadFile(item.NombreEvidenciaImplementacion, fileStream);
-                            fileStream.Dispose();
-
-                            //Desencriptar
-                            var pathDesencriptado = archivePath + item.NombreEvidenciaImplementacion + "_desencriptado.zip";
-                            await _gestorEncriptado.DecryptFileAsync(downloadedFilePath, pathDesencriptado);
-
-                            //Descomprimir
-                            var pathDescomprimido = filePath;
-                            if (!pathDescomprimido.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
-                                pathDescomprimido += Path.DirectorySeparatorChar;
-
-                            using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
+                            if (item.NombreEvidenciaImplementacion != null)
                             {
-                                foreach (ZipArchiveEntry entry in archive.Entries)
+                                var downloadedFilePath = archivePath + item.NombreEvidenciaImplementacion;
+                                var fileStream = System.IO.File.Create(downloadedFilePath);
+                                sftp.DownloadFile(item.NombreEvidenciaImplementacion, fileStream);
+                                fileStream.Dispose();
+
+                                //Desencriptar
+                                var pathDesencriptado = archivePath + item.NombreEvidenciaImplementacion + "_desencriptado.zip";
+                                await _gestorEncriptado.DecryptFileAsync(downloadedFilePath, pathDesencriptado);
+
+                                //Descomprimir
+                                var pathDescomprimido = filePath;
+                                if (!pathDescomprimido.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                                    pathDescomprimido += Path.DirectorySeparatorChar;
+
+                                using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
                                 {
-                                    pathDescomprimido = Path.GetFullPath(Path.Combine(pathDescomprimido, "EvInspImpl_" + item.IdObservacion + "_" + entry.FullName));
-                                    if (pathDescomprimido.StartsWith(pathDescomprimido, StringComparison.Ordinal))
-                                        entry.ExtractToFile(pathDescomprimido);
+                                    foreach (ZipArchiveEntry entry in archive.Entries)
+                                    {
+                                        pathDescomprimido = Path.GetFullPath(Path.Combine(pathDescomprimido, "EvInspImpl_" + item.IdObservacion + "_" + entry.FullName));
+                                        if (pathDescomprimido.StartsWith(pathDescomprimido, StringComparison.Ordinal))
+                                            entry.ExtractToFile(pathDescomprimido);
+                                    }
                                 }
+                                item.RutaEvidenciaImplementacion = pathDescomprimido;
                             }
-                            item.RutaEvidenciaImplementacion = pathDescomprimido;
                         }
+
+                        sftp.Dispose();
                     }
-
-                    sftp.Dispose();
                 }
-
 
 
                 foreach (var observacion in observaciones)
@@ -979,9 +982,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     row.GetCell(startIndex + 17).SetCellValue(observacion.GerenciaLevantamiento);
                     //-> Gerencia Responsable de la Inspección
                     row.GetCell(startIndex + 18).SetCellValue(observacion.GerenciaInspeccion);
-                    //-> Gerencia Responsable de la Inspección
-                    row.GetCell(startIndex + 19).SetCellValue(observacion.ParticipantesInspeccion);
-                    //-> Gerencia Responsable de la Inspección
+                    //-> Participantes de la Inspección
+                    row.GetCell(startIndex + 19).SetCellValue(observacion.Participantes);
+                    //-> Asesor
                     row.GetCell(startIndex + 20).SetCellValue(observacion.Asesor);
                     //-> N° Inspección GESTIONA
                     row.GetCell(startIndex + 21).SetCellValue(observacion.Codigo);
@@ -1327,6 +1330,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             public string GerenciaLevantamiento { get; set; }
             public string GerenciaInspeccion { get; set; }
             public string ParticipantesInspeccion { get; set; }
+            public string Participantes { get; set; }
             public string Asesor { get; set; }
             public string Codigo { get; set; }
             public string AreaInspeccionada { get; set; }

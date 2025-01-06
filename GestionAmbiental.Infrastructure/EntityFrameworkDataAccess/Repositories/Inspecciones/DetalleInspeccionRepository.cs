@@ -233,7 +233,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 }
                 if (IsValidJson(cabecera.Participantes_Inspección)) 
                 { 
-                    var lista_ids = JsonConvert.DeserializeObject<List<int>>(cabecera.Responsable_Inspeccion);
+                    var lista_ids = JsonConvert.DeserializeObject<List<int>>(cabecera.Participantes_Inspección);
                     var lista_usuario = usuarios.Where(x => lista_ids.Contains(x.Id_Usuario)).ToList();
                     foreach( var x in lista_usuario)
                     {
@@ -244,6 +244,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             Apellidos = x.Apellidos
                         });
                     }
+                    cabDomain.Participantes_Inspección_Texto = ConcatUsingComa(lista_usuario.Select(x => x.Nombres.ToUpper() + " " + x.Apellidos.ToUpper()).ToList());
                 }
 
                 var observacionesCab = observaciones.Where(x => x.Id_Inspeccion_Cabecera.Equals(cabecera.Id_Inspeccion_Cabecera)).ToList();
