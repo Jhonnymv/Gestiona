@@ -244,6 +244,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             Apellidos = x.Apellidos
                         });
                     }
+                    cabDomain.Participantes_Inspección_Texto = ConcatUsingComa(lista_usuario.Select(x => x.Nombres.ToUpper() + " " + x.Apellidos.ToUpper()).ToList());
                 }
 
                 var observacionesCab = observaciones.Where(x => x.Id_Inspeccion_Cabecera.Equals(cabecera.Id_Inspeccion_Cabecera)).ToList();

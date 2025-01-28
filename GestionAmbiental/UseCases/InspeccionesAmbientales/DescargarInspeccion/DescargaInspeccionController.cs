@@ -670,10 +670,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                             RiesgoFatalidad = "",
                             GerenciaLevantamiento = inspeccion.GerenciaInspeccionada,
                             GerenciaInspeccion = inspeccion.Gerencia,
-                            ParticipantesInspeccion = inspeccion.Participantes,
+                            ParticipantesInspeccion = inspeccion.Participantes_Inspección_Texto,
                             Asesor = observacion.Asesor.Nombres + " " + observacion.Asesor.Apellidos,
                             Codigo = inspeccion.Codigo,
-                            AreaInspeccionada = inspeccion.AreaInspeccionada
+                            AreaInspeccionada = inspeccion.AreaInspeccionada,
+                            TipoInspeccion = inspeccion.TipoInspeccion
                         });
                     }
                 observaciones = observaciones.OrderBy(x => x.FechaInspeccion).ToList();
@@ -726,7 +727,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                 //1. Vaciar carpeta temporal del usuario 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-v2\\";
+                var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
@@ -767,45 +768,48 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 }
                 /*New file downloaded name*/
                 /*Copy data to new temp file*/
-                using (SftpClient sftp = new SftpClient(hostRegistro, Convert.ToInt32(portRegistro), userRegistro, passRegistro))
+                if (incluirEvidencias)
                 {
-                    
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dirRegistro);
-
-                    //Descargar archivo de sftp a nuevo archivo temporal creado
-                    foreach(var item in listaEvidenciasxObservacion)
+                    using (SftpClient sftp = new SftpClient(hostRegistro, Convert.ToInt32(portRegistro), userRegistro, passRegistro))
                     {
-                        if (item.NombreEvidenciaRegistro != null)
+
+                        sftp.Connect();
+                        sftp.ChangeDirectory(dirRegistro);
+
+                        //Descargar archivo de sftp a nuevo archivo temporal creado
+                        foreach (var item in listaEvidenciasxObservacion)
                         {
-                            var downloadedFilePath = archivePath + item.NombreEvidenciaRegistro;
-                            var fileStream = System.IO.File.Create(downloadedFilePath);
-                            sftp.DownloadFile(item.NombreEvidenciaRegistro, fileStream);
-                            fileStream.Dispose();
-
-                            //Desencriptar
-                            var pathDesencriptado = archivePath + item.NombreEvidenciaRegistro + "_desencriptado.zip";
-                            await _gestorEncriptado.DecryptFileAsync(downloadedFilePath, pathDesencriptado);
-
-                            //Descomprimir
-                            var pathDescomprimido = filePath;
-                            if (!pathDescomprimido.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
-                                pathDescomprimido += Path.DirectorySeparatorChar;
-
-                            using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
+                            if (item.NombreEvidenciaRegistro != null)
                             {
-                                foreach (ZipArchiveEntry entry in archive.Entries)
-                                {
-                                    pathDescomprimido = Path.GetFullPath(Path.Combine(pathDescomprimido, "EvInspReg_" +item.IdObservacion+"_" + entry.FullName));
-                                    if (pathDescomprimido.StartsWith(pathDescomprimido, StringComparison.Ordinal))
-                                        entry.ExtractToFile(pathDescomprimido);
-                                }
-                            }
-                            item.RutaEvidenciaRegistro = pathDescomprimido;
-                        }
-                    }
+                                var downloadedFilePath = archivePath + item.NombreEvidenciaRegistro;
+                                var fileStream = System.IO.File.Create(downloadedFilePath);
+                                sftp.DownloadFile(item.NombreEvidenciaRegistro, fileStream);
+                                fileStream.Dispose();
 
-                    sftp.Dispose();
+                                //Desencriptar
+                                var pathDesencriptado = archivePath + item.NombreEvidenciaRegistro + "_desencriptado.zip";
+                                await _gestorEncriptado.DecryptFileAsync(downloadedFilePath, pathDesencriptado);
+
+                                //Descomprimir
+                                var pathDescomprimido = filePath;
+                                if (!pathDescomprimido.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                                    pathDescomprimido += Path.DirectorySeparatorChar;
+
+                                using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
+                                {
+                                    foreach (ZipArchiveEntry entry in archive.Entries)
+                                    {
+                                        pathDescomprimido = Path.GetFullPath(Path.Combine(pathDescomprimido, "EvInspReg_" + item.IdObservacion + "_" + entry.FullName));
+                                        if (pathDescomprimido.StartsWith(pathDescomprimido, StringComparison.Ordinal))
+                                            entry.ExtractToFile(pathDescomprimido);
+                                    }
+                                }
+                                item.RutaEvidenciaRegistro = pathDescomprimido;
+                            }
+                        }
+
+                        sftp.Dispose();
+                    }
                 }
 
                 string hostImplementacion = "", portImplementacion = "", userImplementacion = "", passImplementacion = "", dirImplementacion = "";
@@ -820,48 +824,49 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                         case "directory": dirImplementacion = item.Value; break;
                     }
                 }
-
-                using (SftpClient sftp = new SftpClient(hostImplementacion, Convert.ToInt32(portImplementacion), userImplementacion, passImplementacion))
+                if (incluirEvidencias)
                 {
-
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dirImplementacion);
-
-                    //Descargar archivo de sftp a nuevo archivo temporal creado
-                    foreach (var item in listaEvidenciasxObservacion)
+                    using (SftpClient sftp = new SftpClient(hostImplementacion, Convert.ToInt32(portImplementacion), userImplementacion, passImplementacion))
                     {
-                        if (item.NombreEvidenciaImplementacion != null)
+
+                        sftp.Connect();
+                        sftp.ChangeDirectory(dirImplementacion);
+
+                        //Descargar archivo de sftp a nuevo archivo temporal creado
+                        foreach (var item in listaEvidenciasxObservacion)
                         {
-                            var downloadedFilePath = archivePath + item.NombreEvidenciaImplementacion;
-                            var fileStream = System.IO.File.Create(downloadedFilePath);
-                            sftp.DownloadFile(item.NombreEvidenciaImplementacion, fileStream);
-                            fileStream.Dispose();
-
-                            //Desencriptar
-                            var pathDesencriptado = archivePath + item.NombreEvidenciaImplementacion + "_desencriptado.zip";
-                            await _gestorEncriptado.DecryptFileAsync(downloadedFilePath, pathDesencriptado);
-
-                            //Descomprimir
-                            var pathDescomprimido = filePath;
-                            if (!pathDescomprimido.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
-                                pathDescomprimido += Path.DirectorySeparatorChar;
-
-                            using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
+                            if (item.NombreEvidenciaImplementacion != null)
                             {
-                                foreach (ZipArchiveEntry entry in archive.Entries)
+                                var downloadedFilePath = archivePath + item.NombreEvidenciaImplementacion;
+                                var fileStream = System.IO.File.Create(downloadedFilePath);
+                                sftp.DownloadFile(item.NombreEvidenciaImplementacion, fileStream);
+                                fileStream.Dispose();
+
+                                //Desencriptar
+                                var pathDesencriptado = archivePath + item.NombreEvidenciaImplementacion + "_desencriptado.zip";
+                                await _gestorEncriptado.DecryptFileAsync(downloadedFilePath, pathDesencriptado);
+
+                                //Descomprimir
+                                var pathDescomprimido = filePath;
+                                if (!pathDescomprimido.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                                    pathDescomprimido += Path.DirectorySeparatorChar;
+
+                                using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
                                 {
-                                    pathDescomprimido = Path.GetFullPath(Path.Combine(pathDescomprimido, "EvInspImpl_" + item.IdObservacion + "_" + entry.FullName));
-                                    if (pathDescomprimido.StartsWith(pathDescomprimido, StringComparison.Ordinal))
-                                        entry.ExtractToFile(pathDescomprimido);
+                                    foreach (ZipArchiveEntry entry in archive.Entries)
+                                    {
+                                        pathDescomprimido = Path.GetFullPath(Path.Combine(pathDescomprimido, "EvInspImpl_" + item.IdObservacion + "_" + entry.FullName));
+                                        if (pathDescomprimido.StartsWith(pathDescomprimido, StringComparison.Ordinal))
+                                            entry.ExtractToFile(pathDescomprimido);
+                                    }
                                 }
+                                item.RutaEvidenciaImplementacion = pathDescomprimido;
                             }
-                            item.RutaEvidenciaImplementacion = pathDescomprimido;
                         }
+
+                        sftp.Dispose();
                     }
-
-                    sftp.Dispose();
                 }
-
 
 
                 foreach (var observacion in observaciones)
@@ -870,7 +875,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     IRow row = sheet.CreateRow(fila);
 
                     //Aplicar cell style a una fila de observación
-                    for (int i = 1; i <= 22; i++)
+                    for (int i = 1; i <= 23; i++)
                     {
                         row.CreateCell(i);
                         row.GetCell(i).CellStyle = estiloNormal;
@@ -967,7 +972,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     var estilo = estilos.FirstOrDefault(x => x.Estado.Equals(observacion.Estado));
                     if (estilo != null)
                         row.GetCell(startIndex + 12).CellStyle = estilo.EstiloCelda;
-                    //-> Responsable Inspección
+                    //-> Lider de la inspección
                     row.GetCell(startIndex + 13).SetCellValue(observacion.ResponsableInspeccion);
                     //-> Fecha Inspección
                     row.GetCell(startIndex + 14).SetCellValue(observacion.FechaInspeccion);
@@ -977,20 +982,22 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     row.GetCell(startIndex + 16).SetCellValue(observacion.RiesgoFatalidad);
                     //-> Gerencia Responsable Levantamiento
                     row.GetCell(startIndex + 17).SetCellValue(observacion.GerenciaLevantamiento);
-                    //-> Gerencia Responsable de la Inspección
+                    //-> Gerencia de la inspección
                     row.GetCell(startIndex + 18).SetCellValue(observacion.GerenciaInspeccion);
-                    //-> Gerencia Responsable de la Inspección
+                    //-> Participantes de la inspección
                     row.GetCell(startIndex + 19).SetCellValue(observacion.ParticipantesInspeccion);
-                    //-> Gerencia Responsable de la Inspección
+                    //-> Asesor
                     row.GetCell(startIndex + 20).SetCellValue(observacion.Asesor);
+                    //-> Tipo de Inspección
+                    row.GetCell(startIndex + 21).SetCellValue(observacion.TipoInspeccion);
                     //-> N° Inspección GESTIONA
-                    row.GetCell(startIndex + 21).SetCellValue(observacion.Codigo);
+                    row.GetCell(startIndex + 22).SetCellValue(observacion.Codigo);
                     XSSFHyperlink UrlLinkLugReg = new XSSFHyperlink(HyperlinkType.Url)
                     {
                         //Address = "https://gestiona.marcobre.com:9190/Inspecciones/DetalleInspeccion?IdCabecera="+(_protector.Protect(observacion.IdInspeccion))
                         Address = "https://gestiona.marcobre.com:9190/Inspecciones/DetalleInspeccionNotificacion?IdCabecera=" + observacion.IdInspeccion
                     };
-                    row.GetCell(startIndex + 21).Hyperlink = (UrlLinkLugReg);
+                    row.GetCell(startIndex + 22).Hyperlink = (UrlLinkLugReg);
 
                     obsIndex++;
                     fila++;
@@ -1007,7 +1014,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 /*
                 //VACIAR CARPETA TEMPORAL
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-v2\\";
+                var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
@@ -1041,7 +1048,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
             //1. Vaciar carpeta temporal del usuario 
             var tempPath = Path.GetTempPath();
-            var SGATempPath = tempPath + "SGA-Marcobre-v2\\";
+            var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
             if (!Directory.Exists(SGATempPath))
             {
                 Directory.CreateDirectory(SGATempPath);
@@ -1330,6 +1337,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             public string Asesor { get; set; }
             public string Codigo { get; set; }
             public string AreaInspeccionada { get; set; }
+            public string TipoInspeccion { get; set; }
 
         }
         private class Estilo
