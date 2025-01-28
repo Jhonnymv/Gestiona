@@ -173,11 +173,11 @@
 
                 var resol = $("#IdResolucion").val();
                 for (var i = 0; i < ultimosRegistros.length; i++) {
-                if (ultimosRegistros[i].IdResolucion == resol) {
-                    caudalPromedio = ultimosRegistros[i].CaudalPromedio;
-                    return;
+                    if (ultimosRegistros[i].IdResolucion == resol) {
+                        caudalPromedio = ultimosRegistros[i].CaudalPromedio;
+                        return;
+                    }
                 }
-            }
             }
         });
 
