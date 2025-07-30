@@ -86,7 +86,7 @@ namespace GestionAmbiental.UseCases.Autenticacion
                 if (captchaResult)
                 {
                     string returnUrl = TempData["returnUrl"] as string;
-                    ////Get LDAP connection data
+                    //Get LDAP connection data
                     var info = await _info_SGA.Execute(Tipo_Info_SGA.LDAPConnection);
                     string ldap_path = "", ldap_domain = "";
                     foreach (var item in info.Info)
@@ -98,56 +98,56 @@ namespace GestionAmbiental.UseCases.Autenticacion
                         }
                     }
                     // Validate credentials
-                    using (var context = new PrincipalContext(ContextType.Domain, ldap_domain))
+                    //using (var context = new PrincipalContext(ContextType.Domain, ldap_domain))
+                    //{
+                    //    if (context.ValidateCredentials(model.User, model.Password, ContextOptions.Negotiate))
+                    //    {
+                    //        var rol = await _getRolUsuario.Execute(model.User);
+                    //        if (!rol.HasValue)
+                    //            result = new
+                    //            {
+                    //                success = false,
+                    //                mensaje = "Usuario no autorizado"
+                    //            };
+                    //        else
+                    //        {
+                    //            var userInfo = new UserInfo { NombreUsuario = model.User, Rol = rol.Value };
+                    //            HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
+                    //            result = new
+                    //            {
+                    //                success = true,
+                    //                returnUrl = returnUrl
+                    //            };
+                    //        }
+                    //    }
+                    //    else
+                    //        result = new
+                    //        {
+                    //            success = false,
+                    //            mensaje = "El usuario o la contraseña son incorrectos"
+                    //        };
+                    //}
+                    var rol = await _getRolUsuario.Execute(model.User);
+                    if (!rol.HasValue)
                     {
-                        if (context.ValidateCredentials(model.User, model.Password, ContextOptions.Negotiate))
+                        model.MensajeAut = "El usuario o la contraseña son incorrectas";
+                        result = new
                         {
-                            var rol = await _getRolUsuario.Execute(model.User);
-                            if (!rol.HasValue)
-                                result = new
-                                {
-                                    success = false,
-                                    mensaje = "Usuario no autorizado"
-                                };
-                            else
-                            {
-                                var userInfo = new UserInfo { NombreUsuario = model.User, Rol = rol.Value };
-                                HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
-                                result = new
-                                {
-                                    success = true,
-                                    returnUrl = returnUrl
-                                };
-                            }
-                        }
-                        else
-                            result = new
-                            {
-                                success = false,
-                                mensaje = "El usuario o la contraseña son incorrectos"
-                            };
-                    }
-                    //var rol = await _getRolUsuario.Execute(model.User);
-                    //if (!rol.HasValue)
-                    //{
-                    //    model.MensajeAut = "El usuario o la contraseña son incorrectas";
-                    //    result = new
-                    //    {
-                    //        success = false,
-                    //        mensaje = "El usuario o la contraseña son incorrectas"
-                    //    };
+                            success = false,
+                            mensaje = "El usuario o la contraseña son incorrectas"
+                        };
 
-                    //}
-                    //else
-                    //{
-                    //    var userInfo = new UserInfo { NombreUsuario = model.User, Rol = rol.Value };
-                    //    HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
-                    //    result = new
-                    //    {
-                    //        success = true,
-                    //        returnUrl = returnUrl
-                    //    };
-                    //}
+                    }
+                    else
+                    {
+                        var userInfo = new UserInfo { NombreUsuario = model.User, Rol = rol.Value };
+                        HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
+                        result = new
+                        {
+                            success = true,
+                            returnUrl = returnUrl
+                        };
+                    }
                 }
                 else
                 {

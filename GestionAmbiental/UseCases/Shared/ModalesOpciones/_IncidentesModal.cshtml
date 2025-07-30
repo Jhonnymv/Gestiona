@@ -31,6 +31,13 @@
                     <div class="modal-menu-options">
                         @if (ViewBag.Rol == "Inspector" || ViewBag.Rol == "AsesorSSO")
                         {
+                            <a class="modal-menu-option" asp-controller="FlashReport" asp-action="Resumen">
+                                <div class="icon-modal-menu-red">
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Flash Report</span>
+                                </div>
+                            </a>
                             <a class="modal-menu-option" asp-controller="ReportePreliminar" asp-action="Resumen">
                                 <div class="icon-modal-menu-red">
 
@@ -51,6 +58,13 @@
 
                         @if (ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Admin")
                         {
+                            <a class="modal-menu-option" asp-controller="FlashReport" asp-action="Resumen">
+                                <div class="icon-modal-menu-red">
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Flash Report</span>
+                                </div>
+                            </a>
                             <a class="modal-menu-option" asp-controller="ReportePreliminar" asp-action="Resumen">
                                 <div class="icon-modal-menu-yellow">
 

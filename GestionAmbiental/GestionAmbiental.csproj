@@ -45,7 +45,6 @@
     <Folder Include="logs\" />
     <Folder Include="UseCases\SGA_Documentos\Indicadores\" />
     <Folder Include="UseCases\SGA_Documentos\Auditoria\" />
-    <Folder Include="Views\CalidadAgua\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\Investigacion\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\ReportePreliminar\" />
     <Folder Include="wwwroot\ExcelTemplates\ResiduoSolido\" />

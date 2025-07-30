@@ -869,27 +869,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                         }
                     }
                 }
-                //if (model.Evidencias != null)
-                //{                       
-                //    for (int i = 0; i < model.Evidencias.Count; i++)
-                //    {
-                //        var extension = Path.GetExtension(model.Evidencias[i].FileName);
-                //        var max_file_size = 12000000;
 
-                //        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG"};
-
-                //        if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
-                //        {
-                //            var newfileName = CreateUniqueFileName(i + 1) + ".zip";
-                //            var filePath = await UploadZipFileAsync(model.Evidencias[i], newfileName);
-                //            evidencias.Add(filePath);
-                //        }
-                //    }
-                //}
-                //if(model.Evidencias_Completas != null)
-                //{
-                //    evidencias.AddRange(new List<string>(model.Evidencias_Completas.Split(',')));
-                //}
                 await _editarReportePreliminar.Execute(
                     model.Id_Reporte_Preliminar,
                     model.Num_Trabajadores,

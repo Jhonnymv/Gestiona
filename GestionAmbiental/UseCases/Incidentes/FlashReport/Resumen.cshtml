@@ -1,0 +1,166 @@
+﻿
+@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+@section styles {
+    <link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
+}
+
+<div class="incidentes">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title incidentes-opacity-color">
+                <h3>Flash Reports de Incidentes Ambientales</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header container">
+            <div class="action-container incidentes-color">
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline incidentes-color" asp-action="NuevoFlashReport" asp-controller="FlashReport">NUEVO REGISTRO</a>
+                </div>
+            </div>
+            <form autocomplete="off" class="custom-form w-100" id="form_filtro">
+                <div class="col-12 col-lg-9">
+                    <div class="row input_container">
+                        <div class="col-12 col-md-4">
+                            <label>Fecha de Inicio</label>
+                            <input id="fecha_inicio_filtro" type="date" class="form-control">
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label>Fecha de Fin</label>
+                            <input id="fecha_fin_filtro" type="date" class="form-control">
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label>Gerencia Involucrada</label>
+                            <select id="gerencia_filtro" asp-items="@ViewBag.Gerencias" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-4">
+                            <label>Supervisor Inmediato (Titular Minero)</label>
+                            <select id="titular_filtro" asp-items="@ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label>Responsable de Acción Inmediata</label>
+                            <select id="responsable_filtro" asp-items="@ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label>Estado</label>
+                            <select id="estado_filtro" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
+                                <option data-tokens="EnProceso" value="EnProceso">En Proceso</option>
+                                <option data-tokens="Cerrado" value="Cerrado">Cerrado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-4">
+                            <label>Supervisor MAP</label>
+                            <select id="asesor_filtro" asp-items="@ViewBag.Asesores" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label>Código</label>
+                            <input id="codigo_filtro" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3">
+                    <div class="row ms-1 me-1">
+                        <button id="btn_filtrar" type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                    </div>
+                    <div class="row ms-1 me-1">
+                        <button id="btn_reset" type="button" class="btn btn-mc-outline">Limpiar Filtros</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive incidentes-color">
+            <table class="table" id="tabla_resumen_incidentes">
+                <thead class="">
+                    <tr>
+                        <th>Código</th>
+                        <th>Gerencia</th>
+                        <th>Empresa</th>
+                        <th>Nivel de Incidente</th>
+                        <th>Fecha de Incidente</th>
+                        <th>Producto Derramado</th>
+                        <th>Cantidad Derramado</th>
+                        <th>Supervisor Marcobre</th>
+                        <th>Supervisor Contratista</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination-container incidentes-color" id="paginado">
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/selectpicker/js/bootstrap-select.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            filtrar(1);
+        });
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/FlashReport/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        let r = data.r;
+                        let g = data.g;
+                        let b = data.b;
+                        let img_url = data.img_url;
+                        incidentesStyle(r, g, b);
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
+        function filtrar(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/FlashReport/GetTablaResumenFiltrada",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "fecha_inicio": $("#fecha_inicio_filtro").val(),
+                    "fecha_fin": $("#fecha_fin_filtro").val(),
+                    "gerencia": $("#gerencia_filtro").val(),
+                    "titular": $("#titular_filtro").val(),
+                    "estado": $("#estado_filtro").val(),
+                    "responsable": $("#responsable_filtro").val(),
+                    "asesor": $("#asesor_filtro").val(),
+                    "codigo": $("#codigo_filtro").val(),
+                    "usuario_red": '@ViewBag.Usuario'
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tabla_resumen_incidentes tbody').empty();
+                    $('#tabla_resumen_incidentes tbody').html(response.data);
+                    $('#paginado').html(response.paginador);
+                    dataModulo();
+                }
+            });
+        }
+    </script>
+}
+
