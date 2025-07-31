@@ -9,7 +9,7 @@
 	<div class="primary-content col-12">
 		<div class="image-header-container">
 			<div class="header-title incidentes-opacity-color">
-				<h3>Editar Flash Report</h3>
+				<h3>Editar Flash Report - @Model.Codigo</h3>
 				<img src="~/img/logo-white.png" alt="Logo Marcobre">
 			</div>
 		</div>
@@ -226,7 +226,8 @@
 						<div class="custom-form w-100">
 							<div class="detail-container col-12 mb-4">
 								<div class="row mb-2">
-									<input type="hidden" id="Id_Accion" />
+									<input type="hidden" id="Id_Accion_Flash_Report" />
+									<input type="hidden" id="Estado_Accion" />
 									<div class="col-sm-12 col-md-12 col-lg-12">
 										<span class="text-danger" id="danger_accion"></span>
 									</div>
@@ -288,20 +289,19 @@
 			var acciones = @Html.Raw(Model.Acciones);
 			console.log("acciones ", acciones)
 			lista_acciones = acciones.map((accion) => ({
-				IdAccion: accion.Id_Accion_Flash_Report,
+				Id_Accion_Flash_Report: accion.Id_Accion_Flash_Report,
 				descripcion: accion.Descripcion,
 				usuario: accion.IdUsuario,
 				contratista: accion.Responsable,
 				fecha: accion.Fecha.split('T')[0],
-				estado: accion.Estatus
+				estado: accion.Estatus,
+				estado_accion: accion.Estado,
+				nuevo:false
 			}
 			));
 			$('#tabla_acciones tbody').empty();
 			$('#tabla_acciones tbody').html(generarTablaAccionesHtml(lista_acciones));
 			$('#NAcciones').val(lista_acciones.length);
-			// GetAcciones();
-			// if ('@Model.Estado' == "Pendiente" || '@ViewBag.PermisosAdmin' == 'True')
-			// 	HabilitarInputs();
 
 			var evidencia_valores = @Html.Raw(Model.Evidencias_Completas);
 			console.log("evidencia_valores", evidencia_valores)
@@ -352,7 +352,7 @@
 		$("#boton_finalizar").on("click", function () {
 			resetValidationMessage()
 			if (validarInputs()) {
-				$("#Opcion").val("Finalizar");
+				$("#Opcion").val("Registrar");
 				$("#Acciones").val(JSON.stringify(lista_acciones));
 				$("#form_editarReporte").submit();
 			}
@@ -429,6 +429,7 @@
 			$('#input_contratista_accion').val("");
 			$('#input_fecha_accion').val("");
 			$('#select_estatus').val("");
+			$("#Estado_Accion").val("");
 		}
 		function ValidateInputsAccion() {
 			var result = true;
@@ -442,34 +443,14 @@
 			return result;
 		}
 		function EditarAccion(idAccion) {
-			// $("#Id_Accion").val(0);
-			// ResetInputsAccion();
-			// $.ajax({
-			// 	type: "GET",
-			// 	url: "/FlashReport/EditarAccion",
-			// 	data: {
-			// 		IdAccion: idAccion
-			// 	},
-			// 	success: (response) => {
-			// 		$("#modal_accion").modal('show');
-			// 		$("#btn_editar_accion").show();
-			// 		$("#btn_guardar_accion").hide();
-
-			// 		$("#Id_Accion").val(response.idAccion);
-			// 		$("#input_descripcion_accion").val(response.accion);
-			// 		$("#select_usuarios_accion").val(response.idUsuario);
-			// 		$("#input_contratista_accion").val(response.responsableCon);
-			// 		$("#input_fecha_accion").val(response.fecha);
-			// 		$("#select_estatus").val(response.estatus);
-			// 	}
-			// });
-			let accion = lista_acciones.find(ac => ac.IdAccion === parseInt(idAccion));
-			$("#Id_Accion").val(idAccion);
+			let accion = lista_acciones.find(ac => ac.Id_Accion_Flash_Report === parseInt(idAccion));
+			$("#Id_Accion_Flash_Report").val(idAccion);
 			$("#input_descripcion_accion").val(accion.descripcion);
 			$('#select_usuarios_accion').val(accion.usuario);
 			$('#input_contratista_accion').val(accion.contratista);
 			$('#input_fecha_accion').val(accion.fecha);
 			$('#select_estatus').val(accion.estado);
+			$("#Estado_Accion").val(accion.estado_accion);
 
 			$("#modal_accion").modal('show');
 			$("#btn_editar_accion").show();
@@ -477,20 +458,12 @@
 		}
 		function EliminarAccion(indexAccion) {
 			if (confirm('¿Está seguro que desea eliminar esta acción?')) {
-				// $.ajax({
-				// 	type: "POST",
-				// 	url: "/FlashReport/EliminarAccion",
-				// 	data: {
-				// 		IdReporte: $("#Id_Reporte_Preliminar").val(),
-				// 		IdAccion: idAccion,
-				// 	},
-				// 	success: (response) => {
-				// 		$('#tabla_acciones tbody').empty();
-				// 		$('#tabla_acciones tbody').html(response.filas_acciones);
-				// 		$('#NAcciones').val(response.nAcciones);
-				// 	}
-				// });
-				lista_acciones = lista_acciones.filter(item => item.IdAccion !== indexAccion)
+				// lista_acciones = lista_acciones.filter(item => item.Id_Accion_Flash_Report !== indexAccion)
+				let accion = lista_acciones.find(ac => ac.Id_Accion_Flash_Report === parseInt(indexAccion));
+				if (accion) {
+					accion.estado_accion = "Eliminado"
+				}
+
 				$('#tabla_acciones tbody').empty();
 				$('#NAcciones').val(lista_acciones.length);
 				if (lista_acciones.length > 0) {
@@ -505,12 +478,14 @@
 			$("#danger_accion").html("");
 			if (validarInputsModalAccion()) {
 				var nuevo_item_acciones = {
-					IdAccion: lista_acciones.length,
+					Id_Accion_Flash_Report: lista_acciones.length,
 					descripcion: $("#input_descripcion_accion").val(),
 					usuario: $('#select_usuarios_accion').val(),
 					contratista: $('#input_contratista_accion').val(),
 					fecha: $('#input_fecha_accion').val(),
-					estado: $('#select_estatus').val()
+					estado: $('#select_estatus').val(),
+					estado_accion: "Registrado",
+					nuevo:true
 				};
 				lista_acciones.push(nuevo_item_acciones)
 				$("#tabla_acciones").show();
@@ -524,6 +499,7 @@
 		function generarTablaAccionesHtml(acciones) {
 			let filas = "";
 			acciones.forEach((accion, index) => {
+				if(accion.estado_accion != "Eliminado"){
 				let usuario = lista_usuarios.find(user => user.IdUsuario === parseInt(accion.usuario));
 				filas += `<tr>
 							<td style="color: rgb(254, 144, 42); background-color: rgba(254, 144, 42, 0.2);">${accion.descripcion}</td>
@@ -531,17 +507,18 @@
 							<td style="color: rgb(254, 144, 42); background-color: rgba(254, 144, 42, 0.2);">${accion.contratista}</td>
 							<td style="color: rgb(254, 144, 42); background-color: rgba(254, 144, 42, 0.2);">${accion.fecha}</td>
 							<td style="color: rgb(254, 144, 42); background-color: rgba(254, 144, 42, 0.2);">${accion.estado}</td>
-							<td style="color: rgb(254, 144, 42); background-color: rgba(254, 144, 42, 0.2);"><button type="button" class="btn btn-mc" onclick="EditarAccion(${accion.IdAccion})">Editar</button></td>
-							<td style="color: rgb(254, 144, 42); background-color: rgba(254, 144, 42, 0.2);"><button type="button" class="btn btn-mc-danger" onclick="EliminarAccion(${accion.IdAccion})">Eliminar</button></td>
+									<td style="color: rgb(254, 144, 42); background-color: rgba(254, 144, 42, 0.2);"><button type="button" class="btn btn-mc" onclick="EditarAccion(${accion.Id_Accion_Flash_Report})">Editar</button></td>
+									<td style="color: rgb(254, 144, 42); background-color: rgba(254, 144, 42, 0.2);"><button type="button" class="btn btn-mc-danger" onclick="EliminarAccion(${accion.Id_Accion_Flash_Report})">Eliminar</button></td>
 						</tr>`;
+				}
 			});
 			return filas;
 		}
 		$("#btn_editar_accion").on("click", function () {
-			var idAccion = $("#Id_Accion").val();
+			var idAccion = $("#Id_Accion_Flash_Report").val();
 			if (validarInputsModalAccion()) {
 				$("#danger_accion").html("");
-				let accion = lista_acciones.find(ac => ac.IdAccion === parseInt(idAccion));
+				let accion = lista_acciones.find(ac => ac.Id_Accion_Flash_Report === parseInt(idAccion));
 				if (accion) {
 					// Update the properties of the found action
 					accion.descripcion = $("#input_descripcion_accion").val();
@@ -549,6 +526,8 @@
 					accion.contratista = $('#input_contratista_accion').val();
 					accion.fecha = $('#input_fecha_accion').val();
 					accion.estado = $('#select_estatus').val();
+					accion.estado_accion = $("#Estado_Accion").val()
+					accion.nuevo = false;
 				}
 				$("#tabla_acciones").show();
 				ResetInputsAccion();
@@ -557,32 +536,6 @@
 				$('#tabla_acciones tbody').html(generarTablaAccionesHtml(lista_acciones));
 				$('#NAcciones').val(lista_acciones.length);
 			}
-			// $("#danger_accion").html("");
-			// if (ValidateInputsAccion() && ($("#IdAccion").val() != "" || $("#IdAccion").val() != 0))
-			// 	$.ajax({
-			// 		type: "POST",
-			// 		url: "/FlashReport/EditarAccion",
-			// 		data: {
-			// 			IdAccion: $("#Id_Accion").val(),
-			// 			IdReporte: $("#Id_Reporte_Preliminar").val(),
-			// 			descripcion: $("#input_descripcion_accion").val(),
-			// 			usuario: $('#select_usuarios_accion').val(),
-			// 			contratista: $('#input_contratista_accion').val(),
-			// 			fecha: $('#input_fecha_accion').val(),
-			// 			estado: $('#select_estatus').val()
-			// 		},
-			// 		success: (response) => {
-			// 			ResetInputsInvolucrado();
-			// 			$("#modal_accion").modal('hide');
-			// 			$('#tabla_acciones tbody').empty();
-			// 			$('#tabla_acciones tbody').html(response.filas_acciones);
-			// 			$('#NAcciones').val(response.nAcciones);
-			// 			dataModulo();
-			// 		}
-			// 	});
-			// else
-			// 	$("#danger_accion").html("Debe completar todos los campos");
-
 		});
 		function validarInputsModalAccion() {
 			if ($("#input_descripcion_accion").val() == "" &&

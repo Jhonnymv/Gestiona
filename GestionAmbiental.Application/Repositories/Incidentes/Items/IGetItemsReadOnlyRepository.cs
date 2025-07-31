@@ -24,6 +24,7 @@ namespace GestionAmbiental.Application.Repositories.Incidentes.Items
         Task<List<Unidad_Medida>> GetListUnidadMedida();
         Task<List<TipoCondicion>> GetListTipoCondicion();
         Task<List<Gerencia>> GetListGerencia();
+        Task<List<Empresa>> GetListEmpresa();
         Task<List<Usuario>> GetListUsuarioMA();
         Task<List<Usuario>> GetListUsuarios();
         Task<List<Factor_Causa_Incidente>> GetListFactores();

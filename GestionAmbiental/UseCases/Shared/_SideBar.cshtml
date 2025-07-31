@@ -332,6 +332,9 @@
                             @if (ViewBag.Rol == "Inspector" || ViewBag.Rol == "AsesorSSO")
                             {
                                 <li>
+                                    <a asp-controller="FlashReport" asp-action="Resumen">Flash Report</a>
+                                </li>
+                                <li>
                                     <a asp-controller="ReportePreliminar" asp-action="Resumen">Reporte Preliminar</a>
                                 </li>
                                 <li>
@@ -341,6 +344,12 @@
 
                             @if (ViewBag.Rol == "AsesorMAP")
                             {
+                                <li>
+                                    <a asp-controller="FlashReport" asp-action="Resumen">Flash Report</a>
+                                </li>
+                                <li>
+                                    <a asp-controller="FlashReportMA" asp-action="Resumen">Flash Report MA</a>
+                                </li>
                                 <li>
                                     <a asp-controller="ReportePreliminar" asp-action="Resumen">Reporte Preliminar</a>
                                 </li>
@@ -744,6 +753,9 @@
                         <ul class="collapse list-unstyled" id="incidentesSubmenu" aria-controls="collapseExample">
                             <li>
                                 <a asp-controller="FlashReport" asp-action="Resumen">Flash Report</a>
+                            </li>
+                            <li>
+                                <a asp-controller="FlashReportMA" asp-action="Resumen">Flash Report MA</a>
                             </li>
                             <li>
                                 <a asp-controller="ReportePreliminar" asp-action="Resumen">Reporte Preliminar</a>

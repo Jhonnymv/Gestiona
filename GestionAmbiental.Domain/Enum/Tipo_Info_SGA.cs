@@ -27,5 +27,6 @@ namespace GestionAmbiental.Domain.Enum
         FTPConnectionSGADocumentos = 19,
         FTPConnectionCMCBImp=20,
         FTPConnectionAvistamientoFlora=21,
-    }
+		FTPConnectionEvidenciaFlashReport = 22
+	}
 }

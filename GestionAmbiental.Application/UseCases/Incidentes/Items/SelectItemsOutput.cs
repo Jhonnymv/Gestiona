@@ -23,9 +23,9 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.Items
         public List<Unidad_Medida> ItemsUnidadMedida { get; set; }
         public List<TipoCondicion> ItemsTipoCondicion { get; set; }
         public List<Gerencia> ItemsGerencia { get; set; }
+        public List<Empresa> ItemsEmpresa { get; set; }
         public List<Usuario> ItemsUsuarioMA { get; set; }
         public List<Usuario> ItemsUsuario { get; set; }
-        public List<Producto_Incidente> ItemsProducto { get; set; }
         public List<Factor_Causa_Incidente> ItemsFactores { get; set; }
     }
 }

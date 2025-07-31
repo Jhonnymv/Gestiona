@@ -15,6 +15,7 @@ using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.FOCAM;
 using Microsoft.EntityFrameworkCore;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.MonitoreoCampoInterno.Calidad_Agua;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inspecciones.Items;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Incidentes.FlashReport;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 {
@@ -64,6 +65,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Tipo_Producto_Incidente> Tipo_Producto_Incidente { get; set; }
         public DbSet<Tipo_Suelo> Tipo_Suelo { get; set; }
         public DbSet<Unidad_Medida> Unidad_Medida { get; set; }
+
+        public DbSet<Flash_Report> Flash_Report { get; set; }
+        public DbSet<Accion_Flash_Report>Accion_Flash_Report { get; set; }
 
         public DbSet<Reporte_Preliminar_Incidente> Reporte_Preliminar_Incidente { get; set; }
 

@@ -279,7 +279,7 @@
 		$("#boton_finalizar").on("click", function () {
 			resetValidationMessage()
 			if (validarInputs()) {
-				$("#Opcion").val("Finalizar");
+				$("#Opcion").val("Registrar");
 				$("#Acciones").val(JSON.stringify(lista_acciones));
 				$("#form_nuevoReporte").submit();
 			}
@@ -343,27 +343,6 @@
 			return result;
 		}
 		function EditarAccion(idAccion) {
-			// $("#Id_Accion").val(0);
-			// ResetInputsAccion();
-			// $.ajax({
-			// 	type: "GET",
-			// 	url: "/FlashReport/EditarAccion",
-			// 	data: {
-			// 		IdAccion: idAccion
-			// 	},
-			// 	success: (response) => {
-			// 		$("#modal_accion").modal('show');
-			// 		$("#btn_editar_accion").show();
-			// 		$("#btn_guardar_accion").hide();
-
-			// 		$("#Id_Accion").val(response.idAccion);
-			// 		$("#input_descripcion_accion").val(response.accion);
-			// 		$("#select_usuarios_accion").val(response.idUsuario);
-			// 		$("#input_contratista_accion").val(response.responsableCon);
-			// 		$("#input_fecha_accion").val(response.fecha);
-			// 		$("#select_estatus").val(response.estatus);
-			// 	}
-			// });
 			let accion = lista_acciones.find(ac => ac.IdAccion === parseInt(idAccion));
 			$("#Id_Accion").val(idAccion);
 			$("#input_descripcion_accion").val(accion.descripcion);
@@ -378,19 +357,6 @@
 		}
 		function EliminarAccion(indexAccion) {
 			if (confirm('¿Está seguro que desea eliminar esta acción?')) {
-				// $.ajax({
-				// 	type: "POST",
-				// 	url: "/FlashReport/EliminarAccion",
-				// 	data: {
-				// 		IdReporte: $("#Id_Reporte_Preliminar").val(),
-				// 		IdAccion: idAccion,
-				// 	},
-				// 	success: (response) => {
-				// 		$('#tabla_acciones tbody').empty();
-				// 		$('#tabla_acciones tbody').html(response.filas_acciones);
-				// 		$('#NAcciones').val(response.nAcciones);
-				// 	}
-				// });
 				lista_acciones = lista_acciones.filter(item => item.IdAccion !== indexAccion)
 				$('#tabla_acciones tbody').empty();
 				$('#NAcciones').val(lista_acciones.length);
@@ -458,32 +424,6 @@
 				$('#tabla_acciones tbody').html(generarTablaAccionesHtml(lista_acciones));
 				$('#NAcciones').val(lista_acciones.length);
 			}
-			// $("#danger_accion").html("");
-			// if (ValidateInputsAccion() && ($("#IdAccion").val() != "" || $("#IdAccion").val() != 0))
-			// 	$.ajax({
-			// 		type: "POST",
-			// 		url: "/FlashReport/EditarAccion",
-			// 		data: {
-			// 			IdAccion: $("#Id_Accion").val(),
-			// 			IdReporte: $("#Id_Reporte_Preliminar").val(),
-			// 			descripcion: $("#input_descripcion_accion").val(),
-			// 			usuario: $('#select_usuarios_accion').val(),
-			// 			contratista: $('#input_contratista_accion').val(),
-			// 			fecha: $('#input_fecha_accion').val(),
-			// 			estado: $('#select_estatus').val()
-			// 		},
-			// 		success: (response) => {
-			// 			ResetInputsInvolucrado();
-			// 			$("#modal_accion").modal('hide');
-			// 			$('#tabla_acciones tbody').empty();
-			// 			$('#tabla_acciones tbody').html(response.filas_acciones);
-			// 			$('#NAcciones').val(response.nAcciones);
-			// 			dataModulo();
-			// 		}
-			// 	});
-			// else
-			// 	$("#danger_accion").html("Debe completar todos los campos");
-
 		});
 		function validarInputsModalAccion() {
 			if ($("#input_descripcion_accion").val() == "" &&

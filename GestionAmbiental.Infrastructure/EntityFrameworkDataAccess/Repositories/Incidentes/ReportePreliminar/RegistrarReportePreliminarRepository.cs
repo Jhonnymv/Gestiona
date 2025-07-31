@@ -18,8 +18,40 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public RegistrarReportePreliminarRepository(Context context)
         {
             _context = context;
-        }
-        public async Task<int> RegistrarReportePreliminarParte1(Reporte_Preliminar_Incidente reporte)
+		}
+		public async Task<int> RegistrarReportePreliminarDesdeFlashReport(Reporte_Preliminar_Incidente reporte)
+		{
+			var entity = new Entities.Incidentes.ReportePreliminar.Reporte_Preliminar_Incidente
+			{
+				Codigo = reporte.Codigo,
+				Num_Trabajadores = reporte.Num_Trabajadores,
+				//Razon_Social_Contratista = reporte.Razon_Social_Contratista,
+				//RUC_Contratista = reporte.RUC_Contratista,
+				//Actividad_Contratista = reporte.Actividad_Contratista,
+				//Domicilio_Contratista = reporte.Domicilio_Contratista,
+				//Num_Trabajadores_Contratista = reporte.Num_Trabajadores_Contratista,
+				//Id_Tipo_Incidente = reporte.Tipo_Incidente.Id_Tipo_Incidente,
+				Id_Nivel_Incidente = reporte.Nivel_Incidente.Id_Nivel_Incidente,
+				Fecha_Incidente = reporte.Fecha_Incidente,
+				Producto_Derramado = reporte.Producto_Derramado,
+                Cantidad_Derramado = reporte.Cantidad_Derramado,
+				Id_Unidad_Cantidad_Derramado = reporte.Unidad_Cantidad_Derramado.Id_Unidad_Medida,
+				//Area_Afectada = reporte.Area_Afectada,
+				//Id_Unidad_Area_Afectada = reporte.Unidad_Area_Afectada.Id_Unidad_Medida,
+				Lugar_Incidente = reporte.Lugar_Incidente,
+				//Equipo_Involucrado = reporte.Equipo_Involucrado,
+				//Id_Componente_Ambiental = reporte.Componente_Ambiental.Id_Componente_Ambiental,
+				Descripcion_Incidente = reporte.Descripcion_Incidente,
+				//Otra_Causa_Incidente = reporte.Otra_Causa_Incidente,
+				Estado = EstadosIncidentes.Pendiente.ToString()
+			};
+
+			_context.Reporte_Preliminar_Incidente.Add(entity);
+			await _context.SaveChangesAsync();
+
+			return entity.Id_Reporte_Preliminar;
+		}
+		public async Task<int> RegistrarReportePreliminarParte1(Reporte_Preliminar_Incidente reporte)
         {
             var entity = new Entities.Incidentes.ReportePreliminar.Reporte_Preliminar_Incidente
             {
@@ -109,9 +141,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<string> GetUltimoCodigo()
         {
-            var codigo = await _context.Reporte_Preliminar_Incidente
-                .Where(x => x.Estado.Equals(EstadosIncidentes.Difundido.ToString())|| x.Estado.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()))
-                .OrderBy(x => x.Codigo).Select(x => x.Codigo)
+			var codigo = await _context.Reporte_Preliminar_Incidente
+				.Where(x => !x.Codigo.Equals("TBD") && (x.Estado.Equals(EstadosIncidentes.Difundido.ToString()) || x.Estado.Equals(EstadosIncidentes.PendienteInvestigacion.ToString())))
+				.OrderBy(x => x.Codigo).Select(x => x.Codigo)
                 .LastOrDefaultAsync();
             if (codigo != null)
                 return codigo;

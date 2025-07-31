@@ -257,6 +257,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
+        public async Task<List<Empresa>> GetListEmpresa()
+        {
+            var output = new List<Empresa>();
+            var items = await _context.Empresas.ToListAsync();
+            foreach (var item in items)
+            {
+                var outputItem = new Empresa
+                {
+                    IdEmpresa = item.Id_Empresa,
+                    RazonSocial = item.Razon_Social,
+                    Estado = item.Estado
+                };
+                output.Add(outputItem);
+            }
+            return output;
+        }
         public async Task<List<Usuario>> GetListUsuarioMA()
         {
             var output = new List<Usuario>();

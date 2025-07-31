@@ -32,6 +32,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.Items
             output.ItemsTipoSuelo = await _getItemsReadOnlyRepository.GetListTipoSuelo();
             output.ItemsUnidadMedida = await _getItemsReadOnlyRepository.GetListUnidadMedida();
             output.ItemsGerencia = await _getItemsReadOnlyRepository.GetListGerencia();
+            output.ItemsEmpresa = await _getItemsReadOnlyRepository.GetListEmpresa();
             output.ItemsUsuarioMA = await _getItemsReadOnlyRepository.GetListUsuarioMA();
             output.ItemsUsuario = await _getItemsReadOnlyRepository.GetListUsuarios();
             output.ItemsFactores = await _getItemsReadOnlyRepository.GetListFactores();

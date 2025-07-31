@@ -96,6 +96,7 @@
                         <th>Cantidad Derramado</th>
                         <th>Supervisor Marcobre</th>
                         <th>Supervisor Contratista</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
 
@@ -119,7 +120,7 @@
         function dataModulo() {
             $.ajax({
                 type: "POST",
-                url: "/FlashReport/PropiedadesModulo",
+                url: "/FlashReportMA/PropiedadesModulo",
                 traditional: true,
                 success: (response) => {
                     if (response.success) {
