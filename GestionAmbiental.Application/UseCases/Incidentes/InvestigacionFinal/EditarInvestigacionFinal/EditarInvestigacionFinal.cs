@@ -21,7 +21,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ed
 
         public async Task<int> Execute(
             int Id_Investigacion_Final,
-            int Num_Trabajadores,
+            int? Num_Trabajadores,
             string Razon_Social_Contratista,
             string RUC_Contratista,
             string Actividad_Contratista,
@@ -138,7 +138,8 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ed
 
             switch (Opcion)
             {
-                case "Pendiente": input_investigacion.Estado = EstadosIncidentes.PendienteInvestigacion.ToString();break;
+                case "Pendiente": input_investigacion.Estado = EstadosIncidentes.Pendiente.ToString();break;
+                case "EnviarMA": input_investigacion.Estado = EstadosIncidentes.PendienteInvestigacion.ToString(); break;
                 case "Completar": input_investigacion.Estado = EstadosIncidentes.Completado.ToString(); break;
             }
 

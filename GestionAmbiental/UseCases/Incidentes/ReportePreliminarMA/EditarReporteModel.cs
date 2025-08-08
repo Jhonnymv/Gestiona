@@ -71,5 +71,6 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
         public int NCausas { get; set; }
         public string Estado { get; set; }
         public string Opcion { get; set; }
+        public int? Id_Registrado_Por { get; set; }
     }
 }

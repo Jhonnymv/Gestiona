@@ -60,7 +60,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
 
         public async Task<MemoryStream> PrepararReportePreliminar(int IdReporte, string NombreUsuario)
         {
-            var reporte = await _getReportePreliminar.Execute(IdReporte);
+            var reporte = await _getReportePreliminar.Execute(IdReporte,NombreUsuario);
             var involucrados = await _getInvolucradosIncidente.Execute(IdReporte);
             involucrados = involucrados.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var acciones = await _getAccionesIncidente.Execute(IdReporte);

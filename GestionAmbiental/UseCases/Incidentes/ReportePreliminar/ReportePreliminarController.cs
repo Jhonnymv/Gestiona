@@ -205,7 +205,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-            var datosTabla = await _getReportesPreliminares.Execute(fecha_inicio, fecha_fin, gerencia, titular, estado, responsable, asesor, codigo, pagina, rpp);
+            var datosTabla = await _getReportesPreliminares.Execute(fecha_inicio, fecha_fin, gerencia, titular, estado, responsable, asesor, codigo, pagina, rpp, userInfo.NombreUsuario);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NReportes % rpp != 0 ? (datosTabla.NReportes / rpp) + 1 : datosTabla.NReportes / rpp;
@@ -217,6 +217,10 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     {
                         var IdEncriptado = _protector.Protect(fila.Id_Reporte_Preliminar.ToString());
                         filasTabla += "<tr>";
+                        if (fila.PermisoEditar)
+                            filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
+                        else
+                            filasTabla += "<td></td>";
                         if (!fila.Estado.Equals(EstadosIncidentes.Eliminado.ToString()))
                             filasTabla += "<td style=\"width: 115px;\"><a href=\"/ReportePreliminar/EditarReportePreliminar?IdReporte=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                         else
@@ -767,7 +771,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdReporte));
 
-                var reporte = await _getReportePreliminar.Execute(IdDesencriptado);
+                var reporte = await _getReportePreliminar.Execute(IdDesencriptado,userInfo.NombreUsuario);
                 var nombresEvidencias = await _getEvidenciasReporte.Execute(IdDesencriptado);
                 var model = new EditarReporteModel();
                 model.Id_Encriptado_Reporte_Preliminar = IdReporte;
@@ -799,6 +803,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 model.Evidencias_Completas = reporte.Evidencia != null ? JsonConvert.SerializeObject(reporte.Evidencia) : null;
                 model.Evidencias_Nombres = nombresEvidencias;
                 model.Estado = reporte.Estado;
+                model.Permiso_Editar = reporte.PermisoEditar;
 
                 ViewBag.TieneInvestigacion = reporte.Investigacion;
 
@@ -808,8 +813,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         [HttpPost]
         public async Task<IActionResult> EditarReportePreliminar(EditarReporteModel model)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 var nombresEvidencias = await _getEvidenciasReporte.Execute(model.Id_Reporte_Preliminar);
                 var nombresArchivos = JsonConvert.DeserializeObject<List<NombreEvidencia>>(nombresEvidencias);
 
@@ -898,13 +903,13 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     model.Comentario_Accion,
                     model.Id_Supervisor,
                     model.Opcion);
-                if (model.Opcion.Equals("Completar"))
-                    return RedirectToAction("NotificarNuevoReporte", "NotificacionesReporteIncidente", new { IdReporte = model.Id_Reporte_Preliminar });
-                else
-                    return RedirectToAction("Resumen");
+                //if (model.Opcion.Equals("Completar"))
+                //    return RedirectToAction("NotificarNuevoReporte", "NotificacionesReporteIncidente", new { IdReporte = model.Id_Reporte_Preliminar });
+                //else
+                //  return RedirectToAction("Resumen");
 
-            }
-            return RedirectToAction("EditarReportePreliminar", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
+            //}
+            return RedirectToAction("EditarReportePreliminarMA", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
         }
         [HttpPost]
         public async Task<IActionResult> EliminarReportePreliminar(string IdReporte)

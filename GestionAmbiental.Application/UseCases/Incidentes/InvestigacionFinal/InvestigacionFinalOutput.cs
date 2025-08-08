@@ -8,10 +8,10 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal
     public class InvestigacionFinalOutput
     {
         public int Id_Investigacion_Final { get; set; }
-        public int Id_Reporte_Preliminar { get; set; }
+        public int? Id_Reporte_Preliminar { get; set; }
         public string Codigo { get; set; }
         //Titular minero
-        public int Num_Trabajadores { get; set; }
+        public int? Num_Trabajadores { get; set; }
         //Contratista - opcional
         public string Razon_Social_Contratista { get; set; }
         public string RUC_Contratista { get; set; }
@@ -49,10 +49,12 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal
         public List<string> Evidencia_Posicion { get; set; }
         public List<string> Evidencia_Parte { get; set; }
         public string Estado { get; set; }
-        public int NAccionesAprobadas { get; set; }
-        public int NAcciones { get; set; }
-        public bool PermisoMA { get; set; }
-        public bool PermisoAdmin { get; set; }
+        public int? NAccionesAprobadas { get; set; }
+        public int? NAcciones { get; set; }
+        public bool PermisoEditar { get; set; } = false;
+        public bool PermisoMA { get; set; } = false;
+        public bool PermisoAdmin { get; set; } = false;
+        public int? Id_Registrado_Por { get; set; }
         public InvestigacionFinalOutput(Domain.Incidentes.InvestigacionFinal.Investigacion_Final_Incidente investigacion)
         {
             Id_Investigacion_Final = investigacion.Id_Investigacion_Final;
@@ -91,7 +93,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal
             Gerencia_Responsable = investigacion.Gerencia_Responsable?.Descripcion;
             Id_Supervisor_MA = investigacion.Supervisor_MA?.IdUsuario;
             Supervisor_MA = investigacion.Supervisor_MA != null ? investigacion.Supervisor_MA.Nombres + " " + investigacion.Supervisor_MA.Apellidos : null;
-
+            Id_Registrado_Por = investigacion.Id_Registrado_Por;
             //Papel
             if (investigacion.Evidencia_Papel != null)
             {

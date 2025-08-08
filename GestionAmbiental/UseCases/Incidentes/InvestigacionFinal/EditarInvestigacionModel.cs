@@ -12,12 +12,12 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
     {
         public string Id_Encriptado_Investigacion_Final { get; set; }
         public int Id_Investigacion_Final { get; set; }
-        public int Id_Reporte_Preliminar { get; set; }
+        public int? Id_Reporte_Preliminar { get; set; }
         [DisplayName("Código:")]
         public string Codigo { get; set; }
         [DisplayName("N° Trabajadores en el Centro Laboral:")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe completar este campo")]
-        public int Num_Trabajadores { get; set; }
+        public int? Num_Trabajadores { get; set; }
         [DisplayName("Razón Social:")]
         public string Razon_Social_Contratista { get; set; }
         [DisplayName("RUC:")]
@@ -91,5 +91,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         public int NCausas { get; set; }
         public string Estado { get; set; }
         public string Opcion { get; set; }
+        public int? Id_Registrado_Por { get; set; }
+        public bool PermisoEditar { get; set; }
     }
 }

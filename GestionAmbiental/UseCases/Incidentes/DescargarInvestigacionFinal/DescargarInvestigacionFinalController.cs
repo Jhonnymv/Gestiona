@@ -91,7 +91,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarInvestigacionFinal
 
             var rowHeight = sheet.GetRow(36).Height;
 
-            sheet.GetRow(7).GetCell(24).SetCellValue(investigacion.Num_Trabajadores);
+            sheet.GetRow(7).GetCell(24).SetCellValue(investigacion.Num_Trabajadores!=null? (double) investigacion.Num_Trabajadores:0);
 
             sheet.GetRow(11).GetCell(2).SetCellValue(investigacion.Razon_Social_Contratista != null ? investigacion.Razon_Social_Contratista : "No Aplica");
             sheet.GetRow(11).GetCell(14).SetCellValue(investigacion.RUC_Contratista != null ? investigacion.RUC_Contratista : "No Aplica");

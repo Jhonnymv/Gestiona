@@ -35,5 +35,7 @@ namespace GestionAmbiental.Domain.Incidentes.ReportePreliminar
         public string Evidencia { get; set; }
         public string Estado { get; set; }
         public string NombresArchivos { get; set; }
+        public int? Id_Registrado_Por { get; set; }
+        public Usuario? Registrado_Por { get; set; }
     }
 }

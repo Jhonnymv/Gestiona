@@ -9,7 +9,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ed
     {
         Task<int> Execute(
             int Id_Investigacion_Final,
-            int Num_Trabajadores,
+            int? Num_Trabajadores,
             string Razon_Social_Contratista,
             string RUC_Contratista,
             string Actividad_Contratista,

@@ -55,7 +55,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 entity.Id_Supervisor_MA = reporte.Supervisor_MA.IdUsuario;
             if (reporte.Estado != null)
             {
-                entity.Codigo = reporte.Codigo;
+                //entity.Codigo = reporte.Codigo;
                 entity.Estado = reporte.Estado;
             }
 

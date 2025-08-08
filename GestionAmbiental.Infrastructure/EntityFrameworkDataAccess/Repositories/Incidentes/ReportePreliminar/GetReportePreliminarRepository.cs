@@ -93,7 +93,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     RUC_Contratista = item.RUC_Contratista,
                     Actividad_Contratista = item.Actividad_Contratista,
                     Domicilio_Contratista = item.Domicilio_Contratista,
-                    Num_Trabajadores_Contratista = item.Num_Trabajadores_Contratista
+                    Num_Trabajadores_Contratista = item.Num_Trabajadores_Contratista,
+                    Id_Registrado_Por = item.Id_Registrado_Por,
                 };
 
                 if (item.Id_Tipo_Incidente != null)
@@ -212,6 +213,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Actividad_Contratista = reporte.Actividad_Contratista;
             output.Domicilio_Contratista = reporte.Domicilio_Contratista;
             output.Num_Trabajadores_Contratista = reporte.Num_Trabajadores_Contratista;
+            output.Id_Registrado_Por = reporte.Id_Registrado_Por;
 
             if (reporte.Id_Tipo_Incidente != null)
             {

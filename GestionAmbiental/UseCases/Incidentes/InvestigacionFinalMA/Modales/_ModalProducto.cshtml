@@ -1,0 +1,116 @@
+﻿<!-- Modal Nuevo Producto-->
+<div class="modal fade" id="modal_producto" tabindex="-1" aria-labelledby="titulo_modal_producto" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-menu modal-incidentes">
+            <div class="modal-content">
+                <div class="incidentes">
+                    <div class="image-header-container">
+                        <div class="header-title incidentes-opacity-color">
+                            <h3> Agregar Producto</h3>
+                            <img src="/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <form>
+                    <div class="container pt-4 pb-4">
+                        <div class="custom-form w-100">
+                            <div class="detail-container col-12 mb-4">
+                                <div class="row mb-2">
+                                    <input type="hidden" id="Id_Producto" />
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <span class="text-danger" id="danger_productos"></span>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Producto</label>
+                                        <select class="form-control" id="select_producto" asp-items="@ViewBag.Productos">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Tipo de Producto</label>
+                                        <select class="form-control" id="select_tipo_producto" asp-items="@ViewBag.TiposProductos">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Estado del producto</label>
+                                        <select class="form-control" id="select_estado_producto">
+                                            <option value="">--SELECCIONE--</option>
+                                            <option value="Sólido">Sólido</option>
+                                            <option value="Líquido">Líquido</option>
+                                            <option value="Gaseoso">Gaseoso</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Cantidad derramada</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="number" class="form-control" id="input_cantidad_derramada" />
+                                    </div>
+                                    <div class="col-4">
+                                        <select class="form-control" id="select_cantidad_derramada" asp-items="@ViewBag.Unidad_Derramado">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Equipo(s) que originó u originaron el incidente</label>
+                                        <input type="text" class="form-control" id="input_equipo" />
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Estado del equipo después del incidente</label>
+                                        <select class="form-control" id="select_estado_equipo" asp-items="@ViewBag.EstadosEquipo">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Cantidad producto recuperado</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="number" class="form-control" id="input_cantidad_recuperado" />
+                                    </div>
+                                    <div class="col-4">
+                                        <select class="form-control" id="select_cantidad_recuperado" asp-items="@ViewBag.Unidad_Derramado" disabled>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label>Cantidad de producto no recuperado:</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="number" class="form-control" id="input_cantidad_no_recuperado" disabled />
+                                    </div>
+                                    <div class="col-4">
+                                        <select class="form-control" id="select_cantidad_no_recuperado" asp-items="@ViewBag.Unidad_Derramado" disabled>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="button-container">
+                                        <button type="button" class="btn btn-mc-outline-danger me-2" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-mc me-2" id="btn_guardar_producto">Guardar</button>
+                                        <button type="button" class="btn btn-mc-success" id="btn_editar_producto" style="display:none">Aceptar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

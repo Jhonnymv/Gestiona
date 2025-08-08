@@ -1,0 +1,1731 @@
+﻿@model GestionAmbiental.UseCases.Incidentes.InvestigacionFinalMA.EditarInvestigacionModel
+
+@{
+    ViewData["Title"] = "Detalle Investigacion";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="incidentes">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title incidentes-opacity-color">
+                <h3>Detalle de Reporte de Incidente Mayor - @Model.Codigo</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" id="formEditarInvestigacion" asp-action="EditarAdminInvestigacion" asp-controller="InvestigacionFinalMA" method="post" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" asp-for="Id_Investigacion_Final" value="@Model.Id_Investigacion_Final" />
+                <input type="hidden" asp-for="Id_Encriptado_Investigacion_Final" value="@Model.Id_Encriptado_Investigacion_Final" />
+                <input type="hidden" asp-for="Opcion" />
+                <input type="hidden" asp-for="NInvolucrados" />
+                <input type="hidden" asp-for="NProductos" />
+                <input type="hidden" asp-for="NAcciones" />
+                <input type="hidden" asp-for="NCausas" />
+                <input type="hidden" asp-for="Estado" value="@Model.Estado" />
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="detail-header">
+                        <span class="text-white bold text-center text-uppercase">DATOS DEL TITULAR MINERO</span>
+                    </div>
+                    <div class="details-content">
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label>Razón Social</label>
+                                <input type="text" class="form-control" value="Marcobre SAC" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label>RUC</label>
+                                <input type="text" class="form-control" value="20508972734" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label>Actividad</label>
+                                <input type="text" class="form-control" value="Mineria" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12">
+                                <label>Domicilio Legal</label>
+                                <input type="text" class="form-control" value="Jr. Lorenzo Bernini 149, Oficina 301, San Borja - Lima" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label>Unidad Minera</label>
+                                <input type="text" class="form-control" value="Mina Justa" disabled />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Num_Trabajadores">N° Trabajadores en el Centro Laboral</label>
+                                <span class="text-danger" asp-validation-for="Num_Trabajadores"></span>
+                                <input type="number" class="form-control writeable" asp-for="Num_Trabajadores" disabled />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="detail-header">
+                        <span class="text-white bold text-center text-uppercase">DATOS DE LA EMPRESA CONTRATISTA O SUBCONTRATISTA</span>
+                    </div>
+                    <div class="details-content">
+                        <div class="p-0">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Contratista (Llenar esta sección en caso el incidente haya sido ocasionado por un contratista)</span>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Razon_Social_Contratista">Razón Social</label>
+                                    <input type="text" class="form-control writeable" asp-for="Razon_Social_Contratista" disabled />
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg46">
+                                    <label asp-for="RUC_Contratista">RUC</label>
+                                    <input type="text" class="form-control writeable" asp-for="RUC_Contratista" maxlength="11" disabled />
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Actividad_Contratista">Actividad</label>
+                                    <input type="text" class="form-control writeable" asp-for="Actividad_Contratista" disabled />
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-8 col-lg-8">
+                                    <label asp-for="Domicilio_Contratista">Domicilio Legal</label>
+                                    <input type="text" class="form-control writeable" asp-for="Domicilio_Contratista" disabled />
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Num_Trabajadores_Contratista">N° Trabajadores en el Centro Laboral</label>
+                                    <input type="number" class="form-control writeable" asp-for="Num_Trabajadores_Contratista" disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-separator"><span></span></div>
+                        <div class="p-0">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Subcontratista (Llenar esta sección en caso el incidente haya sido ocasionado por la subcontratista)</span>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Razon_Social_SubContratista">Razón Social</label>
+                                    <input type="text" class="form-control writeable" asp-for="Razon_Social_SubContratista" disabled />
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg46">
+                                    <label asp-for="RUC_SubContratista">RUC</label>
+                                    <input type="text" class="form-control writeable" asp-for="RUC_SubContratista" maxlength="11" disabled />
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Actividad_SubContratista">Actividad</label>
+                                    <input type="text" class="form-control writeable" asp-for="Actividad_SubContratista" disabled />
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-8 col-lg-8">
+                                    <label asp-for="Domicilio_SubContratista">Domicilio Legal</label>
+                                    <input type="text" class="form-control writeable" asp-for="Domicilio_SubContratista" disabled />
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Num_Trabajadores_SubContratista">N° Trabajadores en el Centro Laboral</label>
+                                    <input type="number" class="form-control writeable" asp-for="Num_Trabajadores_SubContratista" disabled />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="detail-header">
+                        <span class="text-white bold text-center text-uppercase">INFORMACIÓN DEL INCIDENTE AMBIENTAL</span>
+                    </div>
+                    <div class="details-content">
+                        <div class="p-0">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Datos del incidente</span>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-8 col-lg-8">
+                                    <label asp-for="Id_Tipo_Incidente">Tipo de incidente</label>
+                                    <select class="form-control writeable" asp-items="@ViewBag.Tipo_Incidente" asp-for="Id_Tipo_Incidente" disabled></select>
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Id_Nivel_Incidente">Nivel de incidente</label>
+                                    <select class="form-control writeable" asp-items="@ViewBag.Nivel_Incidente" asp-for="Id_Nivel_Incidente" disabled></select>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Lugar_Incidente">Lugar donde ocurrió</label>
+                                    <input type="text" class="form-control writeable" asp-for="Lugar_Incidente" disabled />
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                    <div class="row mt-0 mb-0">
+                                        <label class="text-center">Coordenadas UTM DATUM WGS84</label>
+                                        <div class="col-6 mt-0 mb-0">
+                                            <label asp-for="Coordenada_Este">Este</label>
+                                            <input type="text" class="form-control writeable" maxlength="7" asp-for="Coordenada_Este" disabled>
+                                        </div>
+                                        <div class="col-6 mt-0 mb-0">
+                                            <label asp-for="Coordenada_Norte">Norte</label>
+                                            <input type="text" class="form-control writeable" maxlength="7" asp-for="Coordenada_Norte" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Localidad">Localidad/Zona/Sector</label>
+                                    <input type="text" class="form-control writeable" asp-for="Localidad" disabled />
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Distrito">Distrito</label>
+                                    <input type="text" class="form-control writeable" asp-for="Distrito" disabled />
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Provincia">Provincia</label>
+                                    <input type="text" class="form-control writeable" asp-for="Provincia" disabled />
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Departamento">Departamento</label>
+                                    <input type="text" class="form-control writeable" asp-for="Departamento" disabled />
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Fecha_Incidente">Fecha del Incidente</label>
+                                    <input type="date" class="form-control writeable" asp-for="Fecha_Incidente" disabled />
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Hora_Incidente">Hora del Incidente</label>
+                                    <input type="time" class="form-control writeable" asp-for="Hora_Incidente" disabled />
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Fecha_Inicio_Investigacion">Fecha de Incio de Investigación</label>
+                                    <input type="date" class="form-control writeable" asp-for="Fecha_Inicio_Investigacion" disabled />
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Turno">Turno</label>
+                                    <select class="form-control writeable" asp-for="Turno" disabled>
+                                        <option value="">--SELECCIONE--</option>
+                                        <option value="Día">Día</option>
+                                        <option value="Noche">Noche</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12">
+                                    <label asp-for="Descripcion_Incidente">Descripción detallada del incidente</label>
+                                    <textarea class="form-control writeable" asp-for="Descripcion_Incidente" maxlength="1400" rows="3" disabled></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-separator"><span></span></div>
+                        <div class="p-0">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Datos de los involucrados</span>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12">
+                                    <label asp-for="Id_Gerencia_Responsable">Gerencia Responsable (Titular Minero)</label>
+                                    <select class="form-control writeable" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia_Responsable" disabled></select>
+                                </div>
+                            </div>
+                            @if (ViewBag.PermisoAdmin)
+                            {
+                                <div class="row-center-center col-12">
+                                    <div class="col-12 col-xl-4">
+                                        <button id="btn_nuevo_involucrado" type="button" class="btn btn-special-action incidentes-color">Agregar Involucrado</button>
+                                    </div>
+                                </div>
+                            }
+                            <div class="incidentes">
+                                <div class="tertiary-content col-12">
+                                    <div class="table-responsive incidentes-color">
+                                        <table class="table" id="tabla_involucrados">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tipo</th>
+                                                    <th>Nombres y Apellidos</th>
+                                                    <th>DNI/Pasaporte</th>
+                                                    <th>Edad</th>
+                                                    <th>Puesto de Trabajo</th>
+                                                    <th>Empresa</th>
+                                                    @if (ViewBag.PermisoAdmin)
+                                                    {
+                                                        <th colspan="2"></th>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="100">Sin Datos</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="pagination-container incidentes-color" id="paginado">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-separator"><span></span></div>
+                        <div class="p-0">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Datos del derrame o fuga (Llenar esta sección si el incidente ambiental corresponde a un derrame o fuga de un producto)</span>
+                            </div>
+                            @if (ViewBag.PermisoAdmin)
+                            {
+                                <div class="row-center-center col-12">
+                                    <div class="col-12 col-xl-4">
+                                        <button id="btn_nueva_producto" type="button" class="btn btn-special-action incidentes-color">Agregar Producto</button>
+                                    </div>
+                                </div>
+                            }
+                            <div class="incidentes">
+                                <div class="tertiary-content col-12">
+                                    <div class="table-responsive incidentes-color">
+                                        <table class="table" id="tabla_productos">
+                                            <thead>
+                                                <tr>
+                                                    <th>Producto</th>
+                                                    <th>Tipo de Producto</th>
+                                                    <th>Estado del Producto</th>
+                                                    <th>Cantidad derramada</th>
+                                                    <th>Equipo(s) que originó u originaron el incidente</th>
+                                                    <th>Estado del equipo después del incidente</th>
+                                                    <th>Cantidad producto recuperado</th>
+                                                    <th>Cantidad de producto no recuperado</th>
+                                                    @if (ViewBag.PermisoAdmin)
+                                                    {
+                                                        <th colspan="2"></th>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="100">Sin Datos</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="pagination-container incidentes-color" id="paginado">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-separator"><span></span></div>
+                        <div class="p-0">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Impactos Ambientales o daños derivados del incidente</span>
+                            </div>
+                            <!-- Suelo -->
+                            <div class="row mb-2 rounded-mc" style="border:solid 1px #2e6793">
+                                <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
+                                    @if (ViewBag.PermisoAdmin)
+                                    {
+                                        <input class="form-check-input position-static mr-1" type="checkbox" id="checkbox_suelo">
+                                    }
+                                    <label class="align-self-center font-weight-bold">SUELO</label>
+                                </div>
+                                <div class="col-sm-12 col-md-10 col-lg-10">
+                                    <div class="row input_container">
+                                        <div class="col-12 col-sm-6 col-lg-6">
+                                            <label asp-for="ImpactoAmbiental.Id_Tipo_Suelo">Tipo de suelo</label>
+                                            <select class="form-control" asp-for="ImpactoAmbiental.Id_Tipo_Suelo" asp-items="ViewBag.TiposSuelo" disabled>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                            <div class="row mt-0 mb-0 d-flex align-items-end">
+                                                <div class="col-8 mt-0 mb-0">
+                                                    <label asp-for="ImpactoAmbiental.Area_Suelo">Área afectada</label>
+                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Area_Suelo" disabled />
+                                                </div>
+                                                <div class="col-4 mt-0 mb-0">
+                                                    <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Area_Suelo" asp-items="ViewBag.Unidad_Area" disabled>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row input_container">
+                                        <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                            <div class="row mt-0 mb-0 d-flex align-items-end">
+                                                <div class="col-8 mt-0 mb-0">
+                                                    <label asp-for="ImpactoAmbiental.Cantidad_Suelo">Cantidad de tierra impregnada</label>
+                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Suelo" disabled />
+                                                </div>
+                                                <div class="col-4 mt-0 mb-0">
+                                                    <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Cantidad_Suelo" asp-items="ViewBag.Unidad_Peso" disabled>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-lg-6">
+                                            <label asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Suelo">Lugar de disposición</label>
+                                            <select class="form-control" asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Suelo" asp-items="ViewBag.LugaresDisposicion" disabled>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Fin Suelo -->
+                            <!-- Flora -->
+                            <div class="row mb-2 rounded-mc" style="border:solid 1px #2e6793">
+                                <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
+                                    @if (ViewBag.PermisoAdmin)
+                                    {
+                                        <input class="form-check-input position-static mr-1" type="checkbox" id="checkbox_flora">
+                                    }
+                                    <label class="align-self-center font-weight-bold">FLORA</label>
+                                </div>
+                                <div class="col-sm-12 col-md-10 col-lg-10">
+                                    <div class="row input_container">
+                                        <div class="col-12 col-sm-6 col-lg-6">
+                                            <label asp-for="ImpactoAmbiental.Id_Especie_Flora">Especie</label>
+                                            <select class="form-control" asp-for="ImpactoAmbiental.Id_Especie_Flora" asp-items="ViewBag.TiposFlora" disabled>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                            <div class="row mt-0 mb-0 d-flex align-items-end">
+                                                <div class="col-6 mt-0 mb-0">
+                                                    <label asp-for="ImpactoAmbiental.Unidad_Flora">Unidades de flora</label>
+                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Unidad_Flora" disabled />
+                                                </div>
+                                                <div class="col-6 mt-0 mb-0">
+                                                    <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Flora" asp-items="ViewBag.Unidad_Cantidad" disabled>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row input_container">
+                                        <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                            <div class="row mt-0 mb-0 d-flex align-items-end">
+                                                <div class="col-6 mt-0 mb-0">
+                                                    <label asp-for="ImpactoAmbiental.Cantidad_Residuo_Flora">Cantidad de residuos generados:</label>
+                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Flora" disabled />
+                                                </div>
+                                                <div class="col-6 mt-0 mb-0">
+                                                    <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Residuo_Flora" asp-items="ViewBag.Unidad_Peso" disabled>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-lg-6">
+                                            <label asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Flora">Lugar de disposición</label>
+                                            <select class="form-control" asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Flora" asp-items="ViewBag.LugaresDisposicion" disabled>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Fin Flora -->
+                            <!-- Fauna -->
+                            <div class="row mb-2 rounded-mc" style="border:solid 1px #2e6793">
+                                <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
+                                    @if (ViewBag.PermisoAdmin)
+                                    {
+                                        <input class="form-check-input position-static mr-1" type="checkbox" id="checkbox_fauna">
+                                    }
+                                    <label class="align-self-center font-weight-bold">FAUNA</label>
+                                </div>
+                                <div class="col-sm-12 col-md-10 col-lg-10">
+                                    <div class="row input_container">
+                                        <div class="col-12 col-sm-6 col-lg-6">
+                                            <label asp-for="ImpactoAmbiental.Id_Especie_Fauna">Especie</label>
+                                            <select class="form-control" asp-for="ImpactoAmbiental.Id_Especie_Fauna" asp-items="ViewBag.TiposFauna" disabled>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                            <div class="row mt-0 mb-0 d-flex align-items-end">
+                                                <div class="col-6 mt-0 mb-0">
+                                                    <label asp-for="ImpactoAmbiental.Unidad_Fauna">Número de individuos afectados</label>
+                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Unidad_Fauna" disabled />
+                                                </div>
+                                                <div class="col-6 mt-0 mb-0">
+                                                    <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Fauna" asp-items="ViewBag.Unidad_Cantidad" disabled>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row input_container">
+                                        <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                            <div class="row mt-0 mb-0 d-flex align-items-end">
+                                                <div class="col-6 mt-0 mb-0">
+                                                    <label asp-for="ImpactoAmbiental.Cantidad_Residuo_Fauna">Cantidad de residuos generados:</label>
+                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Fauna" disabled />
+                                                </div>
+                                                <div class="col-6 mt-0 mb-0">
+                                                    <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Residuo_Fauna" asp-items="ViewBag.Unidad_Peso" disabled>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-lg-6">
+                                            <label asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Fauna">Lugar de disposición</label>
+                                            <select class="form-control" asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Fauna" asp-items="ViewBag.LugaresDisposicion" disabled>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Fin Fauna -->
+                            <!-- Agua -->
+                            <div class="row mb-2 rounded-mc" style="border:solid 1px #2e6793">
+                                <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
+                                    @if (ViewBag.PermisoAdmin)
+                                    {
+                                        <input class="form-check-input position-static mr-1" type="checkbox" id="checkbox_agua">
+                                    }
+                                    <label class="align-self-center font-weight-bold">AGUA</label>
+                                </div>
+                                <div class="col-sm-12 col-md-10 col-lg-10">
+                                    <div class="row input_container">
+                                        <div class="col-12 col-sm-6 col-lg-6">
+                                            <label asp-for="ImpactoAmbiental.Id_Tipo_Agua">Tipo de agua</label>
+                                            <select class="form-control" asp-for="ImpactoAmbiental.Id_Tipo_Agua" asp-items="ViewBag.TiposAgua" disabled>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                            <div class="row mt-0 mb-0 d-flex align-items-end">
+                                                <div class="col-6 mt-0 mb-0">
+                                                    <label asp-for="ImpactoAmbiental.Volumen_Agua">Volumen de agua alterada</label>
+                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Volumen_Agua" disabled />
+                                                </div>
+                                                <div class="col-6 mt-0 mb-0">
+                                                    <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Agua" asp-items="ViewBag.Unidad_Area" disabled>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row input_container">
+                                        <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                            <div class="row mt-0 mb-0 d-flex align-items-end">
+                                                <div class="col-6 mt-0 mb-0">
+                                                    <label asp-for="ImpactoAmbiental.Cantidad_Residuo_Agua">Cantidad de residuos generados:</label>
+                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Agua" disabled />
+                                                </div>
+                                                <div class="col-6 mt-0 mb-0">
+                                                    <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Residuo_Agua" asp-items="ViewBag.Unidad_Peso" disabled>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-lg-6">
+                                            <label asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Agua">Lugar de disposición</label>
+                                            <select class="form-control" asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Agua" asp-items="ViewBag.LugaresDisposicion" disabled>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Fin Agua -->
+                            <div class="row mb-2 rounded-mc" style="border:solid 1px #2e6793">
+                                <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
+                                    <label class="align-self-center font-weight-bold text-center">RESTOS ARQUEOLÓGICOS</label>
+                                </div>
+                                <div class="col-sm-12 col-md-10 col-lg-10">
+                                    <div class="row input_container">
+                                        <div class="col-12 col-sm-4 col-lg-4">
+                                            <label asp-for="ImpactoAmbiental.Restos_Arq">¿Restos arqueológicos?</label>
+                                            <select class="form-control" asp-for="ImpactoAmbiental.Restos_Arq" disabled>
+                                                <option value="">--SELECCIONE--</option>
+                                                <option value="SI">SI</option>
+                                                <option value="NO">NO</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-sm-8 col-lg-8 p-0">
+                                            <div class="row mt-0 mb-0">
+                                                <label class="text-center">Coordenadas UTM DATUM WGS84</label>
+                                                <div class="col-6 mt-0 mb-0">
+                                                    <label asp-for="ImpactoAmbiental.Cord_Este">Este</label>
+                                                    <input type="text" class="form-control" maxlength="7" asp-for="ImpactoAmbiental.Cord_Este" disabled />
+                                                </div>
+                                                <div class="col-6 mt-0 mb-0">
+                                                    <label asp-for="ImpactoAmbiental.Cord_Norte">Norte</label>
+                                                    <input type="text" class="form-control" maxlength="7" asp-for="ImpactoAmbiental.Cord_Norte" disabled />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row input_container">
+                                        <div class="col-12">
+                                            <label asp-for="ImpactoAmbiental.Nombre_Resto_Arq">Nombre del resto arqueológico</label>
+                                            <input type="text" class="form-control" asp-for="ImpactoAmbiental.Nombre_Resto_Arq" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2 rounded-mc" style="border:solid 1px #2e6793">
+                                <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
+                                    <label class="align-self-center font-weight-bold">PERSONAS</label>
+                                </div>
+                                <div class="col-sm-12 col-md-10 col-lg-10">
+                                    <div class="row input_container">
+                                        <div class="col-12 col-sm-8 col-lg-8">
+                                            <label asp-for="ImpactoAmbiental.Danio_Salud">Descripción del daño a la salud</label>
+                                            <input type="text" class="form-control writeable" asp-for="ImpactoAmbiental.Danio_Salud" disabled />
+                                        </div>
+                                        <div class="col-12 col-sm-4 col-lg-4">
+                                            <label asp-for="ImpactoAmbiental.Personas_Afectadas">Número de personas afectadas</label>
+                                            <input type="number" class="form-control writeable" asp-for="ImpactoAmbiental.Personas_Afectadas" min="0" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                    <label>Cantidad Total de Residuos Sólidos Generados</label>
+                                    <div class="row mt-0 mb-0">
+                                        <div class="col-6 mt-0 mb-0">
+                                            <input type="number" class="form-control writeable" asp-for="ImpactoAmbiental.Cantidad_RS" disabled />
+                                        </div>
+                                        <div class="col-6 mt-0 mb-0">
+                                            <select class="form-control writeable" asp-for="ImpactoAmbiental.Id_Unidad_Cantidad_RS" asp-items="ViewBag.Unidad_Peso" disabled>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                    <label>Cantidad Total de Residuos Líquidos Generados</label>
+                                    <div class="row mt-0 mb-0">
+                                        <div class="col-6 mt-0 mb-0">
+                                            <input type="number" class="form-control writeable" asp-for="ImpactoAmbiental.Volumen_Rs" disabled />
+                                        </div>
+                                        <div class="col-6 mt-0 mb-0">
+                                            <select class="form-control writeable" asp-for="ImpactoAmbiental.Id_Unidad_Volumen_RS" asp-items="ViewBag.Unidad_Volumen" disabled>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12">
+                                    <label asp-for="ImpactoAmbiental.EO_RS">EO-RS (recolección, transporte y disposición)</label>
+                                    <input type="text" class="form-control writeable" asp-for="ImpactoAmbiental.EO_RS" maxlength="150" disabled />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="detail-header">
+                        <span class="text-white bold text-center text-uppercase">CAUSALIDAD</span>
+                    </div>
+                    <div class="details-content">
+                        @if (ViewBag.PermisoAdmin)
+                        {
+                            <div class="row-center-center col-12">
+                                <div class="col-12 col-xl-4">
+                                    <button id="btn_nueva_causa" type="button" class="btn btn-special-action incidentes-color">Agregar Causa</button>
+                                </div>
+                            </div>
+                        }
+                        <div class="p-0">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Causas inmediatas</span>
+                            </div>
+                            <div class="incidentes">
+                                <div class="tertiary-content col-12">
+                                    <div class="table-responsive incidentes-color">
+                                        <table class="table" id="tabla_causas_inmediatas">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tipo de Causa del Incidente</th>
+                                                    <th>Causa</th>
+                                                    <th>Descripción</th>
+                                                    @if (ViewBag.PermisoAdmin)
+                                                    {
+                                                        <th colspan="2"></th>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="100">Sin Datos</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="pagination-container incidentes-color" id="paginado">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-separator"><span></span></div>
+                        <div class="p-0">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Causas básicas</span>
+                            </div>
+                            <div class="incidentes">
+                                <div class="tertiary-content col-12">
+                                    <div class="table-responsive incidentes-color">
+                                        <table class="table" id="tabla_causas_basicas">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tipo de Causa del Incidente</th>
+                                                    <th>Causa</th>
+                                                    <th>Descripción</th>
+                                                    @if (ViewBag.PermisoAdmin)
+                                                    {
+                                                        <th colspan="2"></th>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="100">Sin Datos</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="pagination-container incidentes-color" id="paginado">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="detail-header">
+                        <span class="text-white bold text-center text-uppercase">RESPUESTA AL INCIDENTE AMBIENTAL</span>
+                    </div>
+                    <div class="details-content">
+                        @if (ViewBag.PermisoAdmin)
+                        {
+                            <div class="row-center-center col-12">
+                                <div class="col-12 col-xl-4">
+                                    <button id="btn_nueva_accion" type="button" class="btn btn-special-action incidentes-color">Agregar Acción</button>
+                                </div>
+                            </div>
+                        }
+                        <div class="p-0">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Acciones Inmediatas</span>
+                            </div>
+                            <div class="incidentes">
+                                <div class="tertiary-content col-12">
+                                    <div class="table-responsive incidentes-color">
+                                        <table class="table" id="tabla_acciones_inmediatas">
+                                            <thead>
+                                                <tr>
+                                                    <th>Acción Tomada</th>
+                                                    <th>Responsable Marcobre 1</th>
+                                                    <th>Responsable Marcobre 2</th>
+                                                    <th>Responsable Contratista</th>
+                                                    <th>Fecha</th>
+                                                    <th>Estatus</th>
+                                                    <th colspan="2"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="100">Sin Datos</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="pagination-container incidentes-color" id="paginado">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-separator"><span></span></div>
+                        <div class="p-0">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Acciones Correctivas</span>
+                            </div>
+                            <div class="incidentes">
+                                <div class="tertiary-content col-12">
+                                    <div class="table-responsive incidentes-color">
+                                        <table class="table" id="tabla_acciones_correctivas">
+                                            <thead>
+                                                <tr>
+                                                    <th>Acción Tomada</th>
+                                                    <th>Responsable Marcobre 1</th>
+                                                    <th>Responsable Marcobre 2</th>
+                                                    <th>Responsable Contratista</th>
+                                                    <th>Fecha</th>
+                                                    <th>Estatus</th>
+                                                    <th colspan="2"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="100">Sin Datos</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="pagination-container incidentes-color" id="paginado">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="detail-header">
+                        <span class="text-white bold text-center text-uppercase">SEGUIMIENTO Y VERIFICACIÓN</span>
+                    </div>
+                    <div class="details-content">
+                        <div class="row input_container">
+                            <div class="col-12">
+                                <label asp-for="Id_Supervisor">Supervisor de Medio Ambiente encargado del seguimiento</label>
+                                <span class="text-danger" asp-validation-for="Id_Supervisor"></span>
+                                <select class="form-control writeable" asp-items="@ViewBag.Supervisor" asp-for="Id_Supervisor" disabled></select>
+                            </div>
+                        </div>
+                        <div class="p-0">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Progreso de Verificación de Acciones</span>
+                            </div>
+                            <div class="incidentes">
+                                <div class="progress progress-mc" id="progreso_vefirifacion">
+                                    <div class="progress-bar" role="progressbar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                        <span class="percent">0%</span>
+                                    </div>
+                                </div>
+                                <div class="tertiary-content col-12">
+                                    <div class="table-responsive incidentes-color">
+                                        <table class="table" id="tabla_acciones">
+                                            <thead>
+                                                <tr>
+                                                    <th>Acción Tomada</th>
+                                                    <th>Responsable Marcobre 1</th>
+                                                    <th>Responsable Marcobre 2</th>
+                                                    <th>Responsable Contratista</th>
+                                                    <th>Fecha</th>
+                                                    <th>Estatus</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="100">Sin Datos</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="pagination-container incidentes-color" id="paginado">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="detail-header">
+                        <span class="text-white bold text-center text-uppercase">EVIDENCIA DE LA INVESTIGACIÓN</span>
+                    </div>
+                    <div class="details-content">
+                        <div class="row mb-2 align-items-start">
+                            <div class="col-sm-12 col-md-3 col-lg-2">
+                                <label asp-for="Evidencias_Papel"></label>
+                                <span class="text-danger field-validation-error" data-valmsg-for="Evidencias_Persona" data-valmsg-replace="true">
+                                    <span id="danger_evidencia_papel" class=""></span>
+                                </span>
+                            </div>
+                            <input type="hidden" asp-for="Evidencias_Completas_Papel" />
+                            @if (ViewBag.PermisoAdmin)
+                            {
+                                <div class="col-sm-12 col-md-9 col-lg-10">
+                                    <input type="file" class="form-control" asp-for="Evidencias_Papel" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+                                </div>
+                            }
+                            <div class="col-sm-12 col-md-9 col-lg-10" id="Evidencias_Lista_Papel">
+                            </div>
+                        </div>
+                        <div class="row mb-2 align-items-start">
+                            <div class="col-sm-12 col-md-3 col-lg-2">
+                                <label asp-for="Evidencias_Persona"></label>
+                                <span class="text-danger field-validation-error" data-valmsg-for="Evidencias_Persona" data-valmsg-replace="true">
+                                    <span id="danger_evidencia_persona" class=""></span>
+                                </span>
+                            </div>
+                            <input type="hidden" asp-for="Evidencias_Completas_Persona" />
+                            @if (ViewBag.PermisoAdmin)
+                            {
+                                <div class="col-sm-12 col-md-9 col-lg-10">
+                                    <input type="file" class="form-control" asp-for="Evidencias_Persona" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+                                </div>
+                            }
+                            <div class="col-sm-12 col-md-9 col-lg-10" id="Evidencias_Lista_Persona">
+                            </div>
+                        </div>
+                        <div class="row mb-2 align-items-start">
+                            <div class="col-sm-12 col-md-3 col-lg-2">
+                                <label asp-for="Evidencias_Posicion"></label>
+                                <span class="text-danger field-validation-error" data-valmsg-for="Evidencias_Persona" data-valmsg-replace="true">
+                                    <span id="danger_evidencia_posicion" class=""></span>
+                                </span>
+                            </div>
+                            <input type="hidden" asp-for="Evidencias_Completas_Posicion" />
+                            @if (ViewBag.PermisoAdmin)
+                            {
+                                <div class="col-sm-12 col-md-9 col-lg-10">
+                                    <input type="file" class="form-control" asp-for="Evidencias_Posicion" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+                                </div>
+                            }
+                            <div class="col-sm-12 col-md-9 col-lg-10" id="Evidencias_Lista_Posicion">
+                            </div>
+                        </div>
+                        <div class="row mb-2 align-items-start">
+                            <div class="col-sm-12 col-md-3 col-lg-2">
+                                <label asp-for="Evidencias_Partes"></label>
+                                <span class="text-danger field-validation-error" data-valmsg-for="Evidencias_Persona" data-valmsg-replace="true">
+                                    <span id="danger_evidencia_partes" class=""></span>
+                                </span>
+                            </div>
+                            <input type="hidden" asp-for="Evidencias_Completas_Partes" />
+                            @if (ViewBag.PermisoAdmin)
+                            {
+                                <div class="col-sm-12 col-md-9 col-lg-10">
+                                    <input type="file" class="form-control" asp-for="Evidencias_Partes" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+                                </div>
+                            }
+                            <div class="col-sm-12 col-md-9 col-lg-10" id="Evidencias_Lista_Partes">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-button-container col-12 col-xl-10 mb-4">
+                    <div class="button-container">
+                        <div></div>
+                        <div>
+                            <a class="btn btn-mc-outline-danger" asp-action="Resumen" asp-controller="InvestigacionFinal">Volver</a>
+                            <a class="btn btn-mc-success" asp-controller="DescargarInvestigacionFinal" asp-action="DescargarInvestigacion" asp-route-IdInvestigacion="@Model.Id_Investigacion_Final">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z" fill="black" />
+                                    <path d="M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z" fill="black" />
+                                    <path d="M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z" fill="black" />
+                                    <path d="M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z" fill="black" />
+                                </svg>
+                                <span>Descargar Excel</span>
+                            </a>
+                            @if (ViewBag.PermisoAdmin)
+                            {
+                                <button id="boton_guardar" type="button" class="btn btn-mc-outline-success">Guardar Cambios</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal Ampliar Fecha-->
+<div class="modal fade" id="modal_ampliacion" tabindex="-1" aria-labelledby="titulo_modal_ampliacion" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-menu modal-incidentes">
+            <div class="modal-content">
+                <div class="incidentes">
+                    <div class="image-header-container">
+                        <div class="header-title incidentes-opacity-color">
+                            <h3>Ingrese Nueva Fecha para Implementación</h3>
+                            <img src="/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <form>
+                    <div class="container pt-4 pb-4">
+                        <div class="custom-form w-100">
+                            <div class="detail-container col-12 mb-4">
+                                <div class="row mb-2">
+                                    <input type="hidden" class="form-control" id="idAccionAmpliacion" />
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <span class="text-danger" id="danger_ampliacion"></span>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Nueva Fecha</label>
+                                        <input type="date" class="form-control" id="nuevaFechaAmpliacion" />
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="button-container">
+                                        <button type="button" class="btn btn-mc-outline-danger me-2" data-bs-dismiss="modal">Cancelar</button>
+                                        <button" type="button" class="btn btn-mc" onclick="AmpliarFechaAccion()">Guardar</button">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@if (ViewBag.PermisoAdmin)
+{
+    <partial name="../InvestigacionFinal/Modales/_ModalInvolucrado.cshtml" />
+    <partial name="../InvestigacionFinal/Modales/_ModalProducto.cshtml" />
+    <partial name="../InvestigacionFinal/Modales/_ModalAccion.cshtml" />
+    <partial name="../InvestigacionFinal/Modales/_ModalCausa.cshtml" />
+}
+@section Scripts{
+    @if (ViewBag.PermisoAdmin)
+    {
+        <script type="text/javascript" src="~/js/UseCases/Incidentes/InvestigacionFinal/EditarInvestigacionFinal-Involucrados.js"></script>
+        <script type="text/javascript" src="~/js/UseCases/Incidentes/InvestigacionFinal/EditarInvestigacionFinal-Productos.js"></script>
+        <script type="text/javascript" src="~/js/UseCases/Incidentes/InvestigacionFinal/EditarInvestigacionFinal-Causas.js"></script>
+        <script type="text/javascript" src="~/js/UseCases/Incidentes/InvestigacionFinal/EditarInvestigacionFinal-Acciones.js"></script>
+        <script type="text/javascript">
+            function HabilitarInputs() {
+                $(".writeable").prop('disabled', false);
+                //$("input").prop('disabled', false);
+                //$("select").prop('disabled', false);
+                //$("textarea").prop('disabled', false);
+            }
+            
+            function EliminarEvidencia(evidencia, tipo) {
+                var admin = '@Html.Raw(ViewBag.PermisoAdmin)';
+                if (admin == "True")
+                    if (confirm('¿Está seguro que desea eliminar esta evidencia?'))
+                        $.ajax({
+                            type: "POST",
+                            url: "/InvestigacionFinal/EliminarEvidencia",
+                            data: {
+                                IdInvestigacion: $("#Id_Investigacion_Final").val(),
+                                Evidencia: evidencia,
+                                Tipo: tipo
+                            },
+                            success: (response) => {
+                                if (response.success) {
+                                    nombresEvidenciasString = response.nombresEvidencias;
+                                    nombresEvidencias = JSON.parse(response.nombresEvidencias);
+                                    CargarEvidencias(admin);
+                                } else {
+                                    alert("Ocurrió un error");
+                                    console.log("Error eliminar: " + response.message);
+                                }
+                            }
+                        });
+            }
+
+            //Restrict to integer
+            function setInputFilter(textbox, inputFilter) {
+                ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
+                    textbox.addEventListener(event, function () {
+                        if (inputFilter(this.value)) {
+                            this.oldValue = this.value;
+                            this.oldSelectionStart = this.selectionStart;
+                            this.oldSelectionEnd = this.selectionEnd;
+                        } else if (this.hasOwnProperty("oldValue")) {
+                            this.value = this.oldValue;
+                            this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                        } else {
+                            this.value = "";
+                        }
+                    });
+                });
+            }
+            setInputFilter(document.getElementById("Coordenada_Este"), function (value) {
+                return /^-?\d*$/.test(value);
+            });
+            setInputFilter(document.getElementById("Coordenada_Norte"), function (value) {
+                return /^-?\d*$/.test(value);
+            });
+            setInputFilter(document.getElementById("ImpactoAmbiental_Cord_Este"), function (value) {
+                return /^-?\d*$/.test(value);
+            });
+            setInputFilter(document.getElementById("ImpactoAmbiental_Cord_Norte"), function (value) {
+                return /^-?\d*$/.test(value);
+            });
+
+            $("#checkbox_suelo").change(function () {
+                var checked = !$("#checkbox_suelo").prop("checked");
+                $("#ImpactoAmbiental_Id_Tipo_Suelo").prop("disabled", checked)
+                $("#ImpactoAmbiental_Area_Suelo").prop("disabled", checked)
+                $("#ImpactoAmbiental_Id_Unidad_Area_Suelo").prop("disabled", checked)
+                $("#ImpactoAmbiental_Cantidad_Suelo").prop("disabled", checked)
+                $("#ImpactoAmbiental_Id_Unidad_Cantidad_Suelo").prop("disabled", checked)
+                $("#ImpactoAmbiental_Id_Lugar_Disposicion_Suelo").prop("disabled", checked)
+            });
+            $("#checkbox_flora").change(function () {
+                var checked = !$("#checkbox_flora").prop("checked");
+                $("#ImpactoAmbiental_Id_Especie_Flora").prop("disabled", checked)
+                $("#ImpactoAmbiental_Unidad_Flora").prop("disabled", checked)
+                $("#ImpactoAmbiental_Id_Unidad_Flora").prop("disabled", checked)
+                $("#ImpactoAmbiental_Cantidad_Residuo_Flora").prop("disabled", checked)
+                $("#ImpactoAmbiental_Id_Unidad_Residuo_Flora").prop("disabled", checked)
+                $("#ImpactoAmbiental_Id_Lugar_Disposicion_Flora").prop("disabled", checked)
+            });
+            $("#checkbox_fauna").change(function () {
+                var checked = !$("#checkbox_fauna").prop("checked");
+                $("#ImpactoAmbiental_Id_Especie_Fauna").prop("disabled", checked)
+                $("#ImpactoAmbiental_Unidad_Fauna").prop("disabled", checked)
+                $("#ImpactoAmbiental_Id_Unidad_Fauna").prop("disabled", checked)
+                $("#ImpactoAmbiental_Cantidad_Residuo_Fauna").prop("disabled", checked)
+                $("#ImpactoAmbiental_Id_Unidad_Residuo_Fauna").prop("disabled", checked)
+                $("#ImpactoAmbiental_Id_Lugar_Disposicion_Fauna").prop("disabled", checked)
+            });
+            $("#checkbox_agua").change(function () {
+                var checked = !$("#checkbox_agua").prop("checked");
+                $("#ImpactoAmbiental_Id_Tipo_Agua").prop("disabled", checked)
+                $("#ImpactoAmbiental_Volumen_Agua").prop("disabled", checked)
+                $("#ImpactoAmbiental_Id_Unidad_Agua").prop("disabled", checked)
+                $("#ImpactoAmbiental_Cantidad_Residuo_Agua").prop("disabled", checked)
+                $("#ImpactoAmbiental_Id_Unidad_Residuo_Agua").prop("disabled", checked)
+                $("#ImpactoAmbiental_Id_Lugar_Disposicion_Agua").prop("disabled", checked)
+            });
+            $("#ImpactoAmbiental_Restos_Arq").change(function () {
+                var sino = $("#ImpactoAmbiental_Restos_Arq").val() == "SI" ? true : false;
+                $("#ImpactoAmbiental_Cord_Este").prop("disabled", !sino);
+                $("#ImpactoAmbiental_Cord_Norte").prop("disabled", !sino);
+                $("#ImpactoAmbiental_Nombre_Resto_Arq").prop("disabled", !sino);
+            });
+
+            $("#ImpactoAmbiental_Cantidad_Residuo_Flora").on('change', function () {
+                ActualizarResiduoSolido();
+
+            });
+            $("#ImpactoAmbiental_Cantidad_Residuo_Fauna").on('change', function () {
+                ActualizarResiduoSolido();
+            });
+            $("#ImpactoAmbiental_Cantidad_Residuo_Agua").on('change', function () {
+                ActualizarResiduoSolido();
+            });
+            $("#ImpactoAmbiental_Id_Unidad_Residuo_Flora").on('change', function () {
+                var unidad = $("#ImpactoAmbiental_Id_Unidad_Residuo_Flora").val();
+                console.log(unidad);
+                $("#ImpactoAmbiental_Id_Unidad_Cantidad_RS").val(unidad);
+            });
+            $("#ImpactoAmbiental_Id_Unidad_Residuo_Fauna").on('change', function () {
+                var unidad = $("#ImpactoAmbiental_Id_Unidad_Residuo_Fauna").val();
+                console.log(unidad);
+                $("#ImpactoAmbiental_Id_Unidad_Cantidad_RS").val(unidad);
+            });
+            $("#ImpactoAmbiental_Id_Unidad_Residuo_Agua").on('change', function () {
+                var unidad = $("#ImpactoAmbiental_Id_Unidad_Residuo_Agua").val();
+                console.log(unidad);
+                $("#ImpactoAmbiental_Id_Unidad_Cantidad_RS").val(unidad);
+            });
+
+            function ActualizarResiduoSolido() {
+                var res_flora = $("#ImpactoAmbiental_Cantidad_Residuo_Flora").val();
+                var res_fauna = $("#ImpactoAmbiental_Cantidad_Residuo_Fauna").val();
+                var res_agua = $("#ImpactoAmbiental_Cantidad_Residuo_Agua").val();
+
+                res_flora = res_flora == "" ? "0" : res_flora;
+                res_fauna = res_fauna == "" ? "0" : res_fauna;
+                res_agua = res_agua == "" ? "0" : res_agua;
+
+                $("#ImpactoAmbiental_Cantidad_RS").val(parseInt(res_flora) + parseInt(res_fauna) + parseInt(res_agua));
+            }
+            function checkDataImpactoSuelo() {
+                var tipo = $("#ImpactoAmbiental_Id_Tipo_Suelo");
+                var area = $("#ImpactoAmbiental_Area_Suelo")
+                var unidad_area = $("#ImpactoAmbiental_Id_Unidad_Area_Suelo")
+                var cantidad = $("#ImpactoAmbiental_Cantidad_Suelo")
+                var unidad_cantidad = $("#ImpactoAmbiental_Id_Unidad_Cantidad_Suelo")
+                var lugar = $("#ImpactoAmbiental_Id_Lugar_Disposicion_Suelo")
+                if (tipo.val() != 0 ||
+                    area.val() != "" ||
+                    unidad_area.val() != 0 ||
+                    cantidad.val() != "" ||
+                    unidad_cantidad.val() != 0 ||
+                    lugar.val() != 0) {
+                    $("#checkbox_suelo").prop("checked", true);
+                    tipo.prop("disabled", false);
+                    area.prop("disabled", false);
+                    unidad_area.prop("disabled", false);
+                    cantidad.prop("disabled", false);
+                    unidad_cantidad.prop("disabled", false);
+                    lugar.prop("disabled", false);
+                }
+            }
+            function checkDataImpactoFlora() {
+                var tipo = $("#ImpactoAmbiental_Id_Especie_Flora");
+                var area = $("#ImpactoAmbiental_Unidad_Flora")
+                var unidad_area = $("#ImpactoAmbiental_Id_Unidad_Flora")
+                var cantidad = $("#ImpactoAmbiental_Cantidad_Residuo_Flora")
+                var unidad_cantidad = $("#ImpactoAmbiental_Id_Unidad_Residuo_Flora")
+                var lugar = $("#ImpactoAmbiental_Id_Lugar_Disposicion_Flora")
+                if (tipo.val() != 0 ||
+                    area.val() != "" ||
+                    unidad_area.val() != 0 ||
+                    cantidad.val() != "" ||
+                    unidad_cantidad.val() != 0 ||
+                    lugar.val() != 0) {
+                    $("#checkbox_flora").prop("checked", true);
+                    tipo.prop("disabled", false);
+                    area.prop("disabled", false);
+                    unidad_area.prop("disabled", false);
+                    cantidad.prop("disabled", false);
+                    unidad_cantidad.prop("disabled", false);
+                    lugar.prop("disabled", false);
+                }
+            }
+            function checkDataImpactoFauna() {
+                var tipo = $("#ImpactoAmbiental_Id_Especie_Fauna");
+                var area = $("#ImpactoAmbiental_Unidad_Fauna")
+                var unidad_area = $("#ImpactoAmbiental_Id_Unidad_Fauna")
+                var cantidad = $("#ImpactoAmbiental_Cantidad_Residuo_Fauna")
+                var unidad_cantidad = $("#ImpactoAmbiental_Id_Unidad_Residuo_Fauna")
+                var lugar = $("#ImpactoAmbiental_Id_Lugar_Disposicion_Fauna")
+                if (tipo.val() != 0 ||
+                    area.val() != "" ||
+                    unidad_area.val() != 0 ||
+                    cantidad.val() != "" ||
+                    unidad_cantidad.val() != 0 ||
+                    lugar.val() != 0) {
+                    $("#checkbox_fauna").prop("checked", true);
+                    tipo.prop("disabled", false);
+                    area.prop("disabled", false);
+                    unidad_area.prop("disabled", false);
+                    cantidad.prop("disabled", false);
+                    unidad_cantidad.prop("disabled", false);
+                    lugar.prop("disabled", false);
+                }
+            }
+            function checkDataImpactoAgua() {
+                var tipo = $("#ImpactoAmbiental_Id_Tipo_Agua");
+                var area = $("#ImpactoAmbiental_Volumen_Agua")
+                var unidad_area = $("#ImpactoAmbiental_Id_Unidad_Agua")
+                var cantidad = $("#ImpactoAmbiental_Cantidad_Residuo_Agua")
+                var unidad_cantidad = $("#ImpactoAmbiental_Id_Unidad_Residuo_Agua")
+                var lugar = $("#ImpactoAmbiental_Id_Lugar_Disposicion_Agua")
+                if (tipo.val() != 0 ||
+                    area.val() != "" ||
+                    unidad_area.val() != 0 ||
+                    cantidad.val() != "" ||
+                    unidad_cantidad.val() != 0 ||
+                    lugar.val() != 0) {
+                    $("#checkbox_agua").prop("checked", true);
+                    tipo.prop("disabled", false);
+                    area.prop("disabled", false);
+                    unidad_area.prop("disabled", false);
+                    cantidad.prop("disabled", false);
+                    unidad_cantidad.prop("disabled", false);
+                    lugar.prop("disabled", false);
+                }
+            }
+            function checkDataImpactoArqueologico() {
+                var este = $("#ImpactoAmbiental_Cord_Este");
+                var norte = $("#ImpactoAmbiental_Cord_Norte");
+                var nombre = $("#ImpactoAmbiental_Nombre_Resto_Arq");
+                if (este.val() != "" ||
+                    norte.val() != "" ||
+                    nombre.val() != "") {
+                    $("#ImpactoAmbiental_Restos_Arq").val() == "SI";
+                    este.prop("disabled", false);
+                    norte.prop("disabled", false);
+                    nombre.prop("disabled", false);
+                }
+            }
+        </script>
+    }
+<script type="text/javascript">
+        var nombresEvidenciasString = '@Html.Raw(Model.Evidencias_Nombres)';
+        var nombresEvidencias = JSON.parse(nombresEvidenciasString);
+        var papeles = '@Html.Raw(Model.Evidencias_Completas_Papel)';
+        var personas = '@Html.Raw(Model.Evidencias_Completas_Persona)';
+        var posiciones = '@Html.Raw(Model.Evidencias_Completas_Posicion)';
+        var partes = '@Html.Raw(Model.Evidencias_Completas_Partes)';
+
+        $(document).ready(function () {
+            GetInvolucrados();
+            GetProductos();
+            GetCausas();
+            GetAcciones();
+            GetAccionesVerificacion();
+            var admin = '@Html.Raw(ViewBag.PermisoAdmin)';
+            CargarEvidencias(admin);
+
+            if (admin == "True") {
+                HabilitarInputs();
+
+                checkDataImpactoSuelo();
+                checkDataImpactoFlora();
+                checkDataImpactoFauna();
+                checkDataImpactoAgua();
+                checkDataImpactoArqueologico();
+            }
+            });
+
+
+        function CargarEvidenciasSinNombre(tipo, evidencias, html, input,admin) {
+        var htmlText = "";
+        for (var i = 0; i < evidencias.length; i++) {
+            htmlText += "<p>";
+            if (admin == "True")
+                htmlText += "<img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencias[i] + "','" + tipo + "')>";
+            htmlText += "<a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=" + tipo.toString().toLowerCase() + "\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
+                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                "</svg><span>Descargar Evidencia " + tipo + " " + (i + 1) + "</span></a></p>";
+        }
+        $(html).html(htmlText);
+        $(input).val(evidencias);
+    }
+        function CargarEvidenciasConNombre(tipo, evidencias, html, input,admin) {
+        var htmlText = "";
+        var newInputValue = "";
+        for (var i = 0; i < evidencias.length; i++) {
+            htmlText += "<p>";
+            if (admin == "True")
+                htmlText += "<img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencias[i].NombreCarga + "','" + tipo + "')>";
+            htmlText += "<a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i].NombreCarga + "&tipo=" + tipo.toString().toLowerCase() + "\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
+                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                "</svg><span>" + evidencias[i].NombreOrigen + "</span></a></p>";
+            newInputValue += evidencias[i].NombreCarga + ",";
+        }
+        $(html).html(htmlText);
+        $(input).val(newInputValue.slice(0, -1));
+    }
+        function CargarEvidencias(admin) {
+        //Papeles
+        if (nombresEvidencias.length === 4) {
+            for (let i = 0; i < nombresEvidencias.length; i++) {
+                if (nombresEvidencias[i].Categoria === "papel") {
+                    CargarEvidenciasConNombre("Papel", nombresEvidencias[i].Evidencias, "#Evidencias_Lista_Papel", "#Evidencias_Completas_Papel",admin);
+                    break;
+                }
+            }
+        }
+        else if (papeles.length > 0) {
+            var papeles_valores = JSON.parse(papeles.replace(/&quot;/g, '"'));
+            CargarEvidenciasSinNombre("Papel", papeles_valores, "#Evidencias_Lista_Papel", "#Evidencias_Completas_Papel",admin);
+        }
+        //Personas
+        if (nombresEvidencias.length === 4) {
+            for (let i = 0; i < nombresEvidencias.length; i++) {
+                if (nombresEvidencias[i].Categoria === "persona") {
+                    CargarEvidenciasConNombre("Persona", nombresEvidencias[i].Evidencias, "#Evidencias_Lista_Persona", "#Evidencias_Completas_Persona", admin);
+                    break;
+                }
+            }
+        }
+        else if (personas.length > 0) {
+            var personas_valores = JSON.parse(personas.replace(/&quot;/g, '"'));
+            CargarEvidenciasSinNombre("Persona", personas_valores, "#Evidencias_Lista_Persona", "#Evidencias_Completas_Persona", admin);
+        }
+        //Posiciones
+        if (nombresEvidencias.length === 4) {
+            for (let i = 0; i < nombresEvidencias.length; i++) {
+                if (nombresEvidencias[i].Categoria === "posicion") {
+                    CargarEvidenciasConNombre("Posicion", nombresEvidencias[i].Evidencias, "#Evidencias_Lista_Posicion", "#Evidencias_Completas_Posicion", admin);
+                    break;
+                }
+            }
+        }
+        else if (posiciones.length > 0) {
+            var posiciones_valores = JSON.parse(posiciones.replace(/&quot;/g, '"'));
+            CargarEvidenciasSinNombre("Posicion", posiciones_valores, "#Evidencias_Lista_Posicion", "#Evidencias_Completas_Posicion", admin);
+        }
+        //Partes
+        if (nombresEvidencias.length === 4) {
+            for (let i = 0; i < nombresEvidencias.length; i++) {
+                if (nombresEvidencias[i].Categoria === "parte") {
+                    CargarEvidenciasConNombre("Parte", nombresEvidencias[i].Evidencias, "#Evidencias_Lista_Partes", "#Evidencias_Completas_Partes", admin);
+                    break;
+                }
+            }
+        }
+        else if (partes.length > 0) {
+            var partes_valores = JSON.parse(partes.replace(/&quot;/g, '"'));
+            CargarEvidenciasSinNombre("Parte", partes_valores, "#Evidencias_Lista_Partes", "#Evidencias_Completas_Partes", admin);
+        }
+    }
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportePreliminar/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        let r = data.r;
+                        let g = data.g;
+                        let b = data.b;
+                        let img_url = data.img_url;
+                        incidentesStyle(r, g, b);
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
+        function GetInvolucrados() {
+            $.ajax({
+                type: "POST",
+                url: "/InvestigacionFinal/ListarInvolucrados",
+                data: {
+                    IdInvestigacion: $("#Id_Investigacion_Final").val()
+                },
+                success: (response) => {
+                    $('#tabla_involucrados tbody').empty()
+                    $('#tabla_involucrados tbody').html(response.filas_involucrados)
+                    $('#NInvolucrados').val(response.nInvolucrados);
+                    dataModulo();
+                }
+            });
+        }
+        function GetProductos() {
+            $.ajax({
+                type: "POST",
+                url: "/InvestigacionFinal/ListarProductoDerramado",
+                data: {
+                    IdInvestigacion: $("#Id_Investigacion_Final").val()
+                },
+                success: (response) => {
+                    $('#tabla_productos tbody').empty()
+                    $('#tabla_productos tbody').html(response.filas_productos)
+                    $('#NInvolucrados').val(response.nProductos);
+                    dataModulo();
+                }
+            });
+        }
+        function GetCausas() {
+            $.ajax({
+                type: "POST",
+                url: "/InvestigacionFinal/ListarCausas",
+                data: {
+                    IdInvestigacion: $("#Id_Investigacion_Final").val()
+                },
+                success: (response) => {
+                    $('#tabla_causas_inmediatas tbody').empty();
+                    $('#tabla_causas_inmediatas tbody').html(response.filas_causas_inmediatas);
+                    $('#tabla_causas_basicas tbody').empty();
+                    $('#tabla_causas_basicas tbody').html(response.filas_causas_basicas);
+                    $('#NCausas').val(response.nCausas);
+                    dataModulo();
+                }
+            });
+        }
+        function GetAcciones() {
+            $.ajax({
+                type: "POST",
+                url: "/InvestigacionFinal/ListarAcciones",
+                data: {
+                    IdInvestigacion: $("#Id_Investigacion_Final").val()
+                },
+                success: (response) => {
+                    $('#tabla_acciones_inmediatas tbody').empty();
+                    $('#tabla_acciones_inmediatas tbody').html(response.filas_acciones_inmediatas);
+                    $('#tabla_acciones_correctivas tbody').empty();
+                    $('#tabla_acciones_correctivas tbody').html(response.filas_acciones_correctivas);
+                    $('#NAcciones').val(response.nAcciones);
+                    dataModulo();
+                }
+            });
+        }
+        function GetAccionesVerificacion() {
+        $.ajax({
+            type: "POST",
+            url: "/InvestigacionFinal/ListarAccionesVerificacion",
+            data: {
+                IdInvestigacion: $("#Id_Investigacion_Final").val()
+            },
+            success: (response) => {
+                $('#tabla_acciones tbody').empty();
+                $('#tabla_acciones tbody').html(response.filas_acciones);
+                var nAcciones = response.nAcciones;
+                var nVerificado = response.nVerificado;
+                var porcentaje = roundNumber((nVerificado * 100 / nAcciones).toString(),2) + "%";
+                $('#progreso_vefirifacion .progress-bar').width(porcentaje);
+                $('#progreso_vefirifacion .percent').text(porcentaje);
+                dataModulo();
+            }
+        });
+    }
+        function AmpliarFecha(idAccion) {
+            $("#idAccionAmpliacion").val(idAccion);
+            $("#modal_ampliacion").modal("show");
+        }
+        function AmpliarFechaAccion() {
+            $.ajax({
+                type: "POST",
+                url: "/InvestigacionFinal/AmpliarFechaAccion",
+                data: {
+                    IdInvestigacion: $("#Id_Investigacion_Final").val(),
+                    IdAccion: $("#idAccionAmpliacion").val(),
+                    fecha: $("#nuevaFechaAmpliacion").val()
+                },
+                success: (response) => {
+                    $("#modal_ampliacion").modal("hide");
+                    $("#idAccionAmpliacion").val(0);
+                    $("#nuevaFechaAmpliacion").val("")
+
+                    $('#tabla_acciones tbody').empty();
+                    $('#tabla_acciones tbody').html(response.filas_acciones);
+                    var nAcciones = response.nAcciones;
+                    var nVerificado = response.nVerificado;
+                    var porcentaje = roundNumber((nVerificado * 100 / nAcciones).toString(),2) + "%";
+                    $('#progreso_vefirifacion .progress-bar').width(porcentaje);
+                    $('#progreso_vefirifacion .percent').text(porcentaje);
+                    dataModulo();
+                }
+            });
+        }
+        function roundNumber(num, scale) {
+            if (!("" + num).includes("e")) {
+                return +(Math.round(num + "e+" + scale) + "e-" + scale);
+            } else {
+                var arr = ("" + num).split("e");
+                var sig = ""
+                if (+arr[1] + scale > 0) {
+                    sig = "+";
+                }
+                return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale);
+            }
+    }
+        function EliminarAccion(idAccion) {
+        if (confirm('¿Está seguro que desea eliminar esta acción?')) {
+            $.ajax({
+                type: "POST",
+                url: "/InvestigacionFinal/EliminarAccion",
+                data: {
+                    IdInvestigacion: $("#Id_Investigacion_Final").val(),
+                    IdAccion: idAccion,
+                },
+                success: (response) => {
+                    $('#tabla_acciones_inmediatas tbody').empty();
+                    $('#tabla_acciones_inmediatas tbody').html(response.filas_acciones_inmediatas);
+                    $('#tabla_acciones_correctivas tbody').empty();
+                    $('#tabla_acciones_correctivas tbody').html(response.filas_acciones_correctivas);
+                    $('#NAcciones').val(response.nAcciones);
+                    dataModulo();
+                    GetAccionesVerificacion();
+                }
+            });
+        }
+    }
+        $("#btn_editar_accion").on("click", function () {
+        $("#danger_accion").html("");
+        if (ValidateInputsAccion() && ($("#IdAccion").val() != "" || $("#IdAccion").val() != 0))
+            $.ajax({
+                type: "POST",
+                url: "/InvestigacionFinal/EditarAccion",
+                data: {
+                    IdAccion: $("#Id_Accion").val(),
+                    tipoAccion: $("#select_tipo_accion").val(),
+                    IdInvestigacion: $("#Id_Investigacion_Final").val(),
+                    accion: $("#input_descripcion_accion").val(),
+                    usuario: $('#select_usuarios_accion').val(),
+                    usuario2: $('#select_usuarios_accion2').val(),
+                    contratista: $('#input_contratista_accion').val(),
+                    fecha: $('#input_fecha_accion').val(),
+                    estado: $('#select_estatus').val()
+                },
+                success: (response) => {
+                    ResetInputsAccion();
+                    $("#modal_accion").modal('hide');
+                    $('#tabla_acciones_inmediatas tbody').empty();
+                    $('#tabla_acciones_inmediatas tbody').html(response.filas_acciones_inmediatas);
+                    $('#tabla_acciones_correctivas tbody').empty();
+                    $('#tabla_acciones_correctivas tbody').html(response.filas_acciones_correctivas);
+                    $('#NAcciones').val(response.nAcciones);
+                    dataModulo();
+                    GetAccionesVerificacion();
+                }
+            });
+        else
+            $("#danger_accion").html("Debe completar todos los campos");
+    });
+        $("#boton_guardar").click(function () {
+        $("#Modal_Guardando_Estado").modal("show");
+        $("#formEditarInvestigacion").submit();
+    });
+
+        //Evidencias Papel
+        $("#Evidencias_Papel").change(function () {
+        $("#danger_evidencia_papel").html("");
+        //Validacion del tamaño del archivo
+        var maxSize = $("#Evidencias_Papel").data('max-size');
+        var archivos = $("#Evidencias_Papel").get(0).files;
+
+        if (archivos.length > 0) {
+            var fileSize = 0
+            for (var i = 0; i < archivos.length; i++) {
+                fileSize += archivos[i].size;
+            }
+            if (fileSize > maxSize) {
+                this.value = '';
+                var filesname = this.files.length + " Archivos";
+                $("#danger_evidencia_papel").html("El  archivo supera el límite permitido de 8MB<br/>");
+                return;
+            }
+            var filesName = "";
+            for (var i = 0; i < archivos.length; i++) {
+                switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'jpeg':
+                    case 'JPEG':
+                    case 'png':
+                    case 'PNG':
+                    case 'xls':
+                    case 'xlsx':
+                    case 'doc':
+                    case 'docx':
+                    case 'pdf':
+                        filesName += archivos[i].name + "<br/>";
+                        break;
+                    default:
+                        this.value = '';
+                        var filesname = this.files.length + " Archivos";
+                        $("#files_name_papel").text(filesname);
+                        $("#danger_evidencia_papel").html("No se admiten este tipo de archivos<br/>");
+                        return;
+                }
+            }
+            filesName.length > 0 ? $("#files_name_papel").html(filesName) : null;
+        }
+    });
+        //Evidencias Persona
+        $("#Evidencias_Persona").change(function () {
+        $("#danger_evidencia_persona").html("");
+        //Validacion del tamaño del archivo
+        var maxSize = $("#Evidencias_Persona").data('max-size');
+        var archivos = $("#Evidencias_Persona").get(0).files;
+
+        if (archivos.length > 0) {
+            var fileSize = 0
+            for (var i = 0; i < archivos.length; i++) {
+                fileSize += archivos[i].size;
+            }
+            if (fileSize > maxSize) {
+                this.value = '';
+                var filesname = this.files.length + " Archivos";
+                $("#danger_evidencia_persona").html("El  archivo supera el límite permitido de 8MB<br/>");
+                return;
+            }
+            var filesName = "";
+            for (var i = 0; i < archivos.length; i++) {
+                switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'jpeg':
+                    case 'JPEG':
+                    case 'png':
+                    case 'PNG':
+                    case 'xls':
+                    case 'xlsx':
+                    case 'doc':
+                    case 'docx':
+                    case 'pdf':
+                        filesName += archivos[i].name + "<br/>";
+                        break;
+                    default:
+                        this.value = '';
+                        var filesname = this.files.length + " Archivos";
+                        $("#files_name_persona").text(filesname);
+                        $("#danger_evidencia_persona").html("No se admiten este tipo de archivos<br/>");
+                        return;
+                }
+            }
+            filesName.length > 0 ? $("#files_name_persona").html(filesName) : null;
+        }
+    });
+        //Evidencias Posicion
+        $("#Evidencias_Posicion").change(function () {
+        $("#danger_evidencia_posicion").html("");
+        //Validacion del tamaño del archivo
+        var maxSize = $("#Evidencias_Posicion").data('max-size');
+        var archivos = $("#Evidencias_Posicion").get(0).files;
+
+        if (archivos.length > 0) {
+            var fileSize = 0
+            for (var i = 0; i < archivos.length; i++) {
+                fileSize += archivos[i].size;
+            }
+            if (fileSize > maxSize) {
+                this.value = '';
+                var filesname = this.files.length + " Archivos";
+                $("#danger_evidencia_posicion").html("El  archivo supera el límite permitido de 8MB<br/>");
+                return;
+            }
+            var filesName = "";
+            for (var i = 0; i < archivos.length; i++) {
+                switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'jpeg':
+                    case 'JPEG':
+                    case 'png':
+                    case 'PNG':
+                    case 'xls':
+                    case 'xlsx':
+                    case 'doc':
+                    case 'docx':
+                    case 'pdf':
+                        filesName += archivos[i].name + "<br/>";
+                        break;
+                    default:
+                        this.value = '';
+                        var filesname = this.files.length + " Archivos";
+                        $("#files_name_posicion").text(filesname);
+                        $("#danger_evidencia_posicion").html("No se admiten este tipo de archivos<br/>");
+                        return;
+                }
+            }
+            filesName.length > 0 ? $("#files_name_posicion").html(filesName) : null;
+        }
+    });
+        //Evidencias Partes
+        $("#Evidencias_Partes").change(function () {
+        $("#danger_evidencia_partes").html("");
+        //Validacion del tamaño del archivo
+        var maxSize = $("#Evidencias_Partes").data('max-size');
+        var archivos = $("#Evidencias_Partes").get(0).files;
+
+        if (archivos.length > 0) {
+            var fileSize = 0
+            for (var i = 0; i < archivos.length; i++) {
+                fileSize += archivos[i].size;
+            }
+            if (fileSize > maxSize) {
+                this.value = '';
+                var filesname = this.files.length + " Archivos";
+                $("#danger_evidencia_partes").html("El  archivo supera el límite permitido de 8MB<br/>");
+                return;
+            }
+            var filesName = "";
+            for (var i = 0; i < archivos.length; i++) {
+                switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'jpeg':
+                    case 'JPEG':
+                    case 'png':
+                    case 'PNG':
+                    case 'xls':
+                    case 'xlsx':
+                    case 'doc':
+                    case 'docx':
+                    case 'pdf':
+                        filesName += archivos[i].name + "<br/>";
+                        break;
+                    default:
+                        this.value = '';
+                        var filesname = this.files.length + " Archivos";
+                        $("#files_name_partes").text(filesname);
+                        $("#danger_evidencia_partes").html("No se admiten este tipo de archivos<br/>");
+                        return;
+                }
+            }
+            filesName.length > 0 ? $("#files_name_partes").html(filesName) : null;
+        }
+    });
+</script>
+}

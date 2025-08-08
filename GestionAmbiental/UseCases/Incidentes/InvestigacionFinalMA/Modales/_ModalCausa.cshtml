@@ -1,0 +1,85 @@
+﻿<!-- Modal Nueva Causas-->
+<div class="modal fade" id="modal_causa" tabindex="-1" aria-labelledby="titulo_modal_causa" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-menu modal-incidentes">
+            <div class="modal-content">
+                <div class="incidentes">
+                    <div class="image-header-container">
+                        <div class="header-title incidentes-opacity-color">
+                            <h3> Agregar Causa del Incidente</h3>
+                            <img src="/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <form>
+                    <div class="container pt-4 pb-4">
+                        <div class="custom-form w-100">
+                            <div class="detail-container col-12 mb-4">
+                                <div class="row mb-2">
+                                    <input type="hidden" id="Id_Causa" />
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <span class="text-danger" id="danger_causa"></span>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Tipo de Causa del Incidente</label>
+                                        <select class="form-control" id="select_acto_condicion">
+                                            <option value="">--SELECCIONE--</option>
+                                            <optgroup label="Causas Inmediatas">
+                                                <option value="Acto">Acto Subestándar</option>
+                                                <option value="Condicion">Condición Subestándar</option>
+                                            </optgroup>
+                                            <optgroup label="Causas Básicas">
+                                                <option value="FactorP">Factor Personal</option>
+                                                <option value="FactorL">Factor Laboral</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row input_container" id="actos_subestandar" style="display:none">
+                                    <div class="col-12">
+                                        <label>Acto Subestándar</label>
+                                        <select class="form-control" asp-items="@ViewBag.Actos" id="select_actos"></select>
+                                    </div>
+                                </div>
+                                <div class="row input_container" id="condiciones_subestandar" style="display:none">
+                                    <div class="col-12">
+                                        <label>Condición Subestándar</label>
+                                        <select class="form-control" asp-items="@ViewBag.Condiciones" id="select_condiciones"></select>
+                                    </div>
+                                </div>
+                                <div class="row input_container" id="factores_personales" style="display:none">
+                                    <div class="col-12">
+                                        <label>Factor Personal</label>
+                                        <select class="form-control" asp-items="@ViewBag.FactoresPersonales" id="select_factores_personales"></select>
+                                    </div>
+                                </div>
+                                <div class="row input_container" id="factores_laborales" style="display:none">
+                                    <div class="col-12">
+                                        <label>Factor Laboral</label>
+                                        <select class="form-control" asp-items="@ViewBag.FactoresLaborales" id="select_factores_laboral"></select>
+                                    </div>
+                                </div>
+                                <div class="row input_container" id="descripcion_causa" style="display:none">
+                                    <div class="col-12">
+                                        <label>Descripción</label>
+                                        <textarea type="text" class="form-control" id="input_descripcion_causa" maxlength="1000" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="button-container">
+                                        <button type="button" class="btn btn-mc-outline-danger me-2" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-mc me-2" id="btn_guardar_causa">Guardar</button>
+                                        <button type="button" class="btn btn-mc-success" id="btn_editar_causa" style="display:none">Aceptar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

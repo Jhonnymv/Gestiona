@@ -11,10 +11,10 @@ namespace GestionAmbiental.Domain.Incidentes.InvestigacionFinal
     public class Investigacion_Final_Incidente
     {
         public int Id_Investigacion_Final { get; set; }
-        public int Id_Reporte_Preliminar { get; set; }
+        public int? Id_Reporte_Preliminar { get; set; }
         public string Codigo { get; set; }
         //Titular minero
-        public int Num_Trabajadores { get; set; }
+        public int? Num_Trabajadores { get; set; }
         //Contratista - opcional
         public string Razon_Social_Contratista { get; set; }
         public string RUC_Contratista { get; set; }
@@ -51,5 +51,7 @@ namespace GestionAmbiental.Domain.Incidentes.InvestigacionFinal
         public int NAccionesAprobadas { get; set; }
         public int NAcciones { get; set; }
         public string NombresArchivos { get; set; }
+        public int? Id_Registrado_Por { get; set; }
+        public Usuario? Registrado_Por { get; set; }
     }
 }

@@ -309,7 +309,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
 
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdReporte));
 
-                var reporte = await _getReportePreliminar.Execute(IdDesencriptado);
+                var reporte = await _getReportePreliminar.Execute(IdDesencriptado,userInfo.NombreUsuario);
                 var nombresEvidencias = await _getEvidenciasReporte.Execute(IdDesencriptado);
                 var model = new EditarReporteModel();
                 model.Id_Encriptado_Reporte_Preliminar = IdReporte;
@@ -466,14 +466,15 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
                         model.Comentario_Accion,
                         model.Id_Supervisor,
                         model.Opcion);
-                    if (model.Opcion.Equals("Difundir") && model.Investigacion)
-                        return RedirectToAction("IniciarInvestigacion", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
-                    else if (model.Opcion.Equals("Difundir"))
+                    //if (model.Opcion.Equals("Difundir") && model.Investigacion)
+                    //return RedirectToAction("IniciarInvestigacion", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
+                    //else if (model.Opcion.Equals("Difundir"))
+                    if (model.Opcion.Equals("Difundir"))
                         return RedirectToAction("DifundirNuevoReporte", "NotificacionesReporteIncidente", new { IdReporte = model.Id_Reporte_Preliminar });
                     else
-                        return RedirectToAction("Resumen");
+                        return RedirectToAction("EditarReportePreliminarMA", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
                 }
-                return RedirectToAction("EditarReportePreliminar", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
+                return RedirectToAction("EditarReportePreliminarMA", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
             }
         }
         public async Task<IActionResult> IniciarInvestigacion(string IdReporte)

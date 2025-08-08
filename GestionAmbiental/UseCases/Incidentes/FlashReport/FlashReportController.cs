@@ -320,7 +320,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
                     Descripcion = flashReport.Descripcion,
                     Fecha_Hora = flashReport.Fecha_Hora,
                     Nivel_Incidente = flashReport.Nivel_Incidente,
-                    Componente_Ambiental_Afectado = flashReport.Componente_Ambiental_Afectado,
+                    Id_Componente_Ambiental = flashReport.Id_Componente_Ambiental,
                     Id_Producto_Incidente = flashReport.Id_Producto_Incidente,
                     Id_Supervisor_Marcobre = flashReport.Id_Supervisor_Marcobre,
                     Supervisor_Contratista = flashReport.Supervisor_Contratista,
@@ -428,7 +428,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
 					Descripcion = flashReport.Descripcion,
 					Fecha_Hora = flashReport.Fecha_Hora,
 					Nivel_Incidente = flashReport.Nivel_Incidente,
-					Componente_Ambiental_Afectado = flashReport.Componente_Ambiental_Afectado,
+					Id_Componente_Ambiental = flashReport.Id_Componente_Ambiental,
 					Id_Producto_Incidente = flashReport.Id_Producto_Incidente,
 					Id_Supervisor_Marcobre = flashReport.Id_Supervisor_Marcobre,
 					Supervisor_Contratista = flashReport.Supervisor_Contratista,
@@ -511,14 +511,11 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
 		[HttpPost]
         public async Task<IActionResult> NuevoFlashReport(NuevoFlashReportModel model)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser")); 
+
             model.Fecha_Hora = Convert.ToDateTime(model.Fecha_Incidente + " " + model.Hora_Incidente);
-			if (model.Opcion != "Finalizar")
-				model.Estado = "Registrado";
-			else
-				model.Estado = "Pendiente";
 
 			var acciones = JsonConvert.DeserializeObject<List<Accion>>(model.Acciones);
-
 
             if (ModelState.IsValid)
             {
@@ -557,7 +554,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
                     model.Lugar,
                     model.Fecha_Hora,
                     model.Nivel_Incidente,
-                    model.Componente_Ambiental_Afectado,
+                    model.Id_Componente_Ambiental,
                     model.Id_Producto_Incidente,
                     model.Cantidad_Derramada,
                     model.Id_Unidad_Cantidad_Derramada,
@@ -569,7 +566,8 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
                     model.Cargo_Supervisor_Marcobre,
                     model.Cargo_Supervisor_Contratista,
                     model.Estado,
-                    model.Opcion
+                    model.Opcion,
+                    userInfo.NombreUsuario
                     );
                 //Agregar acciones
 				foreach (var accion in acciones)
@@ -589,8 +587,10 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
         }
 		[HttpPost]
 		public async Task<IActionResult> EditarFlashReport(EditarFlashReportModel model)
-		{
-			model.Fecha_Hora = Convert.ToDateTime(model.Fecha_Incidente + " " + model.Hora_Incidente);
+        {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+            model.Fecha_Hora = Convert.ToDateTime(model.Fecha_Incidente + " " + model.Hora_Incidente);
             if(model.Opcion!= "Finalizar")
                 model.Estado = "Registrado";
 			else
@@ -667,7 +667,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
 					model.Lugar,
 					model.Fecha_Hora,
 					model.Nivel_Incidente,
-					model.Componente_Ambiental_Afectado,
+					model.Id_Componente_Ambiental,
 					model.Id_Producto_Incidente,
 					model.Cantidad_Derramada,
 					model.Id_Unidad_Cantidad_Derramada,

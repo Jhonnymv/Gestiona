@@ -30,7 +30,7 @@
 								<select class="form-control" asp-items="@ViewBag.Gerencia_Incidente" asp-for="Id_Gerencia"></select>
 							</div>
 							<div class="col-12 col-sm-6 col-lg-6">
-								<label asp-for="Id_Empresa">Nivel de incidente</label>
+								<label asp-for="Id_Empresa">Empresa</label>
 								<span class="text-danger" asp-validation-for="Id_Empresa"></span>
 								<select class="form-control" asp-items="@ViewBag.Empresa_Incidente" asp-for="Id_Empresa"></select>
 							</div>
@@ -63,9 +63,9 @@
 								<select class="form-control" asp-items="@ViewBag.Nivel_Incidente" asp-for="Nivel_Incidente"></select>
 							</div>
 							<div class="col-12 col-sm-6 col-lg-6">
-								<label asp-for="Componente_Ambiental_Afectado">Componente Ambiental Afectado</label>
-								<span class="text-danger" asp-validation-for="Componente_Ambiental_Afectado"></span>
-								<input type="text" class="form-control" asp-for="Componente_Ambiental_Afectado" />
+								<label asp-for="Id_Componente_Ambiental">Componente Ambiental Afectado</label>
+								<span class="text-danger" asp-validation-for="Id_Componente_Ambiental"></span>
+								<select class="form-control" asp-items="@ViewBag.Componente_Ambiental" asp-for="Id_Componente_Ambiental"></select>
 							</div>
 						</div>
 						<div class="row input_container">
@@ -281,6 +281,58 @@
 		</div>
 	</div>
 </div>
+<!-- Modal Enviando Correo-->
+<div class="modal fade mc-modal" id="Modal_Enviando_Correo" tabindex="-1" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog modal-dialog-centered justify-content-center">
+		<div class="mc-modal-image-background col-12">
+			<div class="modal-content">
+				<div class="modal-body">
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					<div class="col-12 d-flex justify-content-center">
+						<div style="width: 150px; height: 35px">
+							<div class="spinner">
+								<div class="rect1"></div>
+								<div class="rect2"></div>
+								<div class="rect3"></div>
+								<div class="rect4"></div>
+								<div class="rect5"></div>
+							</div>
+						</div>
+					</div>
+					<div class="col-12 d-flex justify-content-center mt-4">
+						<label class="text-white">Notificando al Supervisor de Medio Ambiente</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal Guardando Estado-->
+<div class="modal fade mc-modal" id="Modal_Guardando_Estado" tabindex="-1" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog modal-dialog-centered justify-content-center">
+		<div class="mc-modal-image-background col-12">
+			<div class="modal-content">
+				<div class="modal-body">
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					<div class="col-12 d-flex justify-content-center">
+						<div style="width: 150px; height: 35px">
+							<div class="spinner">
+								<div class="rect1"></div>
+								<div class="rect2"></div>
+								<div class="rect3"></div>
+								<div class="rect4"></div>
+								<div class="rect5"></div>
+							</div>
+						</div>
+					</div>
+					<div class="col-12 d-flex justify-content-center mt-4">
+						<label class="text-white">Guardando Estado</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 @section Scripts {
 	<script type="text/javascript">
 		var nombresEvidencias = @Html.Raw(Model.Evidencias_Nombres);
@@ -347,6 +399,7 @@
 		$("#boton_guardar_estado").on("click", function () {
 			$("#Opcion").val("GuardarEstado");
 			$("#Acciones").val(JSON.stringify(lista_acciones));
+			$("#Modal_Guardando_Estado").modal("show");
 			$("#form_editarReporte").submit();
 		});
 		$("#boton_finalizar").on("click", function () {
@@ -354,6 +407,7 @@
 			if (validarInputs()) {
 				$("#Opcion").val("Registrar");
 				$("#Acciones").val(JSON.stringify(lista_acciones));
+				$("#Modal_Enviando_Correo").modal("show");
 				$("#form_editarReporte").submit();
 			}
 		});

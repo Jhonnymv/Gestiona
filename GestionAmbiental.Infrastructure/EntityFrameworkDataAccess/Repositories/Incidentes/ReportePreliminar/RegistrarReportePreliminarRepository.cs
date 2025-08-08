@@ -19,12 +19,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context;
 		}
-		public async Task<int> RegistrarReportePreliminarDesdeFlashReport(Reporte_Preliminar_Incidente reporte)
+		public async Task<int> RegistrarReportePreliminarDesdeFlashReport(Reporte_Preliminar_Incidente reporte, int Id_Flash_Report)
 		{
-			var entity = new Entities.Incidentes.ReportePreliminar.Reporte_Preliminar_Incidente
+            var producto = await _context.Producto_Incidente.FirstOrDefaultAsync(x => x.Id_Producto_Incidente.Equals(Convert.ToInt32(reporte.Producto_Derramado)));
+            var entity = new Entities.Incidentes.ReportePreliminar.Reporte_Preliminar_Incidente
 			{
 				Codigo = reporte.Codigo,
-				Num_Trabajadores = reporte.Num_Trabajadores,
+				//Num_Trabajadores = reporte.Num_Trabajadores,
 				//Razon_Social_Contratista = reporte.Razon_Social_Contratista,
 				//RUC_Contratista = reporte.RUC_Contratista,
 				//Actividad_Contratista = reporte.Actividad_Contratista,
@@ -32,8 +33,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 				//Num_Trabajadores_Contratista = reporte.Num_Trabajadores_Contratista,
 				//Id_Tipo_Incidente = reporte.Tipo_Incidente.Id_Tipo_Incidente,
 				Id_Nivel_Incidente = reporte.Nivel_Incidente.Id_Nivel_Incidente,
+                Id_Gerencia_Responsable = reporte.Gerencia_Responsable.IdGerencia,
 				Fecha_Incidente = reporte.Fecha_Incidente,
-				Producto_Derramado = reporte.Producto_Derramado,
+				Producto_Derramado = producto.Descripcion,
                 Cantidad_Derramado = reporte.Cantidad_Derramado,
 				Id_Unidad_Cantidad_Derramado = reporte.Unidad_Cantidad_Derramado.Id_Unidad_Medida,
 				//Area_Afectada = reporte.Area_Afectada,
@@ -42,14 +44,35 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 				//Equipo_Involucrado = reporte.Equipo_Involucrado,
 				//Id_Componente_Ambiental = reporte.Componente_Ambiental.Id_Componente_Ambiental,
 				Descripcion_Incidente = reporte.Descripcion_Incidente,
+                Id_Supervisor_MA = reporte.Supervisor_MA.IdUsuario,
 				//Otra_Causa_Incidente = reporte.Otra_Causa_Incidente,
-				Estado = EstadosIncidentes.Pendiente.ToString()
-			};
+				Estado = EstadosIncidentes.Pendiente.ToString(),
+                Id_Registrado_Por = reporte.Id_Registrado_Por
+            };
 
-			_context.Reporte_Preliminar_Incidente.Add(entity);
-			await _context.SaveChangesAsync();
+            _context.Reporte_Preliminar_Incidente.Add(entity);
+            await _context.SaveChangesAsync();
 
-			return entity.Id_Reporte_Preliminar;
+            var acciones = await _context.Accion_Flash_Report.Where(x => x.Id_Flash_Report.Equals(Id_Flash_Report) && x.Estado.Equals(EstadosIncidentes.Registrado.ToString())).ToListAsync();
+            var accionesEntities = new List<Entities.Incidentes.ReportePreliminar.Accion_Incidente_Reporte>();
+
+            foreach (var accion in acciones)
+            {
+                accionesEntities.Add(new Entities.Incidentes.ReportePreliminar.Accion_Incidente_Reporte
+                {
+                    Id_Reporte_Preliminar = entity.Id_Reporte_Preliminar,
+                    Accion_Inmediata = accion.Descripcion,
+                    Id_Usuario = accion.Id_Usuario,
+                    Responsable = accion.Responsable,
+                    Fecha = accion.Fecha,
+                    Estatus = accion.Estatus,
+                    Estado = EstadosIncidentes.Registrado.ToString()
+                });
+            }
+            _context.Accion_Incidente_Reporte.AddRange(accionesEntities);
+            await _context.SaveChangesAsync();
+
+            return entity.Id_Reporte_Preliminar;
 		}
 		public async Task<int> RegistrarReportePreliminarParte1(Reporte_Preliminar_Incidente reporte)
         {

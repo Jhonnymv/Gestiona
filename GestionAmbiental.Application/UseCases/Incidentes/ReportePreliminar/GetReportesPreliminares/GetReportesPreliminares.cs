@@ -1,4 +1,5 @@
-﻿using GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar;
+﻿using GestionAmbiental.Application.Repositories.GestorUsuarios;
+using GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar;
 using GestionAmbiental.Domain.Enum;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,18 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Get
     public class GetReportesPreliminares : IGetReportesPreliminares
     {
         private readonly IGetReportePreliminarReadOnlyRepository _getReportePreliminarReadOnlyRepository;
+        private readonly IGestorUsuarioReadOnlyRepository _gestorUsuarioReadOnlyRepository;
 
-        public GetReportesPreliminares(IGetReportePreliminarReadOnlyRepository getReportePreliminarReadOnlyRepository)
+        public GetReportesPreliminares(IGetReportePreliminarReadOnlyRepository getReportePreliminarReadOnlyRepository, IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository)
         {
             _getReportePreliminarReadOnlyRepository = getReportePreliminarReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportePreliminarReadOnlyRepository));
+            _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorUsuarioReadOnlyRepository));
         }
-        public async Task<ReportesPreliminaresOutput> Execute(string fecha_inicio, string fecha_fin, int[] gerencia, int[] titular, string[] estado, int[] responsable, int[] asesor, string codigo, int pagina, int rpp)
+
+        public async Task<ReportesPreliminaresOutput> Execute(string fecha_inicio, string fecha_fin, int[] gerencia, int[] titular, string[] estado, int[] responsable, int[] asesor, string codigo, int pagina, int rpp, string usuario_red)
         {
+            var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red); 
+
             DateTime? fechaInicioFiltro = null;
             DateTime? fechaFinFiltro = null;
 
@@ -47,6 +53,10 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Get
             foreach (var item in data)
             {
                 var outputItem = new ReportePreliminarOutput(item);
+
+                if(outputItem.Id_Registrado_Por!=null && outputItem.Id_Registrado_Por == usuario.IdUsuario)
+                    outputItem.PermisoEditar = true;
+
                 output.Reportes.Add(outputItem);
             }
 

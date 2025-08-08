@@ -24,5 +24,6 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         public int NInvolucrados { get; set; }
         public int NAcciones { get; set; }
         public string Opcion { get; set; }
+        public int? Id_Registrado_Por { get; set; }
     }
 }

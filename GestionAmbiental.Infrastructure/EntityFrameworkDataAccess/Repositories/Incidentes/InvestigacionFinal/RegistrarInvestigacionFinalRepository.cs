@@ -18,7 +18,56 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
+        public async Task<int> RegistrarDesdeFlashReport(Investigacion_Final_Incidente investigacion, int Id_Flash_Report)
+        {
+            var entity = new Entities.Incidentes.InvestigacionFinal.Investigacion_Final_Incidente
+            {
+                //entity.Id_Reporte_Preliminar = reporte.Id_Reporte_Preliminar;
+                Codigo = investigacion.Codigo,
+                //contratista
+                //entity.Num_Trabajadores = reporte.Num_Trabajadores;
+                //entity.Razon_Social_Contratista = reporte.Razon_Social_Contratista;
+                //entity.RUC_Contratista = reporte.RUC_Contratista;
+                //entity.Actividad_Contratista = reporte.Actividad_Contratista;
+                //entity.Domicilio_Contratista = reporte.Domicilio_Contratista;
+                //entity.Num_Trabajadores_Contratista = reporte.Num_Trabajadores_Contratista;
+                //incidente
+                //entity.Id_Tipo_Incidente = reporte.Id_Tipo_Incidente;
+                Id_Nivel_Incidente = investigacion.Nivel_Incidente.Id_Nivel_Incidente,
+                Lugar_Incidente = investigacion.Lugar_Incidente,
+                Fecha_Incidente = investigacion.Fecha_Incidente,
+                Descripcion_Incidente = investigacion.Descripcion_Incidente,
+                Id_Gerencia_Responsable = investigacion.Gerencia_Responsable.IdGerencia,
+                Id_Supervisor_MA = investigacion.Supervisor_MA.IdUsuario,
+                Estado = EstadosIncidentes.Pendiente.ToString(),
+                Id_Registrado_Por = investigacion.Id_Registrado_Por
+            };
+            _context.Investigacion_Final_Incidente.Add(entity);
+            await _context.SaveChangesAsync();
 
+            var acciones = await _context.Accion_Flash_Report.Where(x => x.Id_Flash_Report.Equals(Id_Flash_Report) && x.Estado.Equals(EstadosIncidentes.Registrado.ToString())).ToListAsync();
+
+            var accionesEntities = new List<Entities.Incidentes.InvestigacionFinal.Accion_Incidente_Investigacion>();
+
+            foreach ( var accion in acciones)
+            {
+                accionesEntities.Add(new Entities.Incidentes.InvestigacionFinal.Accion_Incidente_Investigacion
+                {
+                    Id_Investigacion_Final = entity.Id_Investigacion_Final,
+                    Tipo_Accion = "Acción Inmediata",
+                    Accion_Inmediata = accion.Descripcion,
+                    Id_Usuario = accion.Id_Usuario,
+                    Responsable = accion.Responsable,
+                    Fecha = accion.Fecha,
+                    Estatus = accion.Estatus,
+                    Estado = EstadosIncidentes.Registrado.ToString()
+                });
+            }
+            _context.Accion_Incidente_Investigacion.AddRange(accionesEntities);
+            await _context.SaveChangesAsync();
+
+            return entity.Id_Investigacion_Final;
+        }
         public async Task<int> RegistrarDeReportePreliminar(int IdReporte)
         {
             var reporte = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(IdReporte));
@@ -42,6 +91,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Id_Gerencia_Responsable = reporte.Id_Gerencia_Responsable;
             entity.Id_Supervisor_MA = reporte.Id_Supervisor_MA;
             entity.Estado = EstadosIncidentes.PendienteInvestigacion.ToString();
+            entity.Id_Registrado_Por = reporte.Id_Registrado_Por;
 
             _context.Investigacion_Final_Incidente.Add(entity);
 

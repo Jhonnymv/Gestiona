@@ -93,6 +93,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 outputItem.Actividad_Contratista = item.Actividad_Contratista;
                 outputItem.Domicilio_Contratista = item.Domicilio_Contratista;
                 outputItem.Num_Trabajadores_Contratista = item.Num_Trabajadores_Contratista;
+                outputItem.Id_Registrado_Por = item.Id_Registrado_Por;
 
                 if (item.Id_Tipo_Incidente != null)
                 {
@@ -149,10 +150,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 outputItem.NAcciones = acciones.Count;
                 outputItem.NAccionesAprobadas = acciones.Count(x => x.Estado.Equals(EstadosIncidentes.Aprobado.ToString()));
 
-
                 output.Add(outputItem);
             }
-
             return output;
         }
 
@@ -177,6 +176,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Actividad_Subcontratista = investigacion.Actividad_Subcontratista;
             output.Domicilio_Subcontratista = investigacion.Domicilio_Subcontratista;
             output.Num_Trabajadores_Subcontratista = investigacion.Num_Trabajadores_Subcontratista;
+            output.Id_Registrado_Por = investigacion.Id_Registrado_Por;
 
             if (investigacion.Id_Tipo_Incidente != null)
             {
@@ -253,13 +253,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<Impacto_Ambiental_Incidente> GetImpactoAmbiental(int IdInvestigacion)
         {
             var impacto = await _context.Impacto_Ambiental_Incidente.FirstOrDefaultAsync(x => x.Id_Investigacion_Final.Equals(IdInvestigacion));
+            if (impacto == null)
+                return null;
             var tipoSuelo = await _context.Tipo_Suelo.FirstOrDefaultAsync(x => x.Id_Tipo_Suelo.Equals(impacto.Id_Tipo_Suelo));
             var unidadesMedida = await _context.Unidad_Medida.ToListAsync();
             var lugaresDisposicion = await _context.Lugar_Disposicion.ToListAsync();
             var especieFlora = await _context.Especie_Flora.FirstOrDefaultAsync(x => x.Id_Especie_Flora.Equals(impacto.Id_Especie_Flora));
             var especieFauna = await _context.Especie_Fauna.FirstOrDefaultAsync(x => x.Id_Especie_Fauna.Equals(impacto.Id_Especie_Fauna));
             var tipoAgua = await _context.Tipo_Agua.FirstOrDefaultAsync(x => x.Id_Tipo_Agua.Equals(impacto.Id_Tipo_Agua));
-
 
             var output = new Impacto_Ambiental_Incidente();
             output.Id_Impacto_Ambiental_Incidente = impacto.Id_Impacto_Ambiental_Incidente;
@@ -471,7 +472,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 default: return investigacion.Evidencia_Posicion;
             }
         }
-
         public async Task<string> GetEvidenciasNombreInvestigacion(int IdInvestigacion)
         {
             var investigacion = await _context.Investigacion_Final_Incidente.FirstOrDefaultAsync(x => x.Id_Investigacion_Final.Equals(IdInvestigacion));

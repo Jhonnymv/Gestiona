@@ -1,4 +1,5 @@
-﻿using GestionAmbiental.Application.Repositories.Incidentes.InvestigacionFinal;
+﻿using GestionAmbiental.Application.Repositories.GestorUsuarios;
+using GestionAmbiental.Application.Repositories.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Application.UseCases.GestorUsuarios.GetRolUsuario;
 using GestionAmbiental.Domain.Enum;
 using System;
@@ -13,11 +14,13 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ge
     {
         private readonly IGetInvestigacionFinalReadOnlyRepository _getInvestigacionFinalReadOnlyRepository;
         private readonly IGetRolUsuario _getRolUsuario;
+        private readonly IGestorUsuarioReadOnlyRepository _gestorUsuarioReadOnlyRepository;
 
-        public GetInvestigacionesFinales(IGetInvestigacionFinalReadOnlyRepository getInvestigacionFinalReadOnlyRepository, IGetRolUsuario getRolUsuario)
+        public GetInvestigacionesFinales(IGetInvestigacionFinalReadOnlyRepository getInvestigacionFinalReadOnlyRepository, IGetRolUsuario getRolUsuario, IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository)
         {
-            _getInvestigacionFinalReadOnlyRepository = getInvestigacionFinalReadOnlyRepository;
-            _getRolUsuario = getRolUsuario;
+            _getInvestigacionFinalReadOnlyRepository = getInvestigacionFinalReadOnlyRepository ?? throw new ArgumentNullException(nameof(getInvestigacionFinalReadOnlyRepository));
+            _getRolUsuario = getRolUsuario ?? throw new ArgumentNullException(nameof(getRolUsuario));
+            _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorUsuarioReadOnlyRepository));
         }
 
         public async Task<InvestigacionesFinalesOutput> Execute(string fecha_inicio, string fecha_fin, int[] gerencia, int[] titular, string[] estado, int[] responsable, int[] asesor, string codigo, int pagina, int rpp, string usuarioRed)
@@ -70,9 +73,11 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ge
             foreach (var item in data)
             {
                 var outputItem = new InvestigacionFinalOutput(item);
+                var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuarioRed);
+                if (item.Id_Registrado_Por != null && usuario.IdUsuario == item.Id_Registrado_Por)
+                    outputItem.PermisoEditar = true;
                 output.Investigaciones.Add(outputItem);
             }
-
             return output;
         }
     }

@@ -40,7 +40,9 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar
         public string Supervisor_MA { get; set; }
         public List<string> Evidencia { get; set; }
         public string Estado { get; set; }
+        public int? Id_Registrado_Por { get; set; }
         public bool Investigacion { get; set; } = false;
+        public bool PermisoEditar { get; set; } = false;
 
         public ReportePreliminarOutput()
         {
@@ -113,6 +115,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar
                 }
             }
             Estado = reporte.Estado;
+            Id_Registrado_Por = reporte.Id_Registrado_Por;
         }
     }
 }

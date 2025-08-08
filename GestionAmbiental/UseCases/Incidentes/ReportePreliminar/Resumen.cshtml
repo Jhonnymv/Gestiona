@@ -10,16 +10,11 @@
     <div class="primary-content col-12">
         <div class="image-header-container">
             <div class="header-title incidentes-opacity-color">
-                <h3>Reportes Preliminares de Incidentes Ambientales</h3>
+                <h3>Reportes Incidente Menor</h3>
                 <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
         </div>
         <div class="content-header container">
-            <div class="action-container incidentes-color">
-                <div class="w-100 row-center-center">
-                    <a class="btn btn-special-action-outline incidentes-color" asp-action="NuevoReporte" asp-controller="ReportePreliminar">NUEVO REGISTRO</a>
-                </div>
-            </div>
             <form autocomplete="off" class="custom-form w-100" id="form_filtro">
                 <div class="col-12 col-lg-9">
                     <div class="row input_container">
@@ -85,6 +80,7 @@
             <table class="table" id="tabla_resumen_reportes">
                 <thead class="">
                     <tr>
+                        <th></th>
                         <th>Código</th>
                         <th>Tipo de Incidente</th>
                         <th>Nivel de Incidente</th>

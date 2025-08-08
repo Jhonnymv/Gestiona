@@ -236,14 +236,14 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 {
                     var IdEncriptado = _protector.Protect(fila.Id_Investigacion_Final.ToString());
                     var obsAvance = fila.NAccionesAprobadas;
-                    double avance = obsAvance != 0 ? Math.Round((float)obsAvance / fila.NAcciones * 100, 1) : 0;
+                    double avance = obsAvance != 0 ? Math.Round((double)(obsAvance / fila.NAcciones * 100),1) : 0;
 
                     filasTabla += "<tr>";
-                    if (fila.Estado.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()))
+                    if (fila.Estado.Equals(EstadosIncidentes.Pendiente.ToString()) && fila.PermisoEditar)
                         filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
                     else
                         filasTabla += "<td></td>";
-                    if (fila.Estado.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()))
+                    if (fila.Estado.Equals(EstadosIncidentes.Pendiente.ToString()) && fila.PermisoEditar)
                         filasTabla += "<td style=\"width: 115px;\"><a href=\"/InvestigacionFinal/EditarInvestigacion?IdInvestigacion=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     else if (datosTabla.PermisoAdmin)
                         filasTabla += "<td style=\"width: 115px;\"><a href=\"/InvestigacionFinal/EditarInvestigacion?IdInvestigacion=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
@@ -435,7 +435,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                 var nombresEvidenciasJson = await _getEvidenciasNombre.Execute(IdDesencriptado);
 
-                if (investigacion.PermisoMA)
+                if (investigacion.PermisoEditar)
                 {
                     var impacto = await _getImpactoAmbiental.Execute(IdDesencriptado);
 
@@ -477,51 +477,53 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     model.Evidencias_Completas_Partes = investigacion.Evidencia_Parte != null ? JsonConvert.SerializeObject(investigacion.Evidencia_Parte) : null;
                     model.Evidencias_Nombres = nombresEvidenciasJson;
                     model.Estado = investigacion.Estado;
+                    if (impacto != null)
+                    {
+                        model.ImpactoAmbiental = new ImpactoAmbientalModel();
+                        model.ImpactoAmbiental.Id_Impacto_Ambiental_Incidente = impacto.Id_Impacto_Ambiental_Incidente;
+                        model.ImpactoAmbiental.Id_Investigacion_Final = impacto.Id_Investigacion_Final;
 
-                    model.ImpactoAmbiental = new ImpactoAmbientalModel();
-                    model.ImpactoAmbiental.Id_Impacto_Ambiental_Incidente = impacto.Id_Impacto_Ambiental_Incidente;
-                    model.ImpactoAmbiental.Id_Investigacion_Final = impacto.Id_Investigacion_Final;
-                    //Suelo
-                    model.ImpactoAmbiental.Id_Tipo_Suelo = impacto.Id_Tipo_Suelo;
-                    model.ImpactoAmbiental.Area_Suelo = impacto.Area_Suelo;
-                    model.ImpactoAmbiental.Id_Unidad_Area_Suelo = impacto.Id_Unidad_Area_Suelo;
-                    model.ImpactoAmbiental.Cantidad_Suelo = impacto.Cantidad_Suelo;
-                    model.ImpactoAmbiental.Id_Unidad_Cantidad_Suelo = impacto.Id_Unidad_Cantidad_Suelo;
-                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Suelo = impacto.Id_Lugar_Disposicion_Suelo;
-                    //Flora
-                    model.ImpactoAmbiental.Id_Especie_Flora = impacto.Id_Especie_Flora;
-                    model.ImpactoAmbiental.Unidad_Flora = impacto.Unidad_Flora;
-                    model.ImpactoAmbiental.Id_Unidad_Flora = impacto.Id_Unidad_Flora;
-                    model.ImpactoAmbiental.Cantidad_Residuo_Flora = impacto.Cantidad_Residuo_Flora;
-                    model.ImpactoAmbiental.Id_Unidad_Residuo_Flora = impacto.Id_Unidad_Residuo_Flora;
-                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Flora = impacto.Id_Lugar_Disposicion_Flora;
-                    //Fauna
-                    model.ImpactoAmbiental.Id_Especie_Fauna = impacto.Id_Especie_Fauna;
-                    model.ImpactoAmbiental.Unidad_Fauna = impacto.Unidad_Fauna;
-                    model.ImpactoAmbiental.Id_Unidad_Fauna = impacto.Id_Unidad_Fauna;
-                    model.ImpactoAmbiental.Cantidad_Residuo_Fauna = impacto.Cantidad_Residuo_Fauna;
-                    model.ImpactoAmbiental.Id_Unidad_Residuo_Fauna = impacto.Id_Unidad_Residuo_Fauna;
-                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Fauna = impacto.Id_Lugar_Disposicion_Fauna;
-                    //Agua
-                    model.ImpactoAmbiental.Id_Tipo_Agua = impacto.Id_Tipo_Agua;
-                    model.ImpactoAmbiental.Volumen_Agua = impacto.Volumen_Agua;
-                    model.ImpactoAmbiental.Id_Unidad_Agua = impacto.Id_Unidad_Agua;
-                    model.ImpactoAmbiental.Cantidad_Residuo_Agua = impacto.Cantidad_Residuo_Agua;
-                    model.ImpactoAmbiental.Id_Unidad_Residuo_Agua = impacto.Id_Unidad_Residuo_Agua;
-                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Agua = impacto.Id_Lugar_Disposicion_Agua;
+                        //Suelo
+                        model.ImpactoAmbiental.Id_Tipo_Suelo = impacto.Id_Tipo_Suelo;
+                        model.ImpactoAmbiental.Area_Suelo = impacto.Area_Suelo;
+                        model.ImpactoAmbiental.Id_Unidad_Area_Suelo = impacto.Id_Unidad_Area_Suelo;
+                        model.ImpactoAmbiental.Cantidad_Suelo = impacto.Cantidad_Suelo;
+                        model.ImpactoAmbiental.Id_Unidad_Cantidad_Suelo = impacto.Id_Unidad_Cantidad_Suelo;
+                        model.ImpactoAmbiental.Id_Lugar_Disposicion_Suelo = impacto.Id_Lugar_Disposicion_Suelo;
+                        //Flora
+                        model.ImpactoAmbiental.Id_Especie_Flora = impacto.Id_Especie_Flora;
+                        model.ImpactoAmbiental.Unidad_Flora = impacto.Unidad_Flora;
+                        model.ImpactoAmbiental.Id_Unidad_Flora = impacto.Id_Unidad_Flora;
+                        model.ImpactoAmbiental.Cantidad_Residuo_Flora = impacto.Cantidad_Residuo_Flora;
+                        model.ImpactoAmbiental.Id_Unidad_Residuo_Flora = impacto.Id_Unidad_Residuo_Flora;
+                        model.ImpactoAmbiental.Id_Lugar_Disposicion_Flora = impacto.Id_Lugar_Disposicion_Flora;
+                        //Fauna
+                        model.ImpactoAmbiental.Id_Especie_Fauna = impacto.Id_Especie_Fauna;
+                        model.ImpactoAmbiental.Unidad_Fauna = impacto.Unidad_Fauna;
+                        model.ImpactoAmbiental.Id_Unidad_Fauna = impacto.Id_Unidad_Fauna;
+                        model.ImpactoAmbiental.Cantidad_Residuo_Fauna = impacto.Cantidad_Residuo_Fauna;
+                        model.ImpactoAmbiental.Id_Unidad_Residuo_Fauna = impacto.Id_Unidad_Residuo_Fauna;
+                        model.ImpactoAmbiental.Id_Lugar_Disposicion_Fauna = impacto.Id_Lugar_Disposicion_Fauna;
+                        //Agua
+                        model.ImpactoAmbiental.Id_Tipo_Agua = impacto.Id_Tipo_Agua;
+                        model.ImpactoAmbiental.Volumen_Agua = impacto.Volumen_Agua;
+                        model.ImpactoAmbiental.Id_Unidad_Agua = impacto.Id_Unidad_Agua;
+                        model.ImpactoAmbiental.Cantidad_Residuo_Agua = impacto.Cantidad_Residuo_Agua;
+                        model.ImpactoAmbiental.Id_Unidad_Residuo_Agua = impacto.Id_Unidad_Residuo_Agua;
+                        model.ImpactoAmbiental.Id_Lugar_Disposicion_Agua = impacto.Id_Lugar_Disposicion_Agua;
 
-                    model.ImpactoAmbiental.Restos_Arq = impacto.Restos_Arq;
-                    model.ImpactoAmbiental.Nombre_Resto_Arq = impacto.Nombre_Resto_Arq;
-                    model.ImpactoAmbiental.Cord_Este = impacto.Cord_Este;
-                    model.ImpactoAmbiental.Cord_Norte = impacto.Cord_Norte;
-                    model.ImpactoAmbiental.Danio_Salud = impacto.Danio_Salud;
-                    model.ImpactoAmbiental.Personas_Afectadas = impacto.Personas_Afectadas;
-                    model.ImpactoAmbiental.Cantidad_RS = impacto.Cantidad_RS;
-                    model.ImpactoAmbiental.Id_Unidad_Cantidad_RS = impacto.Id_Unidad_Cantidad_RS;
-                    model.ImpactoAmbiental.Volumen_Rs = impacto.Volumen_Rs;
-                    model.ImpactoAmbiental.Id_Unidad_Volumen_RS = impacto.Id_Unidad_Volumen_RS;
-                    model.ImpactoAmbiental.EO_RS = impacto.EO_RS;
-
+                        model.ImpactoAmbiental.Restos_Arq = impacto.Restos_Arq;
+                        model.ImpactoAmbiental.Nombre_Resto_Arq = impacto.Nombre_Resto_Arq;
+                        model.ImpactoAmbiental.Cord_Este = impacto.Cord_Este;
+                        model.ImpactoAmbiental.Cord_Norte = impacto.Cord_Norte;
+                        model.ImpactoAmbiental.Danio_Salud = impacto.Danio_Salud;
+                        model.ImpactoAmbiental.Personas_Afectadas = impacto.Personas_Afectadas;
+                        model.ImpactoAmbiental.Cantidad_RS = impacto.Cantidad_RS;
+                        model.ImpactoAmbiental.Id_Unidad_Cantidad_RS = impacto.Id_Unidad_Cantidad_RS;
+                        model.ImpactoAmbiental.Volumen_Rs = impacto.Volumen_Rs;
+                        model.ImpactoAmbiental.Id_Unidad_Volumen_RS = impacto.Id_Unidad_Volumen_RS;
+                        model.ImpactoAmbiental.EO_RS = impacto.EO_RS;
+                    }
                     return View(model);
                 }
                 else
@@ -719,49 +721,52 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 model.Estado = investigacion.Estado;
 
                 model.ImpactoAmbiental = new ImpactoAmbientalModel();
-                model.ImpactoAmbiental.Id_Impacto_Ambiental_Incidente = impacto.Id_Impacto_Ambiental_Incidente;
-                model.ImpactoAmbiental.Id_Investigacion_Final = impacto.Id_Investigacion_Final;
-                //Suelo
-                model.ImpactoAmbiental.Id_Tipo_Suelo = impacto.Id_Tipo_Suelo;
-                model.ImpactoAmbiental.Area_Suelo = impacto.Area_Suelo;
-                model.ImpactoAmbiental.Id_Unidad_Area_Suelo = impacto.Id_Unidad_Area_Suelo;
-                model.ImpactoAmbiental.Cantidad_Suelo = impacto.Cantidad_Suelo;
-                model.ImpactoAmbiental.Id_Unidad_Cantidad_Suelo = impacto.Id_Unidad_Cantidad_Suelo;
-                model.ImpactoAmbiental.Id_Lugar_Disposicion_Suelo = impacto.Id_Lugar_Disposicion_Suelo;
-                //Flora
-                model.ImpactoAmbiental.Id_Especie_Flora = impacto.Id_Especie_Flora;
-                model.ImpactoAmbiental.Unidad_Flora = impacto.Unidad_Flora;
-                model.ImpactoAmbiental.Id_Unidad_Flora = impacto.Id_Unidad_Flora;
-                model.ImpactoAmbiental.Cantidad_Residuo_Flora = impacto.Cantidad_Residuo_Flora;
-                model.ImpactoAmbiental.Id_Unidad_Residuo_Flora = impacto.Id_Unidad_Residuo_Flora;
-                model.ImpactoAmbiental.Id_Lugar_Disposicion_Flora = impacto.Id_Lugar_Disposicion_Flora;
-                //Fauna
-                model.ImpactoAmbiental.Id_Especie_Fauna = impacto.Id_Especie_Fauna;
-                model.ImpactoAmbiental.Unidad_Fauna = impacto.Unidad_Fauna;
-                model.ImpactoAmbiental.Id_Unidad_Fauna = impacto.Id_Unidad_Fauna;
-                model.ImpactoAmbiental.Cantidad_Residuo_Fauna = impacto.Cantidad_Residuo_Fauna;
-                model.ImpactoAmbiental.Id_Unidad_Residuo_Fauna = impacto.Id_Unidad_Residuo_Fauna;
-                model.ImpactoAmbiental.Id_Lugar_Disposicion_Fauna = impacto.Id_Lugar_Disposicion_Fauna;
-                //Agua
-                model.ImpactoAmbiental.Id_Tipo_Agua = impacto.Id_Tipo_Agua;
-                model.ImpactoAmbiental.Volumen_Agua = impacto.Volumen_Agua;
-                model.ImpactoAmbiental.Id_Unidad_Agua = impacto.Id_Unidad_Agua;
-                model.ImpactoAmbiental.Cantidad_Residuo_Agua = impacto.Cantidad_Residuo_Agua;
-                model.ImpactoAmbiental.Id_Unidad_Residuo_Agua = impacto.Id_Unidad_Residuo_Agua;
-                model.ImpactoAmbiental.Id_Lugar_Disposicion_Agua = impacto.Id_Lugar_Disposicion_Agua;
+                if (impacto != null)
+                {
+                    model.ImpactoAmbiental.Id_Impacto_Ambiental_Incidente = impacto.Id_Impacto_Ambiental_Incidente;
+                    model.ImpactoAmbiental.Id_Investigacion_Final = impacto.Id_Investigacion_Final;
 
-                model.ImpactoAmbiental.Restos_Arq = impacto.Restos_Arq;
-                model.ImpactoAmbiental.Nombre_Resto_Arq = impacto.Nombre_Resto_Arq;
-                model.ImpactoAmbiental.Cord_Este = impacto.Cord_Este;
-                model.ImpactoAmbiental.Cord_Norte = impacto.Cord_Norte;
-                model.ImpactoAmbiental.Danio_Salud = impacto.Danio_Salud;
-                model.ImpactoAmbiental.Personas_Afectadas = impacto.Personas_Afectadas;
-                model.ImpactoAmbiental.Cantidad_RS = impacto.Cantidad_RS;
-                model.ImpactoAmbiental.Id_Unidad_Cantidad_RS = impacto.Id_Unidad_Cantidad_RS;
-                model.ImpactoAmbiental.Volumen_Rs = impacto.Volumen_Rs;
-                model.ImpactoAmbiental.Id_Unidad_Volumen_RS = impacto.Id_Unidad_Volumen_RS;
-                model.ImpactoAmbiental.EO_RS = impacto.EO_RS;
+                    //Suelo
+                    model.ImpactoAmbiental.Id_Tipo_Suelo = impacto.Id_Tipo_Suelo;
+                    model.ImpactoAmbiental.Area_Suelo = impacto.Area_Suelo;
+                    model.ImpactoAmbiental.Id_Unidad_Area_Suelo = impacto.Id_Unidad_Area_Suelo;
+                    model.ImpactoAmbiental.Cantidad_Suelo = impacto.Cantidad_Suelo;
+                    model.ImpactoAmbiental.Id_Unidad_Cantidad_Suelo = impacto.Id_Unidad_Cantidad_Suelo;
+                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Suelo = impacto.Id_Lugar_Disposicion_Suelo;
+                    //Flora
+                    model.ImpactoAmbiental.Id_Especie_Flora = impacto.Id_Especie_Flora;
+                    model.ImpactoAmbiental.Unidad_Flora = impacto.Unidad_Flora;
+                    model.ImpactoAmbiental.Id_Unidad_Flora = impacto.Id_Unidad_Flora;
+                    model.ImpactoAmbiental.Cantidad_Residuo_Flora = impacto.Cantidad_Residuo_Flora;
+                    model.ImpactoAmbiental.Id_Unidad_Residuo_Flora = impacto.Id_Unidad_Residuo_Flora;
+                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Flora = impacto.Id_Lugar_Disposicion_Flora;
+                    //Fauna
+                    model.ImpactoAmbiental.Id_Especie_Fauna = impacto.Id_Especie_Fauna;
+                    model.ImpactoAmbiental.Unidad_Fauna = impacto.Unidad_Fauna;
+                    model.ImpactoAmbiental.Id_Unidad_Fauna = impacto.Id_Unidad_Fauna;
+                    model.ImpactoAmbiental.Cantidad_Residuo_Fauna = impacto.Cantidad_Residuo_Fauna;
+                    model.ImpactoAmbiental.Id_Unidad_Residuo_Fauna = impacto.Id_Unidad_Residuo_Fauna;
+                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Fauna = impacto.Id_Lugar_Disposicion_Fauna;
+                    //Agua
+                    model.ImpactoAmbiental.Id_Tipo_Agua = impacto.Id_Tipo_Agua;
+                    model.ImpactoAmbiental.Volumen_Agua = impacto.Volumen_Agua;
+                    model.ImpactoAmbiental.Id_Unidad_Agua = impacto.Id_Unidad_Agua;
+                    model.ImpactoAmbiental.Cantidad_Residuo_Agua = impacto.Cantidad_Residuo_Agua;
+                    model.ImpactoAmbiental.Id_Unidad_Residuo_Agua = impacto.Id_Unidad_Residuo_Agua;
+                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Agua = impacto.Id_Lugar_Disposicion_Agua;
 
+                    model.ImpactoAmbiental.Restos_Arq = impacto.Restos_Arq;
+                    model.ImpactoAmbiental.Nombre_Resto_Arq = impacto.Nombre_Resto_Arq;
+                    model.ImpactoAmbiental.Cord_Este = impacto.Cord_Este;
+                    model.ImpactoAmbiental.Cord_Norte = impacto.Cord_Norte;
+                    model.ImpactoAmbiental.Danio_Salud = impacto.Danio_Salud;
+                    model.ImpactoAmbiental.Personas_Afectadas = impacto.Personas_Afectadas;
+                    model.ImpactoAmbiental.Cantidad_RS = impacto.Cantidad_RS;
+                    model.ImpactoAmbiental.Id_Unidad_Cantidad_RS = impacto.Id_Unidad_Cantidad_RS;
+                    model.ImpactoAmbiental.Volumen_Rs = impacto.Volumen_Rs;
+                    model.ImpactoAmbiental.Id_Unidad_Volumen_RS = impacto.Id_Unidad_Volumen_RS;
+                    model.ImpactoAmbiental.EO_RS = impacto.EO_RS;
+                }
                 return View(model);
             }
         }
@@ -1328,8 +1333,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         [HttpPost]
         public async Task<IActionResult> EditarInvestigacion(EditarInvestigacionModel model)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 var nombresEvidencias = await _getEvidenciasNombre.Execute(model.Id_Investigacion_Final);
 
@@ -1641,12 +1646,12 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     model.ImpactoAmbiental.EO_RS,
                     model.Opcion
                     );
-                if (model.Opcion.Equals("Completar"))
-                    return RedirectToAction("DifundirInvestigacion", "NotificacionInvestigacionIncidente", new { IdInvestigacion = model.Id_Investigacion_Final });
-                else
-                    return View("Resumen");
-            }
-            return View("EditarInvestigacion", new { IdInvestigacion = model.Id_Encriptado_Investigacion_Final });
+                //if (model.Opcion.Equals("Completar"))
+                //    return RedirectToAction("DifundirInvestigacion", "NotificacionInvestigacionIncidente", new { IdInvestigacion = model.Id_Investigacion_Final });
+                //else
+                //    return View("Resumen");
+            //}
+            return RedirectToAction("EditarInvestigacion", new { IdInvestigacion = model.Id_Encriptado_Investigacion_Final });
 
         }
         [HttpPost]
@@ -1894,7 +1899,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                 await _editarAdminInvestigacion.Execute(
                     model.Id_Investigacion_Final,
-                    model.Num_Trabajadores,
+                    model.Num_Trabajadores.Value,
                     model.Razon_Social_Contratista,
                     model.RUC_Contratista,
                     model.Actividad_Contratista,

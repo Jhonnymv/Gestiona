@@ -16,7 +16,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
 		public string Hora_Incidente { get; set; }
 		public DateTime Fecha_Hora { get; set; }
 		public int Nivel_Incidente { get; set; }
-		public string Componente_Ambiental_Afectado { get; set; }
+		public int Id_Componente_Ambiental { get; set; }
 		public int Id_Producto_Incidente { get; set; }
 		public float Cantidad_Derramada { get; set; }
 		public int Id_Unidad_Cantidad_Derramada { get; set; }
@@ -31,5 +31,6 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
 		public string Estado { get; set; }
 		public string Opcion { get; set; }
 		public string Acciones { get; set; }
-	}
+        public int? Id_Registrado_Por { get; set; }
+    }
 }

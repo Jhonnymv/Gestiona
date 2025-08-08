@@ -1,0 +1,322 @@
+﻿@model GestionAmbiental.UseCases.Incidentes.FlashReport.EditarFlashReportModel
+@{
+	ViewData["Title"] = "Editar Flash Report";
+	Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+
+<div class="incidentes">
+	<div class="primary-content col-12">
+		<div class="image-header-container">
+			<div class="header-title incidentes-opacity-color">
+				<h3>Detalle Flash Report - @Model.Codigo</h3>
+				<img src="~/img/logo-white.png" alt="Logo Marcobre">
+			</div>
+		</div>
+		<div class="container pt-4 pb-4">
+			<form class="custom-form details-container w-100" id="form_editarReporte" asp-action="DetalleFlashReport" asp-controller="FlashReport" method="post" enctype="multipart/form-data" autocomplete="off">
+				<input type="hidden" asp-for="Opcion" />
+				<input type="hidden" asp-for="Acciones" />
+				<input type="hidden" asp-for="Id_Flash_Report" />
+				<input type="hidden" asp-for="Id_Registrado_Por" />
+				<div class="detail-container col-12 col-xl-10 mb-4">
+					<div class="detail-header">
+						<span class="text-white bold text-center text-uppercase">DATOS DEL INCIDENTE AMBIENTAL</span>
+					</div>
+					<div class="details-content">
+						<div class="row input_container">
+							<div class="col-12 col-sm-6 col-lg-6">
+								<label asp-for="Id_Gerencia">Gerencia</label>
+								<span class="text-danger" asp-validation-for="Id_Gerencia"></span>
+								<select class="form-control" asp-items="@ViewBag.Gerencia_Incidente" asp-for="Id_Gerencia" disabled></select>
+							</div>
+							<div class="col-12 col-sm-6 col-lg-6">
+								<label asp-for="Id_Empresa">Empresa</label>
+								<span class="text-danger" asp-validation-for="Id_Empresa"></span>
+								<select class="form-control" asp-items="@ViewBag.Empresa_Incidente" asp-for="Id_Empresa" disabled></select>
+							</div>
+						</div>
+						<div class="row input_container">
+							<div class="col-12 col-sm-6 col-lg-6">
+								<label asp-for="Lugar">Lugar</label>
+								<span class="text-danger" asp-validation-for="Lugar"></span>
+								<input type="text" class="form-control" asp-for="Lugar" disabled />
+							</div>
+							<div class="col-12 col-sm-6 col-lg-6 p-0">
+								<div class="row mt-0 mb-0">
+									<div class="col-7 mt-0 mb-0">
+										<label asp-for="Fecha_Incidente">Fecha</label>
+										<span class="text-danger" asp-validation-for="Fecha_Incidente"></span>
+										<input type="date" class="form-control" asp-for="Fecha_Incidente" disabled />
+									</div>
+									<div class="col-5 mt-0 mb-0">
+										<label asp-for="Hora_Incidente">Hora (24h)</label>
+										<span class="text-danger" asp-validation-for="Hora_Incidente"></span>
+										<input type="time" class="form-control" asp-for="Hora_Incidente" disabled />
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row input_container">
+							<div class="col-12 col-sm-6 col-lg-6">
+								<label asp-for="Nivel_Incidente">Nivel de Incidente</label>
+								<span class="text-danger" asp-validation-for="Nivel_Incidente"></span>
+								<select class="form-control" asp-items="@ViewBag.Nivel_Incidente" asp-for="Nivel_Incidente" disabled></select>
+							</div>
+							<div class="col-12 col-sm-6 col-lg-6">
+								<label asp-for="Id_Componente_Ambiental">Componente Ambiental Afectado</label>
+								<span class="text-danger" asp-validation-for="Id_Componente_Ambiental"></span>
+								<select class="form-control" asp-items="@ViewBag.Componente_Ambiental" asp-for="Id_Componente_Ambiental" disabled></select>
+							</div>
+						</div>
+						<div class="row input_container">
+							<div class="col-12 col-sm-6 col-lg-6">
+								<label asp-for="Id_Producto_Incidente">Producto Derramado</label>
+								<span class="text-danger" asp-validation-for="Id_Producto_Incidente"></span>
+								<select class="form-control" asp-items="@ViewBag.Producto_Derramado" asp-for="Id_Producto_Incidente" disabled></select>
+							</div>
+							<div class="col-12 col-sm-6 col-lg-6 p-0">
+								<div class="row mt-0 mb-0">
+									<div class="col-7 mt-0 mb-0">
+										<label asp-for="Cantidad_Derramada">Cantidad Derramada</label>
+										<span class="text-danger" asp-validation-for="Cantidad_Derramada"></span>
+										<input type="number" class="form-control" asp-for="Cantidad_Derramada" disabled />
+									</div>
+									<div class="col-5 mt-0 mb-0">
+										<label asp-for="Id_Unidad_Cantidad_Derramada">Unidad Derramada</label>
+										<span class="text-danger" asp-validation-for="Id_Unidad_Cantidad_Derramada"></span>
+										<select class="form-control" asp-items="@ViewBag.Unidad_Derramado" asp-for="Id_Unidad_Cantidad_Derramada" disabled></select>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row input_container">
+							<div class="col-12 col-sm-12 col-lg-12">
+								<label asp-for="Descripcion">Descripción (¿qué ocurrió?)</label>
+								<span class="text-danger" asp-validation-for="Descripcion"></span>
+								<textarea class="form-control" asp-for="Descripcion" rows="3" disabled></textarea>
+							</div>
+						</div>
+						<div class="row input_container">
+							<div class="col-12 col-sm-6 col-lg-6">
+								<label asp-for="Id_Supervisor_Marcobre">Supervisor Marcobre</label>
+								<span class="text-danger" asp-validation-for="Id_Supervisor_Marcobre"></span>
+								<select class="form-control" asp-items="@ViewBag.Supervisores_Marcobre" asp-for="Id_Supervisor_Marcobre" disabled></select>
+							</div>
+							<div class="col-12 col-sm-6 col-lg-6">
+								<label asp-for="Cargo_Supervisor_Marcobre">Cargo Supervisor Marcobre</label>
+								<span class="text-danger" asp-validation-for="Cargo_Supervisor_Marcobre"></span>
+								<input type="text" class="form-control" asp-for="Cargo_Supervisor_Marcobre" disabled />
+							</div>
+						</div>
+						<div class="row input_container">
+							<div class="col-12 col-sm-6 col-lg-6">
+								<label asp-for="Supervisor_Contratista">Supervisor Contratista</label>
+								<span class="text-danger" asp-validation-for="Supervisor_Contratista"></span>
+								<input type="text" class="form-control" asp-for="Supervisor_Contratista" disabled />
+							</div>
+							<div class="col-12 col-sm-6 col-lg-6">
+								<label asp-for="Cargo_Supervisor_Contratista">Cargo Supervisor Contratista</label>
+								<span class="text-danger" asp-validation-for="Cargo_Supervisor_Contratista"></span>
+								<input type="text" class="form-control" asp-for="Cargo_Supervisor_Contratista" disabled />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="detail-container col-12 col-xl-10 mb-4">
+					<div class="detail-header">
+						<span class="text-white bold text-center  ">Registro fotográfico</span>
+					</div>
+					<div class="details-content">
+						@if (Model.Estado == "Pendiente")
+                        {
+						<div class="row input_container">
+							<div class="col-12 col-sm-12 col-lg-12">
+								<label asp-for="Evidencias">Seleccionar Evidencias</label>
+								<span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
+									<span id="danger_evidencia" class=""></span>
+								</span>
+								<input type="file" class="form-control" asp-for="Evidencias" accept=".jpg,.jpeg,.png" data-max-size="12000000" multiple>
+							</div>
+						</div>
+						}
+						<div class="row input_container">
+							<div class="col-12 col-sm-12 col-lg-12">
+								<label asp-for="Evidencias_Completas">Evidencias</label>
+								<input type="hidden" asp-for="Evidencias_Completas" />
+								<div class="col-sm-12 col-md-12 col-lg-12" id="Evidencias_Lista">
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="detail-container col-12 col-xl-10 mb-4">
+					<div class="detail-header">
+						<span class="text-white bold text-center  ">ACCIONES INMEDIATAS</span>
+					</div>
+					<div class="details-content">
+						<div class="row-center-center col-12">
+							<div class="col-12 col-xl-4">
+								<span class="text-danger" id="alert_acciones"></span>
+							</div>
+						</div>
+						<div class="incidentes">
+							<div class="tertiary-content col-12">
+								<div class="table-responsive incidentes-color">
+									<table class="table" id="tabla_acciones">
+										<thead>
+											<tr>
+												<th>Acción Inmediata</th>
+												<th>Responsable Marcobre</th>
+												<th>Responsable Contratista</th>
+												<th>Fecha</th>
+												<th>Estatus</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td colspan="100">No hay acciones</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="detail-container col-12 col-xl-10 mb-4">
+					<div class="button-container">
+						<div></div>
+						<div>
+							<a asp-action="Resumen" asp-controller="FlashReport" class="btn btn-mc-outline-danger">Volver</a>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+@section Scripts {
+	<script type="text/javascript">
+		var nombresEvidencias = @Html.Raw(Model.Evidencias_Nombres);
+		var lista_acciones = [];
+		$(document).ready(function () {
+			var acciones = @Html.Raw(Model.Acciones);
+			console.log("acciones ", acciones)
+			lista_acciones = acciones.map((accion) => ({
+				Id_Accion_Flash_Report: accion.Id_Accion_Flash_Report,
+				descripcion: accion.Descripcion,
+				usuario: accion.IdUsuario,
+				contratista: accion.Responsable,
+				fecha: accion.Fecha.split('T')[0],
+				estado: accion.Estatus,
+				nuevo:false
+			}
+			));
+			$('#tabla_acciones tbody').empty();
+			$('#tabla_acciones tbody').html(generarTablaAccionesHtml(lista_acciones));
+			$('#NAcciones').val(lista_acciones.length);
+
+			var evidencia_valores = @Html.Raw(Model.Evidencias_Completas);
+			console.log("evidencia_valores", evidencia_valores)
+			if (nombresEvidencias.length > 0) {
+				CargarEvidenciasConNombre(nombresEvidencias, "#Evidencias_Lista", "#Evidencias_Completas");
+			}
+			else if (evidencia.length > 0) {
+				CargarEvidenciasSinNombre(evidencia_valores, "#Evidencias_Lista", "#Evidencias_Completas");
+			}
+		});
+		function CargarEvidenciasSinNombre(evidencias, html, input) {
+			var htmlText = "";
+			for (var i = 0; i < evidencias.length; i++) {
+				htmlText += "<p>";
+				htmlText += "<a class=\"btn btn-mc-outline-success me-2\" href=\"/FlashReport/Download?fileName=" + evidencias[i] + "\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
+					"<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+					"<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+					"<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+					"<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+					"</svg><span>Descargar Evidencia " + (i + 1) + "</span></a></p>";
+			}
+			console.log("htmlText", htmlText)
+			$(html).html(htmlText);
+			$(input).val(evidencias);
+		}
+		function CargarEvidenciasConNombre(evidencias, html, input) {
+			var htmlText = "";
+			var newInputValue = "";
+			for (var i = 0; i < evidencias.length; i++) {
+				htmlText += "<p>";
+				htmlText += "<a class=\"btn btn-mc-outline-success me-2\" href=\"/FlashReport/Download?fileName=" + evidencias[i].NombreCarga + "\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
+					"<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+					"<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+					"<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+					"<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+					"</svg><span>" + evidencias[i].NombreOrigen + "</span></a></p>";
+				newInputValue += evidencias[i].NombreCarga + ",";
+			}
+			console.log("htmlText", htmlText)
+			$(html).html(htmlText);
+			$(input).val(newInputValue.slice(0, -1));
+		}
+		var lista_usuarios = @Html.Raw(ViewBag.UsuariosJson);
+		function generarTablaAccionesHtml(acciones) {
+			let filas = "";
+			acciones.forEach((accion, index) => {
+				let usuario = lista_usuarios.find(user => user.IdUsuario === parseInt(accion.usuario));
+				filas += `<tr>
+							<td style="color: rgb(254, 144, 42); background-color: rgba(254, 144, 42, 0.2);">${accion.descripcion}</td>
+							<td style="color: rgb(254, 144, 42); background-color: rgba(254, 144, 42, 0.2);">${usuario.NombresApellidos}</td>
+							<td style="color: rgb(254, 144, 42); background-color: rgba(254, 144, 42, 0.2);">${accion.contratista}</td>
+							<td style="color: rgb(254, 144, 42); background-color: rgba(254, 144, 42, 0.2);">${accion.fecha}</td>
+							<td style="color: rgb(254, 144, 42); background-color: rgba(254, 144, 42, 0.2);">${accion.estado}</td>
+						</tr>`;
+			});
+			return filas;
+		}
+		$("#Evidencias").change(function () {
+			$("#danger_evidencia").html("");
+			//Validacion del tamaño del archivo
+			var maxSize = $("#Evidencias").data('max-size');
+			var archivos = $("#Evidencias").get(0).files;
+
+			if (archivos.length > 0) {
+				var fileSize = 0
+				for (var i = 0; i < archivos.length; i++) {
+					fileSize += archivos[i].size;
+				}
+				if (fileSize > maxSize) {
+					this.value = '';
+					var filesname = this.files.length + " Archivos";
+					$("#danger_evidencia").html("El  archivo supera el límite permitido de 8MB<br/>");
+					return;
+				}
+				var filesName = "";
+				for (var i = 0; i < archivos.length; i++) {
+					switch (this.value.match(/\.([^\.]+)$/)[1]) {
+						case 'jpg':
+						case 'JPG':
+						case 'jpeg':
+						case 'JPEG':
+						case 'png':
+						case 'PNG':
+							//case 'xls':
+							//case 'xlsx':
+							//case 'doc':
+							//case 'docx':
+							//case 'pdf':
+							filesName += archivos[i].name + "<br/>";
+							break;
+						default:
+							this.value = '';
+							var filesname = this.files.length + " Archivos";
+							$("#files_name").text(filesname);
+							$("#danger_evidencia").html("No se admiten este tipo de archivos<br/>");
+							return;
+					}
+				}
+				filesName.length > 0 ? $("#files_name").html(filesName) : null;
+			}
+		});
+	</script>
+} 

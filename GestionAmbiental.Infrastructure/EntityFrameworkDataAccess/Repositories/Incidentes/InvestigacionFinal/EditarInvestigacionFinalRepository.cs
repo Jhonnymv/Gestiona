@@ -41,7 +41,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
             return entity.Id_Producto_Derramado_Incidente;
         }
-
         public async Task<int> EditarAccionCorrectivaInvestigacion(Accion_Incidente_Investigacion accion)
         {
             var entity = await _context.Accion_Incidente_Investigacion.FirstOrDefaultAsync(x => x.Id_Accion_Incidente_Investigacion.Equals(accion.Id_Accion_Incidente_Investigacion));
@@ -62,7 +61,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return entity.Id_Accion_Incidente_Investigacion;
         }
-
         public async Task<int> EditarCausaIncidenteInvestigacion(Causa_Incidente_Investigacion causa)
         {
             var entity = await _context.Causa_Incidente_Investigacion.FirstOrDefaultAsync(x => x.Id_Causa_Incidente_Investigacion.Equals(causa.Id_Causa_Incidente_Investigacion));
@@ -78,7 +76,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return entity.Id_Causa_Incidente_Investigacion;
         }
-
         public async Task<int> EditarInvolucradoInvestigacion(Involucrado_Incidente_Investigacion involucrado)
         {
             var entity = await _context.Involucrado_Incidente_Investigacion.FirstOrDefaultAsync(x => x.Id_Involucrado_Incidente_Investigacion.Equals(involucrado.Id_Involucrado_Incidente_Investigacion));
@@ -100,7 +97,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return entity.Id_Involucrado_Incidente_Investigacion;
         }
-
         public async Task<int> EditarInvestigacionFinal(Investigacion_Final_Incidente investigacion, Impacto_Ambiental_Incidente impacto)
         {
             var investigacion_entity = await _context.Investigacion_Final_Incidente.FirstOrDefaultAsync(x => x.Id_Investigacion_Final.Equals(investigacion.Id_Investigacion_Final));

@@ -1,0 +1,147 @@
+﻿@model GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.VerificarAccion.VerificarAccionModel
+@{
+    ViewData["Title"] = "VerificarAccion";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="incidentes">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title incidentes-opacity-color">
+                <h3>Verificar Acción</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" id="formVerificarAccion" asp-action="VerificarAccion" asp-controller="VerificarAccionInvestigacion" method="post" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" asp-for="Id_Investigacion_Final" value="@Model.Id_Investigacion_Final" />
+                <input type="hidden" asp-for="Id_Encriptado" value="@Model.Id_Encriptado" />
+                <input type="hidden" asp-for="Id_Investigacion_Encriptado" value="@Model.Id_Investigacion_Encriptado" />
+                <input type="hidden" asp-for="Id_Accion_Incidente_Investigacion" value="@Model.Id_Accion_Incidente_Investigacion" />
+                <input type="hidden" asp-for="Estado" value="@Model.Estado" />
+                <input type="hidden" asp-for="Opcion" />
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <label asp-for="Tipo_Accion"></label>
+                        <span class="text-danger" asp-validation-for="Tipo_Accion"></span>
+                        <input type="text" class="form-control" asp-for="Tipo_Accion" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Accion_Inmediata"></label>
+                        <span class="text-danger" asp-validation-for="Accion_Inmediata"></span>
+                        <input type="text" class="form-control" asp-for="Accion_Inmediata" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Responsable_Marcobre"></label>
+                        <span class="text-danger" asp-validation-for="Responsable_Marcobre"></span>
+                        <input type="text" class="form-control" asp-for="Responsable_Marcobre" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Responsable_Marcobre2"></label>
+                        <span class="text-danger" asp-validation-for="Responsable_Marcobre2"></span>
+                        <input type="text" class="form-control" asp-for="Responsable_Marcobre2" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Responsable_Contratista"></label>
+                        <span class="text-danger" asp-validation-for="Responsable_Contratista"></span>
+                        <input type="text" class="form-control" asp-for="Responsable_Contratista" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Fecha"></label>
+                        <span class="text-danger" asp-validation-for="Fecha"></span>
+                        <input type="date" class="form-control" asp-for="Fecha" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Estatus"></label>
+                        <span class="text-danger" asp-validation-for="Estatus"></span>
+                        <select class="form-control" asp-for="Estatus">
+                            <option value="">--SELECCIONE--</option>
+                            <option value="En Proceso">En Proceso</option>
+                            <option value="Cerrado">Cerrado</option>
+                        </select>
+                    </div>
+                    <div class="row input_container align-items-start">
+                        <div class="col-sm-12 col-md-4 col-lg-3">
+                            <label asp-for="Evidencias"></label>
+                            <input type="hidden" asp-for="Evidencias" />
+                        </div>
+                        <div class="col-sm-12 col-md-8 col-lg-9" id="Evidencias_Lista">
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Comentarios_Implementacion"></label>
+                        <span class="text-danger" asp-validation-for="Comentarios_Implementacion"></span>
+                        <textarea type="text" class="form-control" asp-for="Comentarios_Implementacion" maxlength="250" rows="3" disabled></textarea>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Comentarios_Verificacion"></label>
+                        <span class="text-danger" asp-validation-for="Comentarios_Verificacion"></span>
+                        <textarea type="text" class="form-control" asp-for="Comentarios_Verificacion" maxlength="250" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="button-container">
+                        <div></div>
+                        <div>
+                            <a id="boton_cancelar" class="btn btn-mc-outline-danger" asp-controller="InvestigacionFinal" asp-action="DetalleInvestigacion" asp-route-IdInvestigacion="@Model.Id_Investigacion_Encriptado">Cancelar</a>
+                            <button id="boton_rechazar" type="button" class="btn btn-mc-danger" onclick="Rechazar()">Rechazar</button>
+                            <button id="boton_aprobar" type="button" class="btn btn-mc-success" onclick="Aprobar()">Aprobar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal Enviando Correo-->
+<div class="modal fade mc-modal" id="Modal_Enviando_Correo" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <div class="mc-modal-image-background col-12">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div style="width: 150px; height: 35px">
+                            <div class="spinner">
+                                <div class="rect1"></div>
+                                <div class="rect2"></div>
+                                <div class="rect3"></div>
+                                <div class="rect4"></div>
+                                <div class="rect5"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <label class="text-white">Notificando al Responsable</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var evidencias = '@Model.Evidencias';
+            //evidencias
+            if (evidencias.length > 0) {
+                var evidencias_valores = JSON.parse(evidencias.replace(/&quot;/g, '"'));
+                var html_evidencias = "";
+                for (var i = 0; i < evidencias_valores.length; i++)
+                    html_evidencias += "<p><a class=\"btn btn-mc-outline me-2\" href=\"/ImplementarAccionInvestigacion/Download?fileName=" + evidencias_valores[i] + "\">Evidencia</a></p>";
+
+                $("#Evidencias_Lista").html(html_evidencias);
+                $("#Evidencias").val(evidencias_valores);
+            }
+        });
+        function Rechazar() {
+            $("#Opcion").val("Rechazar");
+            $("#Modal_Enviando_Correo").modal("show");
+            $("#formVerificarAccion").submit();
+        }
+        function Aprobar() {
+            $("#Opcion").val("Aprobar")
+            $("#formVerificarAccion").submit();
+        }
+    </script>
+}

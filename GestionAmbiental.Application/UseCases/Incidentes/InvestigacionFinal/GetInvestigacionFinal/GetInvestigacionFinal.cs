@@ -12,6 +12,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ge
     {
         private readonly IGetInvestigacionFinalReadOnlyRepository _getInvestigacionFinalReadOnlyRepository;
         private readonly IGetUsuario _getUsuario;
+        
 
         public GetInvestigacionFinal(IGetInvestigacionFinalReadOnlyRepository getInvestigacionFinalReadOnlyRepository, IGetUsuario getUsuario)
         {
@@ -26,12 +27,13 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ge
             var usuario = await _getUsuario.Execute(UsuarioRed);
             if (usuario.IdRol.Equals((int)InspeccionRol.AsesorMAP))
                 output.PermisoMA = true;
-            else
-                output.PermisoMA = false;
+
             if (usuario.IdRol.Equals((int)InspeccionRol.Admin))
                 output.PermisoAdmin = true;
-            else
-                output.PermisoAdmin = false;
+
+            if (output.Id_Registrado_Por!=null && usuario.IdUsuario==output.Id_Registrado_Por.Value)
+                output.PermisoEditar = true;
+
             return output;
         }
         public async Task<InvestigacionFinalOutput> Execute(int IdInvestigacion)

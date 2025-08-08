@@ -9,7 +9,7 @@
     <div class="primary-content col-12">
         <div class="image-header-container">
             <div class="header-title incidentes-opacity-color">
-                <h3>Editar Investigación Final del Incidente Ambiental - @Model.Codigo</h3>
+                <h3>Editar Reporte de Incidente Mayor - @Model.Codigo</h3>
                 <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
         </div>
@@ -229,7 +229,7 @@
                                     <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia_Responsable"></select>
                                 </div>
                             </div>
-                            @if (Model.Estado == "PendienteInvestigacion")
+                            @if (Model.Estado == "Pendiente")
                             {
                                 <div class="row-center-center col-12">
                                     <div class="col-12 col-xl-4">
@@ -249,7 +249,7 @@
                                                     <th>Edad</th>
                                                     <th>Puesto de Trabajo</th>
                                                     <th>Empresa</th>
-                                                    @if (Model.Estado == "PendienteInvestigacion")
+                                                    @if (Model.Estado == "Pendiente")
                                                     {
                                                         <th></th>
                                                         <th></th>
@@ -272,7 +272,7 @@
                             <div class="d-flex justify-content-center">
                                 <span class="text-danger">Datos del derrame o fuga (Llenar esta sección si el incidente ambiental corresponde a un derrame o fuga de un producto)</span>
                             </div>
-                            @if (Model.Estado == "PendienteInvestigacion")
+                            @if (Model.Estado == "Pendiente")
                             {
                                 <div class="row-center-center col-12">
                                     <div class="col-12 col-xl-4">
@@ -294,7 +294,7 @@
                                                     <th>Estado del equipo después del incidente</th>
                                                     <th>Cantidad producto recuperado</th>
                                                     <th>Cantidad de producto no recuperado</th>
-                                                    @if (Model.Estado == "PendienteInvestigacion")
+                                                    @if (Model.Estado == "Pendiente")
                                                     {
                                                         <th></th>
                                                         <th></th>
@@ -637,7 +637,7 @@
                         <span class="text-white bold text-center text-uppercase">CAUSALIDAD</span>
                     </div>
                     <div class="details-content">
-                        @if (Model.Estado == "PendienteInvestigacion")
+                        @if (Model.Estado == "Pendiente")
                         {
                             <div class="row-center-center col-12">
                                 <div class="col-12 col-xl-4">
@@ -659,7 +659,7 @@
                                                     <th>Tipo de Causa del Incidente</th>
                                                     <th>Causa</th>
                                                     <th>Descripción</th>
-                                                    @if (Model.Estado == "PendienteInvestigacion")
+                                                    @if (Model.Estado == "Pendiente")
                                                     {
                                                         <th></th>
                                                         <th></th>
@@ -691,7 +691,7 @@
                                                     <th>Tipo de Causa del Incidente</th>
                                                     <th>Causa</th>
                                                     <th>Descripción</th>
-                                                    @if (Model.Estado == "PendienteInvestigacion")
+                                                    @if (Model.Estado == "Pendiente")
                                                     {
                                                         <th></th>
                                                         <th></th>
@@ -716,7 +716,7 @@
                         <span class="text-white bold text-center text-uppercase">RESPUESTA AL INCIDENTE AMBIENTAL</span>
                     </div>
                     <div class="details-content">
-                        @if (Model.Estado == "PendienteInvestigacion")
+                        @if (Model.Estado == "Pendiente")
                         {
                             <div class="row-center-center col-12">
                                 <div class="col-12 col-xl-4">
@@ -813,7 +813,7 @@
                         <div class="row mb-2 align-items-start">
                             <div class="col-sm-12 col-md-4 col-lg-6">
                                 <label asp-for="Evidencias_Papel"></label>
-                                @if (Model.Estado == "PendienteInvestigacion")
+                                @if (Model.Estado == "Pendiente")
                                 {
                                     <span class="text-danger field-validation-error" data-valmsg-for="Evidencias_Papel" data-valmsg-replace="true">
                                         <span id="danger_evidencia_papel" class=""></span>
@@ -828,7 +828,7 @@
                         <div class="row mb-2 align-items-start">
                             <div class="col-sm-12 col-md-4 col-lg-6">
                                 <label asp-for="Evidencias_Persona"></label>
-                                @if (Model.Estado == "PendienteInvestigacion")
+                                @if (Model.Estado == "Pendiente")
                                 {
                                     <span class="text-danger field-validation-error" data-valmsg-for="Evidencias_Persona" data-valmsg-replace="true">
                                         <span id="danger_evidencia_persona" class=""></span>
@@ -843,7 +843,7 @@
                         <div class="row mb-2 align-items-start">
                             <div class="col-sm-12 col-md-4 col-lg-6">
                                 <label asp-for="Evidencias_Posicion"></label>
-                                @if (Model.Estado == "PendienteInvestigacion")
+                                @if (Model.Estado == "Pendiente")
                                 {
                                     <span class="text-danger field-validation-error" data-valmsg-for="Evidencias_Posicion" data-valmsg-replace="true">
                                         <span id="danger_evidencia_posicion" class=""></span>
@@ -859,7 +859,7 @@
                             <div class="col-sm-12 col-md-4 col-lg-6">
                                 <label asp-for="Evidencias_Partes"></label>
 
-                                @if (Model.Estado == "PendienteInvestigacion")
+                                @if (Model.Estado == "Pendiente")
                                 {
                                     <span class="text-danger field-validation-error" data-valmsg-for="Evidencias_Partes" data-valmsg-replace="true">
                                         <span id="danger_evidencia_partes" class=""></span>
@@ -874,19 +874,19 @@
                     </div>
                 </div>
 
-                @if (Model.Estado == "PendienteInvestigacion")
-                {
+                
                     <div class="detail-container col-12 col-xl-10 mb-4">
                         <div class="button-container">
                             <div></div>
                             <div>
-                                <a asp-action="Resumen" asp-controller="InvestigacionFinal" class="btn btn-mc-outline-danger">Volver</a>
+                            <a asp-action="Resumen" asp-controller="InvestigacionFinal" class="btn btn-mc-outline-danger">Volver</a>@if (Model.Estado == "Pendiente")
+                            {
                                 <button id="boton_guardar_estado" type="button" class="btn btn-mc-outline-success">Guardar Estado</button>
-                                <button id="boton_completar" type="button" class="btn btn-mc-success">Completar y Difundir</button>
+                                <button id="boton_completar" type="button" class="btn btn-mc-success">Completar</button>
+                            }
                             </div>
                         </div>
                     </div>
-                }
             </form>
         </div>
     </div>
@@ -916,7 +916,7 @@
                         </div>
                     </div>
                     <div class="col-12 d-flex justify-content-center mt-4">
-                        <label class="text-white">Difundiendo la Investigación</label>
+                        <label class="text-white">Guardando Reporte y enviando a Medio Ambiente para revisión</label>
                     </div>
                 </div>
             </div>
@@ -969,7 +969,7 @@
             GetProductos();
             GetCausas();
             GetAcciones();
-            let eliminar = $("#Estado").val() == "PendienteInvestigacion"
+            let eliminar = $("#Estado").val() == "Pendiente"
             CargarEvidencias(eliminar);
         });
 
@@ -1146,7 +1146,7 @@
         }
 
         function EliminarEvidencia(evidencia, tipo) {
-            var eliminar = $("#Estado").val() == "PendienteInvestigacion"
+            var eliminar = $("#Estado").val() == "Pendiente"
             if (eliminar)
                 if (confirm('¿Está seguro que desea eliminar esta evidencia?'))
                     $.ajax({
@@ -1388,9 +1388,11 @@
         });
 
         $("#boton_completar").click(function () {
-            $("#Opcion").val("Completar");
-            $("#Modal_Enviando_Correo").modal("show");
-            $("#formEditarInvestigacion").submit();
+            if(ValidarInputs()){
+                $("#Opcion").val("EnviarMA");
+                $("#Modal_Enviando_Correo").modal("show");
+                $("#formEditarInvestigacion").submit();
+            }
         });
 
         $("#checkbox_suelo").change(function () {
@@ -1578,4 +1580,5 @@
     <script type="text/javascript" src="~/js/UseCases/Incidentes/InvestigacionFinal/EditarInvestigacionFinal-Productos.js"></script>
     <script type="text/javascript" src="~/js/UseCases/Incidentes/InvestigacionFinal/EditarInvestigacionFinal-Causas.js"></script>
     <script type="text/javascript" src="~/js/UseCases/Incidentes/InvestigacionFinal/EditarInvestigacionFinal-Acciones.js"></script>
+    <script type="text/javascript" src="~/js/UseCases/Incidentes/InvestigacionFinal/EditarInvestigacionFinal.js"></script>
 } 

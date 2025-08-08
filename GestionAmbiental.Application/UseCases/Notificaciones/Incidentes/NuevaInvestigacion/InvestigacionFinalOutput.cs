@@ -7,11 +7,11 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.Incidentes.NuevaI
 {
     public class InvestigacionFinalOutput
     {
-        public int Id_Investigacion_Final { get; set; }
-        public int Id_Reporte_Preliminar { get; set; }
+        public int? Id_Investigacion_Final { get; set; }
+        public int? Id_Reporte_Preliminar { get; set; }
         public string Codigo { get; set; }
         //Titular minero
-        public int Num_Trabajadores { get; set; }
+        public int? Num_Trabajadores { get; set; }
         //Contratista - opcional
         public string Razon_Social_Contratista { get; set; }
         public string RUC_Contratista { get; set; }

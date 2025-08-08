@@ -12,12 +12,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         [Key]
         public int Id_Investigacion_Final { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Reporte_Preliminar { get; set; }
+        public int? Id_Reporte_Preliminar { get; set; }
         [Column(TypeName = "varhcar(10)")]
         public string Codigo { get; set; }
         //Titular minero
         [Column(TypeName = "int")]
-        public int Num_Trabajadores { get; set; }
+        public int? Num_Trabajadores { get; set; }
         //Contratista - opcional
         [Column(TypeName = "varhcar(250)")]
         public string Razon_Social_Contratista { get; set; }
@@ -84,6 +84,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public string Estado { get; set; }
         [Column(TypeName = "text")]
         public string Nombres_Archivos { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Registrado_Por { get; set; }
 
     }
 }

@@ -63,5 +63,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public string Estado { get; set; }
         [Column(TypeName = "text")]
         public string Nombres_Archivos { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Registrado_Por { get; set; }
     }
 }

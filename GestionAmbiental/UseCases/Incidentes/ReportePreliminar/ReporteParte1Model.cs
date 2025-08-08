@@ -52,5 +52,6 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         public string Otra_Causa_Incidente { get; set; }
         public string Estado { get; set; }
         public string Opcion { get; set; }
+        public int? Id_Registrado_Por { get; set; }
     }
 }

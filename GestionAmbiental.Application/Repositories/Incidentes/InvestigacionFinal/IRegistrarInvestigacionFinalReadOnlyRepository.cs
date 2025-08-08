@@ -8,6 +8,7 @@ namespace GestionAmbiental.Application.Repositories.Incidentes.InvestigacionFina
 {
     public interface IRegistrarInvestigacionFinalReadOnlyRepository
     {
+        Task<int> RegistrarDesdeFlashReport(Investigacion_Final_Incidente investigacion, int Id_Flash_Report);
         Task<int> RegistrarDeReportePreliminar(int IdReporte);
         Task<int> RegistrarImpactoAmbiental(int IdInvestigacion);
         Task<int> RegistrarProductoDerramado(Producto_Derramado_Incidente producto);
