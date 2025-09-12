@@ -41,7 +41,7 @@ function EditarAccion(idAccion) {
             $("#btn_guardar_accion").hide();
 
             $("#Id_Accion").val(response.idAccion);
-            $("#select_tipo_accion").val(response.tipo),
+            $("#select_tipo_accion").val(response.tipo);
             $("#input_descripcion_accion").val(response.accion);
             $("#select_usuarios_accion").val(response.idUsuario);
             $("#select_usuarios_accion2").val(response.idUsuario2);

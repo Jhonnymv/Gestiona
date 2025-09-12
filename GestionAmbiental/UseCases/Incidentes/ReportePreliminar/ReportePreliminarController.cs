@@ -1,4 +1,39 @@
-﻿using System;
+﻿using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Accion.GetAcciones;
+using GestionAmbiental.Application.UseCases.Incidentes.Items;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Accion.AmpliarFechaAccion;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Accion.EditarAccion;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Accion.EliminarAccion;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Accion.GetAcciones;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Accion.RegistrarAccion;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Causa.EditarCausa;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Causa.EliminarCausa;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Causa.RegistrarCausa;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.EditarReportePreliminar;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.EliminarReportePreliminar;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetCausaIncidenteReporte;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetEstadoReportePreliminar;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetEvidenciasReporte;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetReportePreliminar;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetReportesPreliminares;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.EditarInvolucrado;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.EliminarInvolucrado;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.GetInvolucrados;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.RegistrarInvolucrado;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.RegistrarParte1;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.RegistrarParte2;
+using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
+using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.Domain.FOCAM;
+using GestionAmbiental.UseCases.Incidentes.InvestigacionFinal;
+using GestionAmbiental.UseCases.Util.Interfaces;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using Renci.SshNet;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -6,39 +41,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetCausaIncidenteReporte;
-using GestionAmbiental.Application.UseCases.Incidentes.Items;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.EditarReportePreliminar;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetEstadoReportePreliminar;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetReportesPreliminares;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetReportePreliminar;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.RegistrarParte1;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.RegistrarParte2;
-using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
-using GestionAmbiental.Domain.Enum;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
-using Renci.SshNet;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Accion.EditarAccion;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Accion.EliminarAccion;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Accion.GetAcciones;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Accion.RegistrarAccion;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Causa.EliminarCausa;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Causa.EditarCausa;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Causa.RegistrarCausa;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.EditarInvolucrado;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.EliminarInvolucrado;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.GetInvolucrados;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.RegistrarInvolucrado;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Hosting;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.EliminarReportePreliminar;
-using GestionAmbiental.UseCases.Incidentes.InvestigacionFinal;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetEvidenciasReporte;
-using GestionAmbiental.UseCases.Util.Interfaces;
-using GestionAmbiental.Domain.FOCAM;
 
 namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 {
@@ -64,6 +66,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         private readonly IGetAccioIncidente _getAccionIncidente;
         private readonly IEliminarAccionIncidente _eliminarAccionIncidente;
         private readonly IGetAccionesIncidente _getAccionesIncidente;
+        private readonly IAmpliarFechaAccion _ampliarFechaAccion;
         private readonly IGetReportePreliminar _getReportePreliminar;
         private readonly IGetCausasIncidenteReporte _getCausasIncidenteReporte;
         private readonly IGetCausaIncidenteReporte _getCausaIncidenteReporte;
@@ -97,6 +100,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             IGetAccioIncidente getAccioIncidente,
             IGetAccionesIncidente getAccionesIncidente,
             IEliminarAccionIncidente eliminarAccionIncidente,
+            IAmpliarFechaAccion ampliarFechaAccion,
             IGetReportePreliminar getReportePreliminar,
             IGetCausasIncidenteReporte getCausasIncidenteReporte,
             IGetCausaIncidenteReporte getCausaIncidenteReporte,
@@ -128,6 +132,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             _getAccionIncidente = getAccioIncidente;
             _getAccionesIncidente = getAccionesIncidente;
             _eliminarAccionIncidente = eliminarAccionIncidente;
+            _ampliarFechaAccion = ampliarFechaAccion;
             _getReportePreliminar = getReportePreliminar;
             _getCausasIncidenteReporte = getCausasIncidenteReporte;
             _editarCausaIncidenteReporte = editarCausaIncidenteReporte;
@@ -488,6 +493,94 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             return await ListarInvolucrados(IdReporte);
         }
         [HttpPost]
+        public async Task<IActionResult> ListarAccionesVerificacion(int IdReporte)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var acciones = await _getAccionesIncidente.Execute(IdReporte, userInfo.NombreUsuario);
+
+                var nVerificado = acciones.Count(x => x.Estado.Equals(EstadosIncidentes.Aprobado.ToString()));
+
+                var estadoReporte = await _getEstadoReportePreliminar.Execute(IdReporte);
+
+                var filas_acciones = "";
+                if (acciones.Count > 0)
+                {
+                    foreach (var fila in acciones)
+                    {
+                        var IdEncriptado = _protector.Protect(fila.Id_Accion_Correctiva_Incidente.ToString());
+
+                        filas_acciones += "<tr>";
+                        if (fila.Accion_Inmediata != null)
+                            filas_acciones += "<td>" + fila.Accion_Inmediata + "</td>";
+                        else
+                            filas_acciones += "<td>_</td>";
+                        if (fila.Responsable_Marcobre != null)
+                            filas_acciones += "<td>" + fila.Responsable_Marcobre + "</td>";
+                        else
+                            filas_acciones += "<td>_</td>";
+                        if (fila.Responsable_Marcobre2 != null)
+                            filas_acciones += "<td>" + fila.Responsable_Marcobre2 + "</td>";
+                        else
+                            filas_acciones += "<td>_</td>";
+                        if (fila.Responsable_Contratista != null)
+                            filas_acciones += "<td>" + fila.Responsable_Contratista + "</td>";
+                        else
+                            filas_acciones += "<td>_</td>";
+                        filas_acciones += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
+                        filas_acciones += "<td>" + fila.Estatus + "</td>";
+                        //Estado
+                        switch (fila.Estado)
+                        {
+                            case "Registrado": filas_acciones += "<td><span class=\"badge bg-secondary\">" + fila.Estado + "</span></td>"; break;
+                            case "Aprobado": filas_acciones += "<td><span class=\"badge bg-success\">" + fila.Estado + "</span></td>"; break;
+                            case "Rechazado": filas_acciones += "<td><span class=\"badge bg-danger\">" + fila.Estado + "</span></td>"; break;
+                            case "Vencido": filas_acciones += "<td><span class=\"badge bg-danger\">" + fila.Estado + "</span></td>"; break;
+                            case "Ampliado": filas_acciones += "<td><span class=\"badge bg-warning\">" + fila.Estado + "</span></td>"; break;
+                            default: filas_acciones += "<td><span class=\"badge bg-secondary\">" + fila.Estado + "</span>"; break;
+                        }
+                        if (fila.Permiso_Verificacion && fila.Estatus.Equals("Cerrado") && (fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString())))
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\" style=\"color:white;text-decoration: none;\" href=\"/ImplementarAccionMAInvestigacion/ImplementarAccionMA?IdAccion=" + IdEncriptado + "\">Cargar Evidencia" + "</a></td>";
+                        else if (fila.Permiso_Implementacion && !fila.Estatus.Equals("Cerrado") && (fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString())))
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\" style=\"color:white;text-decoration: none;\" href=\"/ImplementarAccionInvestigacion/ImplementarAccion?IdAccion=" + IdEncriptado + "\">Implementar</a></td>";
+                        else if (fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Implementado.ToString()))
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\"style=\"color:white;text-decoration: none;\" href=\"/VerificarAccionInvestigacion/VerificarAccion?IdAccion=" + IdEncriptado + "\">Verificar</a></td>";
+                        else if ((fila.Permiso_Verificacion || userInfo.Rol.Equals(InspeccionRol.Admin)) && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
+                            filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\" style=\"color:white;text-decoration: none;\" onclick=AmpliarFecha(" + fila.Id_Accion_Correctiva_Incidente + ")>Ampliar Fecha</button></td>";
+                        else if (fila.Estado.Equals(EstadosIncidentes.Aprobado.ToString()))
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc-outline\" style=\"color:#2e6793;text-decoration: none;\" href=\"/VerificarAccionInvestigacion/DetalleAccion?IdAccion=" + IdEncriptado + "\">Detalle</a></td>";
+                        else if ((fila.Permiso_Verificacion || userInfo.Rol.Equals(InspeccionRol.Admin)) && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
+                            filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\"style=\"color:white;text-decoration: none;\" onclick=\"AmpliarFecha(" + IdEncriptado + ")\">Ampliar Fecha</button></td>";
+                        else
+                            filas_acciones += "<td></td>";
+                        filas_acciones += "</tr>";
+                    }
+                }
+                else
+                {
+                    filas_acciones += "<tr>";
+                    filas_acciones += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
+                    filas_acciones += "</tr>";
+                }
+                dynamic response = new
+                {
+                    filas_acciones = filas_acciones,
+                    nAcciones = acciones.Count,
+                    nVerificado = nVerificado
+                };
+                return Ok(response);
+            }
+        }
+        [HttpPost]
         public async Task<IActionResult> ListarAcciones(int IdReporte)
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
@@ -495,42 +588,96 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             if (!userInfo.Rol.Equals(InspeccionRol.Admin))
                 acciones = acciones.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var estadoReporte = await _getEstadoReportePreliminar.Execute(IdReporte);
-            var filas_acciones = "";
+            var filas_acciones_inmediatas = "";
+            var filas_acciones_correctivas = "";
+            if (acciones.Where(x => x.Tipo_Accion.Equals("Acción Inmediata")).Count() == 0)
+            {
+                filas_acciones_inmediatas += "<tr>";
+                filas_acciones_inmediatas += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
+                filas_acciones_inmediatas += "</tr>";
+            }
+            if (acciones.Where(x => x.Tipo_Accion.Equals("Acción Correctiva")).Count() == 0)
+            {
+                filas_acciones_correctivas += "<tr>";
+                filas_acciones_correctivas += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
+                filas_acciones_correctivas += "</tr>";
+            }
             foreach (var fila in acciones)
             {
-                filas_acciones += "<tr>";
-                if (fila.Accion_Inmediata != null)
-                    filas_acciones += "<td>" + fila.Accion_Inmediata + "</td>";
-                else
-                    filas_acciones += "<td>_</td>";
-                if (fila.Responsable_Marcobre != null)
-                    filas_acciones += "<td>" + fila.Responsable_Marcobre + "</td>";
-                else
-                    filas_acciones += "<td>_</td>";
-                if (fila.Responsable_Contratista != null)
-                    filas_acciones += "<td>" + fila.Responsable_Contratista + "</td>";
-                else
-                    filas_acciones += "<td>_</td>";
-                filas_acciones += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
-                filas_acciones += "<td>" + fila.Estatus + "</td>";
-                if (estadoReporte.Equals(EstadosIncidentes.Pendiente.ToString()) || userInfo.Rol.Equals(InspeccionRol.Admin))
+                if (fila.Tipo_Accion.Equals("Acción Inmediata"))
                 {
-                    filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
-                    filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
+                    filas_acciones_inmediatas += "<tr>";
+                    if (fila.Accion_Inmediata != null)
+                        filas_acciones_inmediatas += "<td>" + fila.Accion_Inmediata + "</td>";
+                    else
+                        filas_acciones_inmediatas += "<td>_</td>";
+                    if (fila.Responsable_Marcobre != null)
+                        filas_acciones_inmediatas += "<td>" + fila.Responsable_Marcobre + "</td>";
+                    else
+                        filas_acciones_inmediatas += "<td>_</td>";
+                    if (fila.Responsable_Marcobre2 != null)
+                        filas_acciones_inmediatas += "<td>" + fila.Responsable_Marcobre2 + "</td>";
+                    else
+                        filas_acciones_inmediatas += "<td>_</td>";
+                    if (fila.Responsable_Contratista != null)
+                        filas_acciones_inmediatas += "<td>" + fila.Responsable_Contratista + "</td>";
+                    else
+                        filas_acciones_inmediatas += "<td>_</td>";
+                    filas_acciones_inmediatas += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
+                    filas_acciones_inmediatas += "<td>" + fila.Estatus + "</td>";
+                    if ((estadoReporte.Equals(EstadosIncidentes.Pendiente.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
+                    {
+                        filas_acciones_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
+                        filas_acciones_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
+                    }
+                    else
+                        filas_acciones_inmediatas += "<td></td><td></td>";
+                    filas_acciones_inmediatas += "</tr>";
                 }
-                filas_acciones += "</tr>";
+                else if (fila.Tipo_Accion.Equals("Acción Correctiva"))
+                {
+                    filas_acciones_correctivas += "<tr>";
+                    if (fila.Accion_Inmediata != null)
+                        filas_acciones_correctivas += "<td>" + fila.Accion_Inmediata + "</td>";
+                    else
+                        filas_acciones_correctivas += "<td>_</td>";
+                    if (fila.Responsable_Marcobre != null)
+                        filas_acciones_correctivas += "<td>" + fila.Responsable_Marcobre + "</td>";
+                    else
+                        filas_acciones_correctivas += "<td>_</td>";
+                    if (fila.Responsable_Marcobre2 != null)
+                        filas_acciones_correctivas += "<td>" + fila.Responsable_Marcobre2 + "</td>";
+                    else
+                        filas_acciones_correctivas += "<td>_</td>";
+                    if (fila.Responsable_Contratista != null)
+                        filas_acciones_correctivas += "<td>" + fila.Responsable_Contratista + "</td>";
+                    else
+                        filas_acciones_correctivas += "<td>_</td>";
+                    filas_acciones_correctivas += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
+                    filas_acciones_correctivas += "<td>" + fila.Estatus + "</td>";
+                    if ((estadoReporte.Equals(EstadosIncidentes.Pendiente.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
+                    {
+                        filas_acciones_correctivas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
+                        filas_acciones_correctivas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
+                    }
+                    else
+                        filas_acciones_correctivas += "<td></td><td></td>";
+                    filas_acciones_correctivas += "</tr>";
+                }
             }
+
             dynamic response = new
             {
-                filas_acciones = filas_acciones,
+                filas_acciones_inmediatas = filas_acciones_inmediatas,
+                filas_acciones_correctivas = filas_acciones_correctivas,
                 nAcciones = acciones.Count
             };
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> NuevaAccion(int IdReporte, string descripcion, int usuario, string contratista, string fecha, string estado)
+        public async Task<IActionResult> NuevaAccion(int IdReporte, string tipoAccion, string accion, int usuario, int usuario2, string contratista, string fecha, string estado)
         {
-            await _registrarAccionCorrectivaIncidente.Execute(IdReporte, descripcion, usuario, contratista, fecha, estado);
+            await _registrarAccionCorrectivaIncidente.Execute(IdReporte, tipoAccion, accion, usuario, usuario2, contratista, fecha, estado);
             return await ListarAcciones(IdReporte);
         }
         [HttpGet]
@@ -542,8 +689,11 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             {
                 idAccion = accion.Id_Accion_Correctiva_Incidente,
                 idReporte = accion.Id_Reporte_Preliminar,
+                tipo = accion.Tipo_Accion,
                 idUsuario = accion.Id_Usuario,
                 responsableMarc = accion.Responsable_Marcobre,
+                idUsuario2 = accion.Id_Usuario2,
+                responsableMarc2 = accion.Responsable_Marcobre2,
                 accion = accion.Accion_Inmediata,
                 responsableCon = accion.Responsable_Contratista,
                 fecha = accion.Fecha != null ? accion.Fecha.Value.ToString("yyyy-MM-dd") : "",
@@ -552,9 +702,9 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> EditarAccion(int IdAccion, int IdReporte, string descripcion, int usuario, string contratista, string fecha, string estado)
+        public async Task<IActionResult> EditarAccion(int IdAccion, int IdReporte, string tipoAccion, int usuario, int usuario2, string accion, string contratista, string fecha, string estado)
         {
-            await _editarAccionIncidente.Execute(IdAccion, IdReporte, descripcion, usuario, contratista, fecha, estado);
+            await _editarAccionIncidente.Execute(IdAccion, IdReporte, tipoAccion, usuario, usuario2, accion, fecha, contratista, estado);
             return await ListarAcciones(IdReporte);
         }
         [HttpPost]
@@ -564,6 +714,12 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             return await ListarAcciones(IdReporte);
         }
         [HttpPost]
+        public async Task<IActionResult> AmpliarFechaAccion(int IdAccion, int IdReporte, string fecha)
+        {
+            await _ampliarFechaAccion.Execute(IdAccion, fecha);
+            return await ListarAccionesVerificacion(IdReporte);
+        }
+        [HttpPost]
         public async Task<IActionResult> ListarCausas(int IdReporte)
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
@@ -571,31 +727,69 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             if (!userInfo.Rol.Equals(InspeccionRol.Admin))
                 causas = causas.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var estadoReporte = await _getEstadoReportePreliminar.Execute(IdReporte);
-            var filas_causas = "";
+            var filas_causas_inmediatas = "";
+            var filas_causas_basicas = "";
+
+            //foreach (var fila in causas)
+            //{
+            //    filas_causas += "<tr>";
+            //    filas_causas += "<td>" + fila.Tipo_Acto_Condicion + "</td>";
+            //    filas_causas += "<td>" + fila.Acto_Condicion + "</td>";
+            //    if (estadoReporte.Equals(EstadosIncidentes.Pendiente.ToString()) || userInfo.Rol.Equals(InspeccionRol.Admin))
+            //    {
+            //        filas_causas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
+            //        filas_causas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
+            //    }
+
+            //    filas_causas += "</tr>";
+            //}
             foreach (var fila in causas)
             {
-                filas_causas += "<tr>";
-                filas_causas += "<td>" + fila.Tipo_Acto_Condicion + "</td>";
-                filas_causas += "<td>" + fila.Acto_Condicion + "</td>";
-                if (estadoReporte.Equals(EstadosIncidentes.Pendiente.ToString()) || userInfo.Rol.Equals(InspeccionRol.Admin))
+                if (fila.Tipo_Acto_Condicion.Equals("Acto Subestándar") || fila.Tipo_Acto_Condicion.Equals("Condición Subestándar"))
                 {
-                    filas_causas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
-                    filas_causas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
-                }
+                    filas_causas_inmediatas += "<tr>";
+                    filas_causas_inmediatas += "<td>" + fila.Tipo_Acto_Condicion + "</td>";
+                    filas_causas_inmediatas += "<td>" + fila.Acto_Condicion + "</td>";
+                    if (fila.Descripcion != null)
+                        filas_causas_inmediatas += "<td>" + fila.Descripcion + "</td>";
+                    else
+                        filas_causas_inmediatas += "<td>_</td>";
+                    if (estadoReporte.Equals(EstadosIncidentes.Pendiente.ToString()) || userInfo.Rol.Equals(InspeccionRol.Admin))
+                    {
+                        filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
+                        filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
+                    }
 
-                filas_causas += "</tr>";
+                    filas_causas_inmediatas += "</tr>";
+                }
+                else if (fila.Tipo_Acto_Condicion.Equals("Factor Personal") || fila.Tipo_Acto_Condicion.Equals("Factor Laboral"))
+                {
+                    filas_causas_basicas += "<tr>";
+                    filas_causas_basicas += "<td>" + fila.Tipo_Acto_Condicion + "</td>";
+                    filas_causas_basicas += "<td>" + fila.Factor_Causa_Incidente + "</td>";
+                    if (fila.Descripcion != null)
+                        filas_causas_basicas += "<td>" + fila.Descripcion + "</td>";
+                    else
+                        filas_causas_basicas += "<td>_</td>";
+                    if (estadoReporte.Equals(EstadosIncidentes.Pendiente.ToString()) || userInfo.Rol.Equals(InspeccionRol.Admin))
+                    {
+                        filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
+                        filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
+                    }
+                }
             }
             dynamic response = new
             {
-                filas_causas = filas_causas,
+                filas_causas_inmediatas = filas_causas_inmediatas,
+                filas_causas_basicas = filas_causas_basicas,
                 nCausas = causas.Count
             };
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> NuevaCausa(int IdReporte, int IdActoCondicion, string Acto_Condicion)
+        public async Task<IActionResult> NuevaCausa(int IdReporte, int IdActoCondicion, string Acto_Condicion, string Descripcion)
         {
-            await _registrarCausaIncidenteReporte.Execute(IdReporte, IdActoCondicion, Acto_Condicion);
+            await _registrarCausaIncidenteReporte.Execute(IdReporte, IdActoCondicion, Acto_Condicion, Descripcion);
             return await ListarCausas(IdReporte);
         }
         [HttpGet]
@@ -606,14 +800,16 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             {
                 idCausa = causa.Id_Causa_Incidente,
                 idActoCondicion = causa.Id_Acto_Condicion,
-                tipoActoCondicion = causa.Tipo_Acto_Condicion
+                idFactor = causa.Id_Factor_Causa_Incidente,
+                tipoActoCondicion = causa.Tipo_Acto_Condicion,
+                descripcion = causa.Descripcion
             };
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> EditarCausa(int IdCausa, int IdReporte, int IdActoCondicion, string Acto_Condicion)
+        public async Task<IActionResult> EditarCausa(int IdCausa, int IdReporte, int IdActoCondicion, string Acto_Condicion, string Descripcion)
         {
-            await _editarCausaIncidenteReporte.Execute(IdCausa, IdReporte, IdActoCondicion, Acto_Condicion);
+            await _editarCausaIncidenteReporte.Execute(IdCausa, IdReporte, IdActoCondicion, Acto_Condicion, IdActoCondicion, Descripcion);
             return await ListarCausas(IdReporte);
         }
         [HttpPost]
@@ -757,6 +953,12 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 var condiciones = items.ItemsTipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
                 condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                var factoresPersonales = items.ItemsFactores.Where(x => x.Tipo_Factor.Equals("Factor Personal")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Factor_Causa_Incidente.ToString(), Text = g.Descripcion }).ToList();
+                factoresPersonales.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var factoresLaborales = items.ItemsFactores.Where(x => x.Tipo_Factor.Equals("Factor Laboral")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Factor_Causa_Incidente.ToString(), Text = g.Descripcion }).ToList();
+                factoresLaborales.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
                 ViewBag.Tipo_Incidente = tipo_Incidente;
                 ViewBag.Nivel_Incidente = nivel_Incidente;
                 ViewBag.Unidad_Derramado = unidad_Derramado;
@@ -768,6 +970,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 ViewBag.Usuario = usuario;
                 ViewBag.Actos = actos;
                 ViewBag.Condiciones = condiciones;
+                ViewBag.FactoresPersonales = factoresPersonales;
+                ViewBag.FactoresLaborales = factoresLaborales;
 
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdReporte));
 
@@ -909,7 +1113,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 //  return RedirectToAction("Resumen");
 
             //}
-            return RedirectToAction("EditarReportePreliminarMA", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
+            return RedirectToAction("EditarReportePreliminar", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
         }
         [HttpPost]
         public async Task<IActionResult> EliminarReportePreliminar(string IdReporte)
@@ -1014,7 +1218,6 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 }
             }
         }
-
         public async Task<string> UploadZipFileAsync(IFormFile file, string newFileName)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))

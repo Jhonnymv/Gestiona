@@ -53,11 +53,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
                 outputItem.Id_Accion_Incidente_Reporte = item.Id_Accion_Incidente_Reporte;
                 outputItem.Id_Reporte_Preliminar = item.Id_Reporte_Preliminar;
+                outputItem.Tipo_Accion = item.Tipo_Accion;
                 outputItem.Accion_Inmediata = item.Accion_Inmediata;
                 outputItem.Id_Usuario = item.Id_Usuario;
+                outputItem.Id_Usuario2 = item.Id_Usuario2;
                 outputItem.Responsable = item.Responsable;
                 outputItem.Fecha = item.Fecha;
                 outputItem.Estatus = item.Estatus;
+                outputItem.Fecha_Verificacion = item.Fecha_Verificacion;
+                outputItem.Comentarios_Verificacion = item.Comentarios_Verificacion;
                 outputItem.Estado = item.Estado;
 
                 output.Add(outputItem);
@@ -76,6 +80,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 outputItem.Id_Reporte_Preliminar = item.Id_Reporte_Preliminar;
                 outputItem.Id_Acto_Condicion = item.Id_Acto_Condicion;
                 outputItem.Tipo_Acto_Condicion = item.Tipo_Acto_Condicion;
+                outputItem.Id_Factor_Causa_Incidente = item.Id_Factor_Causa_Incidente;
+                outputItem.Descripcion = item.Descripcion;
                 outputItem.Estado = item.Estado;
 
                 output.Add(outputItem);
@@ -89,10 +95,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Id_Accion_Incidente_Reporte = entity.Id_Accion_Incidente_Reporte;
             output.Id_Reporte_Preliminar = entity.Id_Reporte_Preliminar;
             output.Accion_Inmediata = entity.Accion_Inmediata;
+            output.Tipo_Accion = entity.Tipo_Accion;
             output.Id_Usuario = entity.Id_Usuario;
+            output.Id_Usuario2 = entity.Id_Usuario2;
             output.Responsable = entity.Responsable;
             output.Fecha = entity.Fecha;
             output.Estatus = entity.Estatus;
+            output.Evidencia = entity.Evidencia;
+            output.Fecha_Implementacion = entity.Fecha_Implementacion;
+            output.Comentarios_Implementacion = entity.Comentarios_Implementacion;
+            output.Fecha_Verificacion = entity.Fecha_Verificacion;
+            output.Comentarios_Verificacion = entity.Comentarios_Verificacion;
             output.Estado = entity.Estado;
             return output;
         }
@@ -104,6 +117,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Id_Reporte_Preliminar = entity.Id_Reporte_Preliminar;
             output.Id_Acto_Condicion = entity.Id_Acto_Condicion;
             output.Tipo_Acto_Condicion = entity.Tipo_Acto_Condicion;
+            output.Descripcion = entity.Descripcion;
+            output.Id_Factor_Causa_Incidente = entity.Id_Factor_Causa_Incidente;
             output.Estado = entity.Estado;
             return output;
         }

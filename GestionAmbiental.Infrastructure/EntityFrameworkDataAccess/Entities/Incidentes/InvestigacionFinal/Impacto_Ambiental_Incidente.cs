@@ -15,11 +15,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         //-Suelo
         [Column(TypeName = "int")]
         public int? Id_Tipo_Suelo { get; set; }
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(TypeName = "decimal(10,4)")]
         public double? Area_Suelo { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Unidad_Area_Suelo { get; set; }
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(TypeName = "decimal(10,4)")]
         public double? Cantidad_Suelo { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Unidad_Cantidad_Suelo { get; set; }
@@ -28,11 +28,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         //-Flora
         [Column(TypeName = "int")]
         public int? Id_Especie_Flora { get; set; }
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(TypeName = "decimal(10,4)")]
         public double? Unidad_Flora { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Unidad_Flora { get; set; }
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(TypeName = "decimal(10,4)")]
         public double? Cantidad_Residuo_Flora { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Unidad_Residuo_Flora { get; set; }
@@ -41,11 +41,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         //-Fauna
         [Column(TypeName = "int")]
         public int? Id_Especie_Fauna { get; set; }
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(TypeName = "decimal(10,4)")]
         public double? Unidad_Fauna { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Unidad_Fauna { get; set; }
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(TypeName = "decimal(10,4)")]
         public double? Cantidad_Residuo_Fauna { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Unidad_Residuo_Fauna { get; set; }
@@ -54,11 +54,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         //-Agua
         [Column(TypeName = "int")]
         public int? Id_Tipo_Agua { get; set; }
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(TypeName = "decimal(10,4)")]
         public double? Volumen_Agua { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Unidad_Agua { get; set; }
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(TypeName = "decimal(10,4)")]
         public double? Cantidad_Residuo_Agua { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Unidad_Residuo_Agua { get; set; }
@@ -77,11 +77,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public string Danio_Salud { get; set; }
         [Column(TypeName = "int")]
         public int? Personas_Afectadas { get; set; }
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(TypeName = "decimal(10,4)")]
         public double? Cantidad_RS { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Unidad_Cantidad_RS { get; set; }
-        [Column(TypeName = "decimal(10,2)")]
+        [Column(TypeName = "decimal(10,4)")]
         public double? Volumen_Rs { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Unidad_Volumen_RS { get; set; }

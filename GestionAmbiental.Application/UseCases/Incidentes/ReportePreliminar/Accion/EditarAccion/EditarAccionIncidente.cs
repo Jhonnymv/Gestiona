@@ -1,5 +1,7 @@
-﻿using GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar;
+﻿using GestionAmbiental.Application.Repositories.Incidentes.InvestigacionFinal;
+using GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar;
 using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Domain.Incidentes.ReportePreliminar;
 using System;
 using System.Collections.Generic;
@@ -41,6 +43,26 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Acc
             accion.Id_Accion_Incidente_Reporte = IdAccion;
             accion.Id_Reporte_Preliminar = IdReporte;
             accion.Estatus = Estatus;
+
+            return await _editarReportePreliminarReadOnlyRepository.EditarAccionCorrectivaReportePreliminar(accion);
+        }
+        public async Task<int> Execute(int IdAccion, int IdReporte, string tipoAccion, int IdUsuario, int IdUsuario2, string AccionInmediata, string Fecha, string Responsable, string Estatus)
+        {
+            var fechaAccion = Convert.ToDateTime(Fecha);
+
+            var accion = new Accion_Incidente_Reporte();
+            accion.Id_Accion_Incidente_Reporte = IdAccion;
+            accion.Id_Reporte_Preliminar = IdReporte;
+            accion.Tipo_Accion = tipoAccion;
+            accion.Accion_Inmediata = AccionInmediata;
+            if (IdUsuario != 0)
+                accion.Id_Usuario = IdUsuario;
+            if (IdUsuario2 != 0)
+                accion.Id_Usuario2 = IdUsuario2;
+            accion.Responsable = Responsable;
+            accion.Fecha = fechaAccion;
+            accion.Estatus = Estatus;
+            accion.Estado = EstadosIncidentes.Registrado.ToString();
 
             return await _editarReportePreliminarReadOnlyRepository.EditarAccionCorrectivaReportePreliminar(accion);
         }

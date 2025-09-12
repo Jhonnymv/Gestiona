@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Cau
 {
     public interface IRegistrarCausaIncidenteReporte
     {
-        Task<int> Execute(int Id_Reporte, int Id_Acto_Condicion, string Tipo_Acto_Condicion);
+        Task<int> Execute(int Id_Reporte, int Id_Acto_Condicion, string Tipo_Acto_Condicion, string Descripcion);
     }
 }

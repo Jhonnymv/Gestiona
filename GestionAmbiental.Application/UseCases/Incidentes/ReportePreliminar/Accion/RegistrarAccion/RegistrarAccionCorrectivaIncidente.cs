@@ -1,4 +1,6 @@
-﻿using GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar;
+﻿using GestionAmbiental.Application.Repositories.Incidentes.InvestigacionFinal;
+using GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar;
+using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Domain.Incidentes.ReportePreliminar;
 using System;
 using System.Collections.Generic;
@@ -28,6 +30,24 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Acc
             accion.Responsable = contratista;
             accion.Fecha = fechaAccion;
             accion.Estatus = estado;
+
+            return await _registrarReportePreliminarReadOnlyRepository.RegistrarAccionCorrectivaReportePreliminar(accion);
+        }
+        public async Task<int> Execute(int IdReporte, string tipoAccion, string AccionInmediata, int IdUsuario, int IdUsuario2, string Responsable, string Fecha, string Estatus)
+        {
+            var fechaAccion = Convert.ToDateTime(Fecha);
+
+            var accion = new Accion_Incidente_Reporte();
+            accion.Id_Reporte_Preliminar = IdReporte;
+            accion.Accion_Inmediata = AccionInmediata;
+            accion.Tipo_Accion = tipoAccion;
+            if (IdUsuario != 0)
+                accion.Id_Usuario = IdUsuario;
+            if (IdUsuario2 != 0)
+                accion.Id_Usuario2 = IdUsuario2;
+            accion.Responsable = Responsable;
+            accion.Fecha = fechaAccion;
+            accion.Estatus = Estatus;
 
             return await _registrarReportePreliminarReadOnlyRepository.RegistrarAccionCorrectivaReportePreliminar(accion);
         }

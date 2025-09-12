@@ -66,12 +66,56 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<int> EditarAccionCorrectivaReportePreliminar(Accion_Incidente_Reporte accion)
         {
             var entity = await _context.Accion_Incidente_Reporte.FirstOrDefaultAsync(x => x.Id_Accion_Incidente_Reporte.Equals(accion.Id_Accion_Incidente_Reporte));
-            entity.Accion_Inmediata = accion.Accion_Inmediata != null ? accion.Accion_Inmediata : entity.Accion_Inmediata;
-            entity.Id_Usuario = accion.Id_Usuario != null ? accion.Id_Usuario : entity.Id_Usuario;
-            entity.Responsable = accion.Responsable != null ? accion.Responsable : entity.Responsable ;
-            entity.Fecha = accion.Fecha != null ? accion.Fecha : entity.Fecha;
-            entity.Estatus = accion.Estatus != null ? accion.Estatus : entity.Estatus;
-            entity.Estado = accion.Estado != null ? accion.Estado : entity.Estado;
+            entity.Tipo_Accion = accion.Tipo_Accion??entity.Tipo_Accion;
+            entity.Accion_Inmediata = accion.Accion_Inmediata??entity.Accion_Inmediata;
+            entity.Id_Usuario = accion.Id_Usuario??entity.Id_Usuario;
+            entity.Id_Usuario2 = accion.Id_Usuario2??entity.Id_Usuario2;
+            entity.Responsable = accion.Responsable ?? entity.Responsable;
+            entity.Fecha = accion.Fecha ?? entity.Fecha;
+            entity.Estatus = accion.Estatus ?? entity.Estatus;
+            entity.Fecha_Verificacion = accion.Fecha_Verificacion ?? entity.Fecha_Verificacion;
+            entity.Comentarios_Verificacion = accion.Comentarios_Verificacion ?? entity.Comentarios_Verificacion;
+            entity.Estado = accion.Estado;
+
+            _context.Accion_Incidente_Reporte.Update(entity);
+
+            await _context.SaveChangesAsync();
+
+            return entity.Id_Accion_Incidente_Reporte;
+        }
+        public async Task<int> ImplementarAccionCorrectivaReportePreliminar(Accion_Incidente_Reporte accion)
+        {
+            var entity = await _context.Accion_Incidente_Reporte.FirstOrDefaultAsync(x => x.Id_Accion_Incidente_Reporte.Equals(accion.Id_Accion_Incidente_Reporte));
+            entity.Evidencia = accion.Evidencia;
+            entity.Comentarios_Implementacion = accion.Comentarios_Implementacion;
+            entity.Fecha_Implementacion = accion.Fecha_Implementacion;
+            entity.Estado = accion.Estado;
+
+            _context.Accion_Incidente_Reporte.Update(entity);
+
+            await _context.SaveChangesAsync();
+
+            return entity.Id_Accion_Incidente_Reporte;
+        }
+        public async Task<int> VerificarAccionCorrectivaReportePreliminar(Accion_Incidente_Reporte accion)
+        {
+            var entity = await _context.Accion_Incidente_Reporte.FirstOrDefaultAsync(x => x.Id_Accion_Incidente_Reporte.Equals(accion.Id_Accion_Incidente_Reporte));
+            entity.Comentarios_Verificacion = accion.Comentarios_Verificacion;
+            entity.Estatus = accion.Estatus;
+            entity.Fecha_Verificacion = accion.Fecha_Verificacion;
+            entity.Estado = accion.Estado;
+
+            _context.Accion_Incidente_Reporte.Update(entity);
+
+            await _context.SaveChangesAsync();
+
+            return entity.Id_Accion_Incidente_Reporte;
+        }
+        public async Task<int> AmpliarFechaAccion(Accion_Incidente_Reporte accion)
+        {
+            var entity = await _context.Accion_Incidente_Reporte.FirstOrDefaultAsync(x => x.Id_Accion_Incidente_Reporte.Equals(accion.Id_Accion_Incidente_Reporte));
+            entity.Fecha = accion.Fecha;
+            entity.Estado = accion.Estado;
 
             _context.Accion_Incidente_Reporte.Update(entity);
 
@@ -84,6 +128,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var entity = await _context.Causa_Incidente_Reporte.FirstOrDefaultAsync(x => x.Id_Causa_Incidente_Reporte.Equals(causa.Id_Causa_Incidente_Reporte));
             entity.Id_Acto_Condicion = causa.Id_Acto_Condicion;
             entity.Tipo_Acto_Condicion = causa.Tipo_Acto_Condicion;
+            entity.Id_Factor_Causa_Incidente = causa.Id_Factor_Causa_Incidente;
+            entity.Descripcion = causa.Descripcion;
             entity.Estado = causa.Estado;
 
             _context.Causa_Incidente_Reporte.Update(entity);
@@ -152,7 +198,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return false;
         }
-
         public async Task<int> EliminarReportePreliminar(int IdReportePreliminar)
         {
             var entity = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(IdReportePreliminar));
@@ -174,7 +219,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return entity.Id_Reporte_Preliminar;
         }
-
         public async Task<bool> EditarEvidenciasReporte(Reporte_Preliminar_Incidente input)
         {
             try

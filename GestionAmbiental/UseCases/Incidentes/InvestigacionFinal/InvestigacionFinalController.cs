@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetImpactoAmbiental;
-using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetInvestigacionesFinales;
-using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetInvestigacionFinal;
-using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.RegistrarInvestigacionFinal;
-using GestionAmbiental.Application.UseCases.Incidentes.Items;
-using GestionAmbiental.Domain.Enum;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetEstadoInvestigacion;
+﻿using GestionAmbiental.Application.UseCases.GestorUsuarios.GetRolUsuario;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Accion.AmpliarFechaAccion;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Accion.EditarAccion;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Accion.EliminarAccion;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Accion.GetAcciones;
@@ -19,6 +8,15 @@ using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Causa.
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Causa.EliminarCausa;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Causa.GetCausa;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Causa.RegistrarCausa;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.EditarAdminInvestigacion;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.EditarInvestigacionFinal;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.EliminarEvidenciaInvestigacion;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetEstadoInvestigacion;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetEvidenciaInvestigacion;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetEvidenciasNombre;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetImpactoAmbiental;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetInvestigacionesFinales;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetInvestigacionFinal;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Involucrado.EditarInvolucrado;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Involucrado.EliminarInvolucrado;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Involucrado.GetInvolucrados;
@@ -27,26 +25,30 @@ using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Produc
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Producto.EliminarProducto;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Producto.GetProductos;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Producto.RegistrarProductoDerramado;
-using System.Security.Cryptography;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using Newtonsoft.Json;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.RegistrarInvestigacionFinal;
+using GestionAmbiental.Application.UseCases.Incidentes.Items;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
-using Renci.SshNet;
-using System.IO.Compression;
-using System.Text;
-using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.EditarInvestigacionFinal;
-using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Accion.AmpliarFechaAccion;
-using Microsoft.AspNetCore.DataProtection;
-using GestionAmbiental.Application.UseCases.GestorUsuarios.GetRolUsuario;
-using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.EliminarEvidenciaInvestigacion;
-using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetEvidenciaInvestigacion;
-using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.EditarAdminInvestigacion;
-using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetEvidenciasNombre;
-using Serilog;
-using Microsoft.AspNetCore.Hosting;
-using GestionAmbiental.UseCases.Util.Interfaces;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.ValueObjects;
+using GestionAmbiental.UseCases.Util.Interfaces;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using NPOI.HPSF;
+using Renci.SshNet;
+using Serilog;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+using static GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion.DescargaInspeccionController;
 
 namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 {
@@ -801,7 +803,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_involucrados += "<td>" + fila.Empresa + "</td>";
                     else
                         filas_involucrados += "<td>_</td>";
-                    if ((estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
+                    if ((estadoInvestigacion.Equals(EstadosIncidentes.Pendiente.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
                     {
                         filas_involucrados += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarInvolucrado(" + fila.Id_Involucrado_Incidente + ")\">Editar</button></td>";
                         filas_involucrados += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarInvolucrado(" + fila.Id_Involucrado_Incidente + ")\">Eliminar</button></td>";
@@ -883,7 +885,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     filas_productos += "<td>" + fila.Estado_Equipo_Responsable + "</td>";
                     filas_productos += "<td>" + fila.Cantidad_Recuperado + " " + fila.Unidad + "</td>";
                     filas_productos += "<td>" + fila.Cantidad_No_Recuperado + " " + fila.Unidad + "</td>";
-                    if ((estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
+                    if ((estadoInvestigacion.Equals(EstadosIncidentes.Pendiente.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
                     {
                         filas_productos += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarProducto(" + fila.Id_Producto_Derramado_Incidente + ")\">Editar</button></td>";
                         filas_productos += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarProducto(" + fila.Id_Producto_Derramado_Incidente + ")\">Eliminar</button></td>";
@@ -983,7 +985,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_causas_inmediatas += "<td>" + fila.Descripcion + "</td>";
                     else
                         filas_causas_inmediatas += "<td>_</td>";
-                    if ((estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
+                    if ((estadoInvestigacion.Equals(EstadosIncidentes.Pendiente.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
                     {
                         filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
                         filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
@@ -1000,7 +1002,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_causas_basicas += "<td>" + fila.Descripcion + "</td>";
                     else
                         filas_causas_basicas += "<td>_</td>";
-                    if ((estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
+                    if ((estadoInvestigacion.Equals(EstadosIncidentes.Pendiente.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
                     {
                         filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
                         filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
@@ -1180,7 +1182,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_acciones_inmediatas += "<td>_</td>";
                     filas_acciones_inmediatas += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
                     filas_acciones_inmediatas += "<td>" + fila.Estatus + "</td>";
-                    if ((estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
+                    if ((estadoReporte.Equals(EstadosIncidentes.Pendiente.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
                     {
                         filas_acciones_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
                         filas_acciones_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
@@ -1210,7 +1212,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_acciones_correctivas += "<td>_</td>";
                     filas_acciones_correctivas += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
                     filas_acciones_correctivas += "<td>" + fila.Estatus + "</td>";
-                    if ((estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
+                    if ((estadoReporte.Equals(EstadosIncidentes.Pendiente.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
                     {
                         filas_acciones_correctivas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
                         filas_acciones_correctivas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
@@ -1651,7 +1653,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 //else
                 //    return View("Resumen");
             //}
-            return RedirectToAction("EditarInvestigacion", new { IdInvestigacion = model.Id_Encriptado_Investigacion_Final });
+            return View("Resumen");
 
         }
         [HttpPost]
@@ -1973,6 +1975,96 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             }
             return RedirectToAction("DetalleInvestigacion", new { IdInvestigacion = _protector.Protect(model.Id_Investigacion_Final.ToString()) });
         }
+        [HttpPost]
+        public async Task<IActionResult> ObtenerImagenesCargadas(string imagenes)
+        {
+            dynamic response;
+            if (HttpContext.Session.GetString("SessionUser") != null && imagenes != null)
+            {
+                var listaImagenes = new List<string>(imagenes.Split(','));
+                var archivos = JsonConvert.DeserializeObject<List<EvidenciaCategoria>>(imagenes);
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var imagesSrc = new List<ImagenCargada>();
+
+                for (int i = 0; i < archivos.Count; i++)
+                {
+                    foreach (var evidencia in archivos[i].Evidencias)
+                    {
+                        try
+                        {
+                            var encryptedFile = "";
+                            if (archivos[i].Categoria == "papel")
+                                encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(evidencia.NombreCarga, userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPapel);
+                            else if (archivos[i].Categoria == "persona")
+                                encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(evidencia.NombreCarga, userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPersona);
+                            else if (archivos[i].Categoria == "posicion")
+                                encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(evidencia.NombreCarga, userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPosicion);
+                            else if (archivos[i].Categoria == "parte")
+                                encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(evidencia.NombreCarga, userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPartes);
+                            /* Save encrypted file in temp path*/
+                            var tempPath = Path.GetTempPath();
+
+                            var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
+                            if (!Directory.Exists(SGATempPath))
+                            {
+                                Directory.CreateDirectory(SGATempPath);
+                            }
+                            var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                            var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
+
+                            /*decrypt file*/
+                            var decryptedFileName = "desencriptado" + i.ToString() + Path.GetExtension(evidencia.NombreCarga);
+                            await _gestorEncriptado.DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                            /*unzip file*/
+                            if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                                filePath += Path.DirectorySeparatorChar;
+
+                            using (ZipArchive archive = ZipFile.OpenRead(archivePath + decryptedFileName))
+                            {
+                                foreach (ZipArchiveEntry entry in archive.Entries)
+                                {
+                                    filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
+                                    if (filePath.StartsWith(filePath, StringComparison.Ordinal))
+                                        entry.ExtractToFile(filePath);
+                                }
+                            }
+                            byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+                            var newFileName = evidencia.NombreCarga.Replace(Path.GetExtension(evidencia.NombreCarga), Path.GetExtension(filePath));
+                            /*read decrypted file*/
+                            //byte[] imageByteData = System.IO.File.ReadAllBytes(archivePath + decryptedFileName);
+                            string imageBase64Data = Convert.ToBase64String(bytes);
+                            string imageDataURL = string.Format("data:image/png;base64,{0}", imageBase64Data);
+
+                            imagesSrc.Add(new ImagenCargada
+                            {
+                                Nombre = evidencia.NombreOrigen,
+                                NombreCarga = evidencia.NombreCarga,
+                                tipo = archivos[i].Categoria,
+                                Src = imageDataURL,
+                                EsImagen = (evidencia.ExtOrigen.ToLower() == ".jpg" || evidencia.ExtOrigen.ToLower() == ".jpeg" || evidencia.ExtOrigen.ToLower() == ".png" || evidencia.ExtCarga.ToLower() == ".jpg" || evidencia.ExtCarga.ToLower() == ".jpeg" || evidencia.ExtCarga.ToLower() == ".png")
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            //No se encontró el archivo 
+                        }
+                    }
+                }
+                response = new
+                {
+                    imagenes = JsonConvert.SerializeObject(imagesSrc)
+                };
+            }
+            else
+            {
+                response = new
+                {
+                    imagenes = "[]"
+                };
+            }
+            return Ok(response);
+        }
         //Carga y descarga de archivos
         private string CreateUniqueFileName(int index, string tipo)
         {
@@ -2044,10 +2136,22 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     /*decrypt file*/
                     var decryptedFileName = archivePath + "desencriptado.zip";
                     await _gestorEncriptado.DecryptFileAsync(encryptedFile, decryptedFileName);
-                    /*read decrypted file*/
-                    FileStream stream = new FileStream(decryptedFileName, FileMode.Open);
+                    //4. descomprimir en carpeta temporal submission
+                    if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                        filePath += Path.DirectorySeparatorChar;
 
-                    return File(stream, GetContentType(decryptedFileName), fileName);
+                    using (ZipArchive archive = ZipFile.OpenRead(decryptedFileName))
+                    {
+                        foreach (ZipArchiveEntry entry in archive.Entries)
+                        {
+                            filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
+                            if (filePath.StartsWith(filePath, StringComparison.Ordinal))
+                                entry.ExtractToFile(filePath);
+                        }
+                    }
+                    byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+                    var newFileName = fileName.Replace(Path.GetExtension(fileName), Path.GetExtension(filePath));
+                    return File(bytes, GetContentType(filePath), newFileName);
                 }
                 catch (Exception e)
                 {
@@ -2117,6 +2221,14 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         {
             public string Categoria { get; set; }
             public List<NombreEvidencia> Evidencias { get; set; }
+        }
+        private class ImagenCargada
+        {
+            public string Nombre { get; set; }
+            public string Src { get; set; }
+            public string NombreCarga { get; set; }
+            public string tipo { get; set; }
+            public bool EsImagen { get; set; }
         }
     }
 }

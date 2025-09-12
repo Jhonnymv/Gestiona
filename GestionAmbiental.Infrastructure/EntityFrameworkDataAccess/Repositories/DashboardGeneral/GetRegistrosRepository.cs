@@ -234,6 +234,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             foreach (var accion in acciones)
             {
                 var responsable1 = usuarios.Find(x => x.Id_Usuario.Equals(accion.Id_Usuario));
+                var responsable2 = usuarios.Find(x => x.Id_Usuario.Equals(accion.Id_Usuario2));
                 var reporte = reportesPrelim.Find(x => x.Id_Reporte_Preliminar.Equals(accion.Id_Reporte_Preliminar));
                 var gerencia = gerencias.Find(x => x.Id_Gerencia.Equals(reporte.Id_Gerencia_Responsable));
 
@@ -252,19 +253,33 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             Estado = gerencia.Estado
                         }
                     },
+                    Tipo_Accion = accion.Tipo_Accion,
                     Accion_Inmediata = accion.Accion_Inmediata,
                     Responsable = accion.Responsable,
+                    Comentarios_Implementacion = accion.Comentarios_Implementacion,
+                    Comentarios_Verificacion = accion.Comentarios_Verificacion,
                     Fecha = accion.Fecha,
+                    Fecha_Implementacion = accion.Fecha_Implementacion,
+                    Fecha_Verificacion = accion.Fecha_Verificacion,
                     Estatus = accion.Estatus,
                     Estado = accion.Estado
                 };
                 if (responsable1 != null)
                 {
-                    item.ResponsableMarcobre = new Domain.ValueObjects.Usuario
+                    item.Usuario = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = responsable1.Id_Usuario,
                         Nombres = responsable1.Nombres.ToUpper(),
                         Apellidos = responsable1.Apellidos.ToUpper()
+                    };
+                }
+                if (responsable2 != null)
+                {
+                    item.Usuario2 = new Domain.ValueObjects.Usuario
+                    {
+                        IdUsuario = responsable2.Id_Usuario,
+                        Nombres = responsable2.Nombres.ToUpper(),
+                        Apellidos = responsable2.Apellidos.ToUpper()
                     };
                 }
                 output.Add(item);

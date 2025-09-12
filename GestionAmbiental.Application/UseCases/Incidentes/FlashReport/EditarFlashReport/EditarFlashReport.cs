@@ -88,7 +88,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.FlashReport.EditarFla
                         flashReport.Id_Nivel_Incidente,
                         flashReport.Id_Gerencia,
                         flashReport.Fecha_Hora,
-                        flashReport.Id_Unidad_Cantidad_Derramada,
+                        flashReport.Id_Componente_Ambiental,
                         flashReport.Cantidad_Derramada,
                         flashReport.Id_Unidad_Cantidad_Derramada,
                         flashReport.Lugar,

@@ -13,16 +13,30 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public int Id_Accion_Incidente_Reporte { get; set; }
         [Column(TypeName = "int")]
         public int Id_Reporte_Preliminar { get; set; }
+        [Column(TypeName = "varchar(15)")]
+        public string Tipo_Accion { get; set; }
         [Column(TypeName = "varchar(1100)")]
         public string Accion_Inmediata { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Usuario { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Usuario2 { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Responsable { get; set; }
+        [Column(TypeName = "text")]
+        public string Evidencia { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? Fecha { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string Estatus { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? Fecha_Implementacion { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string Comentarios_Implementacion { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? Fecha_Verificacion { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string Comentarios_Verificacion { get; set; }
         [Column(TypeName = "varchar(15)")]
         public string Estado { get; set; }
     }

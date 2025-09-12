@@ -301,7 +301,9 @@ $("#btn_nueva_accion").on("click", function () {
 });
 function ResetInputsAccion() {
     $('#input_descripcion_accion').val("");
+    $('#select_tipo_accion').val("");
     $('#select_usuarios_accion').val(0);
+    $('#select_usuarios_accion2').val(0);
     $('#input_contratista_accion').val("");
     $('#input_fecha_accion').val("");
     $('#select_estatus').val("");
@@ -309,10 +311,11 @@ function ResetInputsAccion() {
 function ValidateInputsAccion() {
     var result = true;
     if ($('#input_descripcion_accion').val() == "" ||
+        $('#select_tipo_accion').val() == "" ||
         $('#input_fecha_accion').val() == "" ||
         $('#select_estatus').val() == "")
         result = false;
-    if ($('#select_usuarios_accion').val() == 0 &&
+    if (($('#select_usuarios_accion').val() == 0 || $('#select_usuarios_accion2').val() == 0) &&
         $('#input_contratista_accion').val() == "")
         result = false;
     return result;
@@ -332,8 +335,10 @@ function EditarAccion(idAccion) {
             $("#btn_guardar_accion").hide();
 
             $("#Id_Accion").val(response.idAccion);
+            $("#select_tipo_accion").val(response.tipo);
             $("#input_descripcion_accion").val(response.accion);
             $("#select_usuarios_accion").val(response.idUsuario);
+            $("#select_usuarios_accion2").val(response.idUsuario2);
             $("#input_contratista_accion").val(response.responsableCon);
             $("#input_fecha_accion").val(response.fecha);
             $("#select_estatus").val(response.estatus);
@@ -350,9 +355,12 @@ function EliminarAccion(idAccion) {
                 IdAccion: idAccion,
             },
             success: (response) => {
-                $('#tabla_acciones tbody').empty();
-                $('#tabla_acciones tbody').html(response.filas_acciones);
+                $('#tabla_acciones_inmediatas tbody').empty();
+                $('#tabla_acciones_inmediatas tbody').html(response.filas_acciones_inmediatas);
+                $('#tabla_acciones_correctivas tbody').empty();
+                $('#tabla_acciones_correctivas tbody').html(response.filas_acciones_correctivas);
                 $('#NAcciones').val(response.nAcciones);
+                dataModulo();
             }
         });
     }
@@ -365,8 +373,10 @@ $("#btn_guardar_accion").on("click", function () {
             url: "/ReportePreliminar/NuevaAccion",
             data: {
                 IdReporte: $("#Id_Reporte_Preliminar").val(),
-                descripcion: $("#input_descripcion_accion").val(),
+                tipoAccion: $("#select_tipo_accion").val(),
+                accion: $("#input_descripcion_accion").val(),
                 usuario: $('#select_usuarios_accion').val(),
+                usuario2: $('#select_usuarios_accion2').val(),
                 contratista: $('#input_contratista_accion').val(),
                 fecha: $('#input_fecha_accion').val(),
                 estado: $('#select_estatus').val()
@@ -374,8 +384,10 @@ $("#btn_guardar_accion").on("click", function () {
             success: (response) => {
                 ResetInputsAccion();
                 $("#modal_accion").modal('hide');
-                $('#tabla_acciones tbody').empty();
-                $('#tabla_acciones tbody').html(response.filas_acciones);
+                $('#tabla_acciones_inmediatas tbody').empty();
+                $('#tabla_acciones_inmediatas tbody').html(response.filas_acciones_inmediatas);
+                $('#tabla_acciones_correctivas tbody').empty();
+                $('#tabla_acciones_correctivas tbody').html(response.filas_acciones_correctivas);
                 $('#NAcciones').val(response.nAcciones);
                 dataModulo();
             }
@@ -392,8 +404,10 @@ $("#btn_editar_accion").on("click", function () {
             data: {
                 IdAccion: $("#Id_Accion").val(),
                 IdReporte: $("#Id_Reporte_Preliminar").val(),
-                descripcion: $("#input_descripcion_accion").val(),
+                tipoAccion: $("#select_tipo_accion").val(),
+                accion: $("#input_descripcion_accion").val(),
                 usuario: $('#select_usuarios_accion').val(),
+                usuario2: $('#select_usuarios_accion2').val(),
                 contratista: $('#input_contratista_accion').val(),
                 fecha: $('#input_fecha_accion').val(),
                 estado: $('#select_estatus').val()
@@ -401,8 +415,10 @@ $("#btn_editar_accion").on("click", function () {
             success: (response) => {
                 ResetInputsAccion();
                 $("#modal_accion").modal('hide');
-                $('#tabla_acciones tbody').empty();
-                $('#tabla_acciones tbody').html(response.filas_acciones);
+                $('#tabla_acciones_inmediatas tbody').empty();
+                $('#tabla_acciones_inmediatas tbody').html(response.filas_acciones_inmediatas);
+                $('#tabla_acciones_correctivas tbody').empty();
+                $('#tabla_acciones_correctivas tbody').html(response.filas_acciones_correctivas);
                 $('#NAcciones').val(response.nAcciones);
                 dataModulo();
             }
@@ -414,16 +430,24 @@ $("#btn_editar_accion").on("click", function () {
 function ResetInputsCausa() {
     $('#select_actos').val(0);
     $('#select_condiciones').val(0);
+    $('#select_factores_personales').val(0);
+    $('#select_factores_laboral').val(0);
+    $('#input_descripcion_causa').val("");
 }
 function HideInputsCausa() {
     $("#actos_subestandar").hide();
     $("#condiciones_subestandar").hide();
+    $("#factores_personales").hide();
+    $("#factores_laborales").hide();
+    $("#descripcion_causa").hide();
 }
-function ValidateInputsCausa(actoCondicion) {
+function ValidateInputsCausa(tipoCausa) {
     var result = true;
-    switch (actoCondicion) {
-        case "Acto": if ($('#select_actos').val() == 0) result = false; break;
-        case "Condicion": if ($('#select_condiciones').val() == 0) result = false; break;
+    switch (tipoCausa) {
+        case "Acto": if ($('#select_actos').val() == 0 && $('#input_descripcion_causa').val() == "") result = false; break;
+        case "Condicion": if ($('#select_condiciones').val() == 0 && $('#input_descripcion_causa').val() == "") result = false; break;
+        case "FactorP": if ($('#select_factores_personales').val() == 0 && $('#input_descripcion_causa').val() == "") result = false; break;
+        case "FactorL": if ($('#select_factores_laboral').val() == 0 && $('#input_descripcion_causa').val() == "") result = false; break;
         case "": result = false; break;
     }
     return result;
@@ -439,24 +463,33 @@ function EditarCausa(idCausa) {
             IdCausa: idCausa
         },
         success: (response) => {
-            
-
             $("#modal_causa").modal('show');
             $("#btn_editar_causa").show();
             $("#btn_guardar_causa").hide();
 
             $("#Id_Causa").val(response.idCausa);
+            $('#input_descripcion_causa').val(response.descripcion)
+            $("#descripcion_causa").show();
             if (response.tipoActoCondicion == "Acto Subestándar") {
                 $("#actos_subestandar").show();
                 $("#select_acto_condicion").val("Acto");
                 $("#select_actos").val(response.idActoCondicion);
             }
             else if (response.tipoActoCondicion == "Condición Subestándar") {
-                $("#select_acto_condicion").val("Condicion");
                 $("#condiciones_subestandar").show();
+                $("#select_acto_condicion").val("Condicion");
                 $("#select_condiciones").val(response.idActoCondicion);
             }
-
+            else if (response.tipoActoCondicion == "Factor Personal") {
+                $("#factores_personales").show();
+                $("#select_acto_condicion").val("FactorP");
+                $("#select_factores_personales").val(response.idFactor);
+            }
+            else if (response.tipoActoCondicion == "Factor Laboral") {
+                $("#factores_laborales").show();
+                $("#select_acto_condicion").val("FactorL");
+                $("#select_factores_laboral").val(response.idFactor);
+            }
         }
     });
 }
@@ -470,9 +503,12 @@ function EliminarCausa(idCausa) {
                 IdCausa: idCausa,
             },
             success: (response) => {
-                $('#tabla_causas tbody').empty()
-                $('#tabla_causas tbody').html(response.filas_causas)
+                $('#tabla_causas_inmediatas tbody').empty();
+                $('#tabla_causas_inmediatas tbody').html(response.filas_causas_inmediatas);
+                $('#tabla_causas_basicas tbody').empty();
+                $('#tabla_causas_basicas tbody').html(response.filas_causas_basicas);
                 $('#NCausas').val(response.nCausas);
+                dataModulo();
             }
         });
     }
@@ -490,9 +526,19 @@ $("#select_acto_condicion").on("change", function () {
     HideInputsCausa();
     if ($("#select_acto_condicion").val() == "Acto") {
         $("#actos_subestandar").show();
+        $("#descripcion_causa").show();
     }
     if ($("#select_acto_condicion").val() == "Condicion") {
         $("#condiciones_subestandar").show();
+        $("#descripcion_causa").show();
+    }
+    if ($("#select_acto_condicion").val() == "FactorP") {
+        $("#factores_personales").show();
+        $("#descripcion_causa").show();
+    }
+    if ($("#select_acto_condicion").val() == "FactorL") {
+        $("#factores_laborales").show();
+        $("#descripcion_causa").show();
     }
 });
 $("#btn_guardar_causa").on("click", function () {
@@ -504,6 +550,12 @@ $("#btn_guardar_causa").on("click", function () {
     } else if ($("#select_acto_condicion").val() == "Condicion") {
         IdActoCondicion = $("#select_condiciones").val();
         ActoCondicion = "Condición Subestándar";
+    } else if ($("#select_acto_condicion").val() == "FactorP") {
+        IdActoCondicion = $("#select_factores_personales").val();
+        ActoCondicion = "Factor Personal";
+    } else if ($("#select_acto_condicion").val() == "FactorL") {
+        IdActoCondicion = $("#select_factores_laboral").val();
+        ActoCondicion = "Factor Laboral";
     }
     $("#danger_causa").html("");
     if (ValidateInputsCausa($("#select_acto_condicion").val()))
@@ -513,14 +565,17 @@ $("#btn_guardar_causa").on("click", function () {
             data: {
                 IdReporte: $("#Id_Reporte_Preliminar").val(),
                 IdActoCondicion: IdActoCondicion,
-                Acto_Condicion: ActoCondicion
+                Acto_Condicion: ActoCondicion,
+                Descripcion: $("#input_descripcion_causa").val()
             },
             success: (response) => {
+                $("#modal_causa").modal('hide');
                 HideInputsCausa();
                 ResetInputsCausa();
-                $("#modal_causa").modal('hide');
-                $('#tabla_causas tbody').empty()
-                $('#tabla_causas tbody').html(response.filas_causas)
+                $('#tabla_causas_inmediatas tbody').empty();
+                $('#tabla_causas_inmediatas tbody').html(response.filas_causas_inmediatas);
+                $('#tabla_causas_basicas tbody').empty();
+                $('#tabla_causas_basicas tbody').html(response.filas_causas_basicas);
                 $('#NCausas').val(response.nCausas);
                 dataModulo();
             }
@@ -537,6 +592,12 @@ $("#btn_editar_causa").on("click", function () {
     } else if ($("#select_acto_condicion").val() == "Condicion") {
         IdActoCondicion = $("#select_condiciones").val();
         ActoCondicion = "Condición Subestándar";
+    } else if ($("#select_acto_condicion").val() == "FactorP") {
+        IdActoCondicion = $("#select_factores_personales").val();
+        ActoCondicion = "Factor Personal";
+    } else if ($("#select_acto_condicion").val() == "FactorL") {
+        IdActoCondicion = $("#select_factores_laboral").val();
+        ActoCondicion = "Factor Laboral";
     }
     $("#danger_causa").html("");
     if (ValidateInputsCausa($("#select_acto_condicion").val()) && ($("#Id_Causa").val() != "" || $("#Id_Causa").val() != 0))
@@ -547,14 +608,17 @@ $("#btn_editar_causa").on("click", function () {
                 IdReporte: $("#Id_Reporte_Preliminar").val(),
                 IdCausa: $("#Id_Causa").val(),
                 IdActoCondicion: IdActoCondicion,
-                Acto_Condicion: ActoCondicion
+                Acto_Condicion: ActoCondicion,
+                Descripcion: $("#input_descripcion_causa").val()
             },
             success: (response) => {
                 HideInputsCausa();
                 ResetInputsCausa();
                 $("#modal_causa").modal('hide');
-                $('#tabla_causas tbody').empty()
-                $('#tabla_causas tbody').html(response.filas_causas)
+                $('#tabla_causas_inmediatas tbody').empty();
+                $('#tabla_causas_inmediatas tbody').html(response.filas_causas_inmediatas);
+                $('#tabla_causas_basicas tbody').empty();
+                $('#tabla_causas_basicas tbody').html(response.filas_causas_basicas);
                 $('#NCausas').val(response.nCausas);
                 dataModulo();
             }

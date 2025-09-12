@@ -56,7 +56,7 @@
                             <div class="col-12 col-sm-6 col-lg-6">
                                 <label asp-for="Num_Trabajadores">N° Trabajadores en el Centro Laboral</label>
                                 <span class="text-danger" asp-validation-for="Num_Trabajadores"></span>
-                                <input type="number" class="form-control" asp-for="Num_Trabajadores" />
+                                <input type="number" step="any" class="form-control" asp-for="Num_Trabajadores" />
                             </div>
                         </div>
                     </div>
@@ -92,7 +92,7 @@
                                 </div>
                                 <div class="col-12 col-sm-4 col-lg-4">
                                     <label asp-for="Num_Trabajadores_Contratista">N° Trabajadores en el Centro Laboral</label>
-                                    <input type="number" class="form-control" asp-for="Num_Trabajadores_Contratista" />
+                                    <input type="number" step="any" class="form-control" asp-for="Num_Trabajadores_Contratista" />
                                 </div>
                             </div>
                         </div>
@@ -122,7 +122,7 @@
                                 </div>
                                 <div class="col-12 col-sm-4 col-lg-4">
                                     <label asp-for="Num_Trabajadores_SubContratista">N° Trabajadores en el Centro Laboral</label>
-                                    <input type="number" class="form-control" asp-for="Num_Trabajadores_SubContratista" />
+                                    <input type="number" step="any" class="form-control" asp-for="Num_Trabajadores_SubContratista" />
                                 </div>
                             </div>
                         </div>
@@ -349,7 +349,7 @@
                                             <div class="row mt-0 mb-0 d-flex align-items-end">
                                                 <div class="col-8 mt-0 mb-0">
                                                     <label asp-for="ImpactoAmbiental.Area_Suelo">Área afectada</label>
-                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Area_Suelo" disabled />
+                                                    <input type="number" step="any" class="form-control" asp-for="ImpactoAmbiental.Area_Suelo" disabled />
                                                 </div>
                                                 <div class="col-4 mt-0 mb-0">
                                                     <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cantidad_Suelo"></span>
@@ -364,7 +364,7 @@
                                             <div class="row mt-0 mb-0 d-flex align-items-end">
                                                 <div class="col-8 mt-0 mb-0">
                                                     <label asp-for="ImpactoAmbiental.Cantidad_Suelo">Cantidad de tierra impregnada</label>
-                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Suelo" disabled />
+                                                    <input type="number" step="any" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Suelo" disabled />
                                                 </div>
                                                 <div class="col-4 mt-0 mb-0">
                                                     <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Cantidad_Suelo"></span>
@@ -402,7 +402,7 @@
                                                 <div class="col-6 mt-0 mb-0">
                                                     <label asp-for="ImpactoAmbiental.Unidad_Flora">Unidades de flora</label>
                                                     <span class="text-danger" asp-validation-for="ImpactoAmbiental.Unidad_Flora"></span>
-                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Unidad_Flora" disabled />
+                                                    <input type="number" step="any" class="form-control" asp-for="ImpactoAmbiental.Unidad_Flora" disabled />
                                                 </div>
                                                 <div class="col-6 mt-0 mb-0">
                                                     <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Flora"></span>
@@ -418,7 +418,7 @@
                                                 <div class="col-6 mt-0 mb-0">
                                                     <label asp-for="ImpactoAmbiental.Cantidad_Residuo_Flora">Cantidad de residuos generados:</label>
                                                     <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cantidad_Residuo_Flora"></span>
-                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Flora" disabled />
+                                                    <input type="number" step="any" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Flora" disabled />
                                                 </div>
                                                 <div class="col-6 mt-0 mb-0">
                                                     <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Residuo_Flora"></span>
@@ -456,7 +456,7 @@
                                                 <div class="col-6 mt-0 mb-0">
                                                     <label asp-for="ImpactoAmbiental.Unidad_Fauna">Número de individuos afectados</label>
                                                     <span class="text-danger" asp-validation-for="ImpactoAmbiental.Unidad_Fauna"></span>
-                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Unidad_Fauna" disabled />
+                                                    <input type="number" step="any" class="form-control" asp-for="ImpactoAmbiental.Unidad_Fauna" disabled />
                                                 </div>
                                                 <div class="col-6 mt-0 mb-0">
                                                     <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Fauna"></span>
@@ -472,7 +472,7 @@
                                                 <div class="col-6 mt-0 mb-0">
                                                     <label asp-for="ImpactoAmbiental.Cantidad_Residuo_Fauna">Cantidad de residuos generados:</label>
                                                     <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cantidad_Residuo_Fauna"></span>
-                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Fauna" disabled />
+                                                    <input type="number" step="any" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Fauna" disabled />
                                                 </div>
                                                 <div class="col-6 mt-0 mb-0">
                                                     <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Residuo_Fauna" asp-items="ViewBag.Unidad_Peso" disabled>
@@ -509,7 +509,7 @@
                                                 <div class="col-6 mt-0 mb-0">
                                                     <label asp-for="ImpactoAmbiental.Volumen_Agua">Volumen de agua alterada</label>
                                                     <span class="text-danger" asp-validation-for="ImpactoAmbiental.Volumen_Agua"></span>
-                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Volumen_Agua" disabled />
+                                                    <input type="number" step="any" class="form-control" asp-for="ImpactoAmbiental.Volumen_Agua" disabled />
                                                 </div>
                                                 <div class="col-6 mt-0 mb-0">
                                                     <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Agua"></span>
@@ -525,7 +525,7 @@
                                                 <div class="col-6 mt-0 mb-0">
                                                     <label asp-for="ImpactoAmbiental.Cantidad_Residuo_Agua">Cantidad de residuos generados:</label>
                                                     <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cantidad_Residuo_Agua"></span>
-                                                    <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Agua" disabled />
+                                                    <input type="number" step="any" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Agua" disabled />
                                                 </div>
                                                 <div class="col-6 mt-0 mb-0">
                                                     <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Residuo_Agua"></span>
@@ -601,7 +601,7 @@
                                         <div class="col-12 col-sm-4 col-lg-4">
                                             <label asp-for="ImpactoAmbiental.Personas_Afectadas">Número de personas afectadas</label>
                                             <span class="text-danger" asp-validation-for="ImpactoAmbiental.Personas_Afectadas"></span>
-                                            <input type="number" class="form-control" asp-for="ImpactoAmbiental.Personas_Afectadas" min="0" />
+                                            <input type="number" step="any" class="form-control" asp-for="ImpactoAmbiental.Personas_Afectadas" min="0" />
                                         </div>
                                     </div>
                                 </div>
@@ -613,7 +613,7 @@
                                     <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cantidad_RS"></span>
                                     <div class="row mt-0 mb-0">
                                         <div class="col-6 mt-0 mb-0">
-                                            <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_RS" />
+                                            <input type="number" step="any" class="form-control" asp-for="ImpactoAmbiental.Cantidad_RS" />
                                         </div>
                                         <div class="col-6 mt-0 mb-0">
                                             <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Cantidad_RS" asp-items="ViewBag.Unidad_Peso">
@@ -626,7 +626,7 @@
                                     <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Volumen_RS"></span>
                                     <div class="row mt-0 mb-0">
                                         <div class="col-6 mt-0 mb-0">
-                                            <input type="number" class="form-control" asp-for="ImpactoAmbiental.Volumen_Rs" />
+                                            <input type="number" step="any" class="form-control" asp-for="ImpactoAmbiental.Volumen_Rs" />
                                         </div>
                                         <div class="col-6 mt-0 mb-0">
                                             <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Volumen_RS" asp-items="ViewBag.Unidad_Volumen">
@@ -773,7 +773,7 @@
                         <div class="detail-separator"><span></span></div>
                         <div class="p-0 mb-4">
                             <div class="d-flex justify-content-center">
-                                <span class="text-danger">Acciones Correctivas</span>
+                                <span class="text-danger">Plan de Acción</span>
                             </div>
                             <div class="incidentes">
                                 <div class="tertiary-content col-12">
@@ -836,7 +836,11 @@
                                 }
                             </div>
                             <input type="hidden" asp-for="Evidencias_Completas_Papel" />
-                            <div class="col-sm-12 col-md-6 col-lg-6" id="Evidencias_Lista_Papel">
+                            @* <div class="col-sm-12 col-md-6 col-lg-6" id="Evidencias_Lista_Papel">
+                            </div> *@
+                            <div class="row input_container">
+                                <div class="row mb-2 justify-content-center align-items-center" id="imagenes_cargadas_Evidencias_Lista_Papel">
+                                </div>
                             </div>
                         </div>
                         <div class="row mb-2 align-items-start">
@@ -851,7 +855,11 @@
                                 }
                             </div>
                             <input type="hidden" asp-for="Evidencias_Completas_Persona" />
-                            <div class="col-sm-12 col-md-6 col-lg-6" id="Evidencias_Lista_Persona">
+                            @* <div class="col-sm-12 col-md-6 col-lg-6" id="Evidencias_Lista_Persona">
+                            </div> *@
+                            <div class="row input_container">
+                                <div class="row mb-2 justify-content-center align-items-center" id="imagenes_cargadas_Evidencias_Lista_Persona">
+                                </div>
                             </div>
                         </div>
                         <div class="row mb-2 align-items-start">
@@ -866,7 +874,11 @@
                                 }
                             </div>
                             <input type="hidden" asp-for="Evidencias_Completas_Posicion" />
-                            <div class="col-sm-12 col-md-6 col-lg-6" id="Evidencias_Lista_Posicion">
+                            @* <div class="col-sm-12 col-md-6 col-lg-6" id="Evidencias_Lista_Posicion">
+                            </div> *@
+                            <div class="row input_container">
+                                <div class="row mb-2 justify-content-center align-items-center" id="imagenes_cargadas_Evidencias_Lista_Posicion">
+                                </div>
                             </div>
                         </div>
                         <div class="row mb-2 align-items-start">
@@ -882,25 +894,29 @@
                                 }
                             </div>
                             <input type="hidden" asp-for="Evidencias_Completas_Partes" />
-                            <div class="col-sm-12 col-md-6 col-lg-6" id="Evidencias_Lista_Partes">
+                            @* <div class="col-sm-12 col-md-6 col-lg-6" id="Evidencias_Lista_Partes">
+                            </div> *@
+                            <div class="row input_container">
+                                <div class="row mb-2 justify-content-center align-items-center" id="imagenes_cargadas_Evidencias_Lista_Partes">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                    <div class="detail-container col-12 col-xl-10 mb-4">
-                        <div class="button-container">
-                            <div></div>
-                            <div>
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="button-container">
+                        <div></div>
+                        <div>
                             <a asp-action="Resumen" asp-controller="InvestigacionFinal" class="btn btn-mc-outline-danger">Volver</a>
                             @if (Model.Estado == "PendienteInvestigacion")
                             {
                                 <button id="boton_guardar_estado" type="button" class="btn btn-mc-outline-success">Guardar Estado</button>
                                 <button id="boton_completar" type="button" class="btn btn-mc-success">Completar y Difundir</button>
                             }
-                            </div>
                         </div>
                     </div>
+                </div>
             </form>
         </div>
     </div>
@@ -963,7 +979,7 @@
         </div>
     </div>
 </div>
-@section Scripts{
+@section Scripts {
     <script type="text/javascript">
         var nombresEvidenciasString = '@Html.Raw(Model.Evidencias_Nombres)';
         var nombresEvidencias = JSON.parse(nombresEvidenciasString);
@@ -985,6 +1001,7 @@
             GetAcciones();
             let eliminar = $("#Estado").val() == "PendienteInvestigacion"
             CargarEvidencias(eliminar);
+            visualizarImagenesCargadas();
         });
 
         function CargarEvidenciasSinNombre(tipo, evidencias, html, input, eliminar) {
@@ -1097,7 +1114,7 @@
         function GetInvolucrados() {
             $.ajax({
                 type: "POST",
-                url: "/InvestigacionFinal/ListarInvolucrados",
+                url: "/InvestigacionFinalMA/ListarInvolucrados",
                 data: {
                     IdInvestigacion: $("#Id_Investigacion_Final").val()
                 },
@@ -1112,7 +1129,7 @@
         function GetProductos() {
             $.ajax({
                 type: "POST",
-                url: "/InvestigacionFinal/ListarProductoDerramado",
+                url: "/InvestigacionFinalMA/ListarProductoDerramado",
                 data: {
                     IdInvestigacion: $("#Id_Investigacion_Final").val()
                 },
@@ -1127,7 +1144,7 @@
         function GetCausas() {
             $.ajax({
                 type: "POST",
-                url: "/InvestigacionFinal/ListarCausas",
+                url: "/InvestigacionFinalMA/ListarCausas",
                 data: {
                     IdInvestigacion: $("#Id_Investigacion_Final").val()
                 },
@@ -1144,7 +1161,7 @@
         function GetAcciones() {
             $.ajax({
                 type: "POST",
-                url: "/InvestigacionFinal/ListarAcciones",
+                url: "/InvestigacionFinalMA/ListarAcciones",
                 data: {
                     IdInvestigacion: $("#Id_Investigacion_Final").val()
                 },
@@ -1165,7 +1182,7 @@
                 if (confirm('¿Está seguro que desea eliminar esta evidencia?'))
                     $.ajax({
                         type: "POST",
-                        url: "/InvestigacionFinal/EliminarEvidencia",
+                        url: "/InvestigacionFinalMA/EliminarEvidencia",
                         data: {
                             IdInvestigacion: $("#Id_Investigacion_Final").val(),
                             Evidencia: evidencia,
@@ -1176,6 +1193,7 @@
                                 nombresEvidenciasString = response.nombresEvidencias;
                                 nombresEvidencias = JSON.parse(response.nombresEvidencias);
                                 CargarEvidencias(eliminar);
+                                visualizarImagenesCargadas();
                             } else {
                                 alert("Ocurrió un error");
                                 console.log("Error eliminar: " + response.message);
@@ -1588,6 +1606,65 @@
                 norte.prop("disabled", false);
                 nombre.prop("disabled", false);
             }
+        }
+        function visualizarImagenesCargadas() {
+            $.ajax({
+                type: 'POST',
+                url: '/InvestigacionFinalMA/ObtenerImagenesCargadas',
+                data:
+                {
+                    imagenes: nombresEvidenciasString
+                },
+                success: function (response) {
+                    temp = response;
+                    var fuentes = JSON.parse(response.imagenes);
+
+                    var html_imagenes_papel = "";
+                    var html_imagenes_persona = "";
+                    var html_imagenes_posicion = "";
+                    var html_imagenes_partes = "";
+
+                    for (var i = 0; i < fuentes.length; i++) {
+                        var html_imagenes = "";
+                        html_imagenes += "<div class=\"col-lg-6 col-md-6 col-6 mt-2\" id=\""+fuentes[i].Nombre+"\">";
+                        html_imagenes += "<div class=\"card\" style=\"width:100%;\">";
+                        if(fuentes[i].EsImagen){
+                        html_imagenes += "<img style=\"width:100%; height:auto;\" class=\"card-img-top img-thumbnail\" src=\"";
+                        html_imagenes += fuentes[i].Src;
+                        html_imagenes += "\">";
+                        }
+                        html_imagenes += "<div class=\"card-body text-center\">";
+                        html_imagenes += fuentes[i].Nombre;
+                        html_imagenes += "</div>";
+                        html_imagenes += "<div class=\"card-body text-center\">";
+                        html_imagenes += "<a class=\"btn btn-mc\" href=\"/InvestigacionFinal/Download?fileName=" + fuentes[i].NombreCarga + "&tipo=" + fuentes[i].tipo.toString().toLowerCase() + "\"><span>Descargar</span></a></p>";
+                        html_imagenes += "<button type=\"button\" class=\"btn btn-danger\" style=\"margin-right: 10px;\" onclick=\"EliminarEvidencia(\'"+fuentes[i].NombreCarga+"\','" + fuentes[i].tipo.toString().toLowerCase() + "')\">Eliminar</button>";
+                        html_imagenes += "</div>";
+                        html_imagenes += "</div>";
+                        html_imagenes += "</div>";
+
+                        if(fuentes[i].tipo.toString().toLowerCase() === "papel"){
+                            html_imagenes_papel += html_imagenes;
+                        }
+                        else if (fuentes[i].tipo.toString().toLowerCase() === "persona") {
+                            html_imagenes_persona += html_imagenes;
+                        }
+                        else if (fuentes[i].tipo.toString().toLowerCase() === "posicion") {
+                            html_imagenes_posicion += html_imagenes;
+                        }
+                        else if (fuentes[i].tipo.toString().toLowerCase() === "parte") {
+                            html_imagenes_partes += html_imagenes;
+                        }
+                    }
+                    $("#imagenes_cargadas_Evidencias_Lista_Papel").html(html_imagenes_papel);
+                    $("#imagenes_cargadas_Evidencias_Lista_Persona").html(html_imagenes_persona);
+                    $("#imagenes_cargadas_Evidencias_Lista_Posicion").html(html_imagenes_posicion);
+                    $("#imagenes_cargadas_Evidencias_Lista_Partes").html(html_imagenes_partes);
+                },
+                error: function () {
+                    console.log("No se ha podido obtener la información");
+                }
+            });
         }
     </script>
     <script type="text/javascript" src="~/js/UseCases/Incidentes/InvestigacionFinal/EditarInvestigacionFinal-Involucrados.js"></script>

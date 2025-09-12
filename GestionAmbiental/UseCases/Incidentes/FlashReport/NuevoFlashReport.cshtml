@@ -324,7 +324,7 @@
 		var lista_acciones = [];
 		var lista_usuarios = @Html.Raw(ViewBag.UsuariosJson);
 		$("#boton_guardar_estado").on("click", function () {
-			$("#Opcion").val("Guardar");
+			$("#Opcion").val("GuardarEstado");
 			$("#Acciones").val(JSON.stringify(lista_acciones));
 			$("#Modal_Guardando_Estado").modal("show");
 			$("#form_nuevoReporte").submit();

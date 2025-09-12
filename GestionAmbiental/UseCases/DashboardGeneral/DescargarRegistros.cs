@@ -277,7 +277,7 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
                 row.CreateCell(5).SetCellValue(acciones[i].Reporte.Gerencia_Responsable.Descripcion);
                 row.GetCell(5).CellStyle = customCellStyle;
                 //ResponsableMarcobre
-                row.CreateCell(6).SetCellValue(acciones[i].ResponsableMarcobre.Nombres + " " + acciones[i].ResponsableMarcobre.Apellidos);
+                row.CreateCell(6).SetCellValue(acciones[i].Usuario.Nombres + " " + acciones[i].Usuario.Apellidos);
                 row.GetCell(6).CellStyle = customCellStyle;
                 //Responsable Contratista
                 row.CreateCell(7).SetCellValue(acciones[i].Responsable);

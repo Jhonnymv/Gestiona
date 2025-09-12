@@ -203,7 +203,70 @@
                                 </div>
                             </div>
                         }
-                        <div class="incidentes">
+                        <!-- Causas inmediatas -->
+                        <div class="p-0 mb-4">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Causas inmediatas</span>
+                            </div>
+                            <div class="incidentes">
+                                <div class="tertiary-content col-12">
+                                    <div class="table-responsive incidentes-color">
+                                        <table class="table" id="tabla_causas_inmediatas">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tipo de Causa del Incidente</th>
+                                                    <th>Causa</th>
+                                                    <th>Descripción</th>
+                                                    @if (Model.Estado == "Pendiente" || (!Model.Estado.Equals("Eliminado") && ViewBag.PermisosAdmin))
+                                                    {
+                                                        <th></th>
+                                                        <th></th>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="100">No hay registros</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Causas básicas -->
+                        <div class="detail-separator"><span></span></div>
+                        <div class="p-0 mb-4">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Causas básicas</span>
+                            </div>
+                            <div class="incidentes">
+                                <div class="tertiary-content col-12">
+                                    <div class="table-responsive incidentes-color">
+                                        <table class="table" id="tabla_causas_basicas">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tipo de Causa del Incidente</th>
+                                                    <th>Causa</th>
+                                                    <th>Descripción</th>
+                                                    @if (Model.Estado == "Pendiente" || (!Model.Estado.Equals("Eliminado") && ViewBag.PermisosAdmin))
+                                                    {
+                                                        <th></th>
+                                                        <th></th>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="100">No hay registros</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @* <div class="incidentes">
                             <div class="tertiary-content col-12">
                                 <div class="table-responsive incidentes-color">
                                     <table class="table" id="tabla_causas">
@@ -229,7 +292,7 @@
                                 <div class="pagination-container incidentes-color" id="paginado">
                                 </div>
                             </div>
-                        </div>
+                        </div> *@
                         <div class="row input_container">
                             <div class="col-12 col-sm-12 col-lg-12">
                                 <label asp-for="Otra_Causa_Incidente">Otra causa inmediata</label>
@@ -311,7 +374,76 @@
                                 </div>
                             </div>
                         }
-                        <div class="incidentes">
+                        <!-- Acciones Inmediatas -->
+                        <div class="p-0 mb-4">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Acciones Inmediatas</span>
+                            </div>
+                            <div class="incidentes">
+                                <div class="tertiary-content col-12">
+                                    <div class="table-responsive incidentes-color">
+                                        <table class="table" id="tabla_acciones_inmediatas">
+                                            <thead>
+                                                <tr>
+                                                    <th>Acción Tomada</th>
+                                                    <th>Responsable Marcobre 1</th>
+                                                    <th>Responsable Marcobre 2</th>
+                                                    <th>Responsable Contratista</th>
+                                                    <th>Fecha</th>
+                                                    <th>Estatus</th>
+                                                    @if (Model.Estado == "Pendiente" || (!Model.Estado.Equals("Eliminado") && ViewBag.PermisosAdmin))
+                                                    {
+                                                        <th></th>
+                                                        <th></th>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="100">No hay registros</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Plan de Accion -->
+                        <div class="detail-separator"><span></span></div>
+                        <div class="p-0 mb-4">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Plan de Accion</span>
+                            </div>
+                            <div class="incidentes">
+                                <div class="tertiary-content col-12">
+                                    <div class="table-responsive incidentes-color">
+                                        <table class="table" id="tabla_acciones_correctivas">
+                                            <thead>
+                                                <tr>
+                                                    <th>Acción Tomada</th>
+                                                    <th>Responsable Marcobre 1</th>
+                                                    <th>Responsable Marcobre 2</th>
+                                                    <th>Responsable Contratista</th>
+                                                    <th>Fecha</th>
+                                                    <th>Estatus</th>
+                                                    @if (Model.Estado == "Pendiente" || (!Model.Estado.Equals("Eliminado") && ViewBag.PermisosAdmin))
+                                                    {
+                                                        <th></th>
+                                                        <th></th>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="100">No hay registros</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @* <div class="incidentes">
                             <div class="tertiary-content col-12">
                                 <div class="table-responsive incidentes-color">
                                     <table class="table" id="tabla_acciones">
@@ -340,7 +472,7 @@
                                 <div class="pagination-container incidentes-color" id="paginado">
                                 </div>
                             </div>
-                        </div>
+                        </div> *@
                         <div class="row input_container">
                             <div class="col-12 col-sm-12 col-lg-12">
                                 <label asp-for="Comentario_Accion">Comentario</label>
@@ -403,10 +535,10 @@
                                 </div>
                             </div>*@
                         <div class="button-container align-items-center">
-                            <div>
+                            @* <div>
                                 <label asp-for="Investigacion"></label>
                                 <input class="ms-2 form-check-input position-static" type="checkbox" asp-for="Investigacion">
-                            </div>
+                            </div> *@
                             <div>
                                 <a asp-action="Resumen" asp-controller="ReportePreliminarMA" class="btn btn-mc-outline-danger">Volver</a>
                                 <button id="boton_guardar_estado" type="button" class="btn btn-mc-success">Guardar Estado</button>
@@ -429,10 +561,10 @@
                                     </svg>
                                     <span>Descargar Excel</span>
                                 </a>
-                                @if (ViewBag.Rol == "Admin")
+                                @* @if (ViewBag.Rol == "Admin")
                                 {
                                     <button id="boton_iniciar_investigacion" type="button" class="btn btn-mc">Iniciar Investigación</button>
-                                }
+                                } *@
                             </div>
                         </div>
                     }
@@ -627,15 +759,55 @@
                         <div class="custom-form w-100">
                             <div class="detail-container col-12 mb-4">
                                 <div class="row mb-2">
-                                    <input type="hidden" id="id_editar_accion" />
+                                    <input type="hidden" id="Id_Accion" />
                                     <div class="col-sm-12 col-md-12 col-lg-12">
-                                        <span class="text-danger" id="danger_editar_accion"></span>
+                                        <span class="text-danger" id="danger_accion"></span>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Tipo de Acción</label>
+                                        <select class="form-control" id="select_tipo_accion">
+                                            <option value="">--SELECCIONE--</option>
+                                            <option value="Acción Inmediata">Acción Inmediata</option>
+                                            <option value="Acción Correctiva">Plan de Acción</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Descripción</label>
+                                        <textarea class="form-control" rows="2" maxlength="1000" id="input_descripcion_accion"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Responsable Marcobre 1</label>
+                                        <select class="form-control" asp-items="@ViewBag.Usuario" id="select_usuarios_accion"></select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Responsable Marcobre 2</label>
+                                        <select class="form-control" asp-items="@ViewBag.Usuario" id="select_usuarios_accion2"></select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Responsable Contratista</label>
+                                        <input type="text" class="form-control" id="input_contratista_accion" placeholder="Nombres y Apellidos" />
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Fecha</label>
+                                        <input type="date" class="form-control" id="input_fecha_accion" />
                                     </div>
                                 </div>
                                 <div class="row input_container">
                                     <div class="col-12">
                                         <label>Estatus</label>
-                                        <select class="form-control" id="select_editar_estatus">
+                                        <select class="form-control" id="select_estatus">
                                             <option value="">--SELECCIONE--</option>
                                             <option value="En Proceso">En Proceso</option>
                                             <option value="Cerrado">Cerrado</option>
@@ -643,15 +815,10 @@
                                     </div>
                                 </div>
                                 <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Evidencia</label>
-                                        <input type="file" class="form-control" id="file_editar_accion" accept=".jpg,.jpeg,.png" data-max-size="12582912">
-                                    </div>
-                                </div>
-                                <div class="row input_container">
                                     <div class="button-container">
                                         <button type="button" class="btn btn-mc-outline-danger me-2" data-bs-dismiss="modal">Cancelar</button>
-                                        <button type="button" class="btn btn-mc me-2" id="btn_guardar_editar_accion" onclick="EditarAccionPostDifusion()">Guardar</button>
+                                        <button type="button" class="btn btn-mc me-2" id="btn_guardar_accion">Guardar</button>
+                                        <button type="button" class="btn btn-mc-success" id="btn_editar_accion" style="display:none">Aceptar</button>
                                     </div>
                                 </div>
                             </div>
@@ -691,8 +858,14 @@
                                         <label>Tipo de Causa del Incidente</label>
                                         <select class="form-control" id="select_acto_condicion">
                                             <option value="">--SELECCIONE--</option>
-                                            <option value="Acto">Acto Subestándar</option>
-                                            <option value="Condicion">Condición Subestándar</option>
+                                            <optgroup label="Causas Inmediatas">
+                                                <option value="Acto">Acto Subestándar</option>
+                                                <option value="Condicion">Condición Subestándar</option>
+                                            </optgroup>
+                                            <optgroup label="Causas Básicas">
+                                                <option value="FactorP">Factor Personal</option>
+                                                <option value="FactorL">Factor Laboral</option>
+                                            </optgroup>
                                         </select>
                                     </div>
                                 </div>
@@ -706,6 +879,24 @@
                                     <div class="col-12">
                                         <label>Condición Subestándar</label>
                                         <select class="form-control" asp-items="@ViewBag.Condiciones" id="select_condiciones"></select>
+                                    </div>
+                                </div>
+                                <div class="row input_container" id="factores_personales" style="display:none">
+                                    <div class="col-12">
+                                        <label>Factor Personal</label>
+                                        <select class="form-control" asp-items="@ViewBag.FactoresPersonales" id="select_factores_personales"></select>
+                                    </div>
+                                </div>
+                                <div class="row input_container" id="factores_laborales" style="display:none">
+                                    <div class="col-12">
+                                        <label>Factor Laboral</label>
+                                        <select class="form-control" asp-items="@ViewBag.FactoresLaborales" id="select_factores_laboral"></select>
+                                    </div>
+                                </div>
+                                <div class="row input_container" id="descripcion_causa" style="display:none">
+                                    <div class="col-12">
+                                        <label>Descripción</label>
+                                        <textarea type="text" class="form-control" id="input_descripcion_causa" maxlength="1000" rows="3"></textarea>
                                     </div>
                                 </div>
                                 <div class="row input_container">
@@ -870,8 +1061,10 @@
                     IdReporte: $("#Id_Reporte_Preliminar").val()
                 },
                 success: (response) => {
-                    $('#tabla_acciones tbody').empty();
-                    $('#tabla_acciones tbody').html(response.filas_acciones);
+                    $('#tabla_acciones_inmediatas tbody').empty();
+                    $('#tabla_acciones_inmediatas tbody').html(response.filas_acciones_inmediatas);
+                    $('#tabla_acciones_correctivas tbody').empty();
+                    $('#tabla_acciones_correctivas tbody').html(response.filas_acciones_correctivas);
                     $('#NAcciones').val(response.nAcciones);
                     dataModulo();
                 }
@@ -885,8 +1078,10 @@
                     IdReporte: $("#Id_Reporte_Preliminar").val()
                 },
                 success: (response) => {
-                    $('#tabla_causas tbody').empty();
-                    $('#tabla_causas tbody').html(response.filas_causas);
+                    $('#tabla_causas_inmediatas tbody').empty();
+                    $('#tabla_causas_inmediatas tbody').html(response.filas_causas_inmediatas);
+                    $('#tabla_causas_basicas tbody').empty();
+                    $('#tabla_causas_basicas tbody').html(response.filas_causas_basicas);
                     $('#NCausas').val(response.nCausas);
                     dataModulo();
                 }
@@ -905,18 +1100,18 @@
                 $("#form_editarReporte").submit();
             }
         });
-        $("#boton_iniciar_investigacion").on("click", function () {
-            $.ajax({
-                type: "POST",
-                url: "/ReportePreliminarMA/IniciarInvestigacionSinNotificar",
-                data: {
-                    IdReporte: $("#Id_Reporte_Preliminar").val()
-                },
-                success: (response) => {
-                    alert(response);
-                }
-            });
-        });
+        // $("#boton_iniciar_investigacion").on("click", function () {
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/ReportePreliminarMA/IniciarInvestigacionSinNotificar",
+        //         data: {
+        //             IdReporte: $("#Id_Reporte_Preliminar").val()
+        //         },
+        //         success: (response) => {
+        //             alert(response);
+        //         }
+        //     });
+        // });
 
         function HabilitarInputs() {
             $("#Num_Trabajadores").prop("disabled", false)

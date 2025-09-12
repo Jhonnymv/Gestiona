@@ -42,8 +42,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 				//Id_Unidad_Area_Afectada = reporte.Unidad_Area_Afectada.Id_Unidad_Medida,
 				Lugar_Incidente = reporte.Lugar_Incidente,
 				//Equipo_Involucrado = reporte.Equipo_Involucrado,
-				//Id_Componente_Ambiental = reporte.Componente_Ambiental.Id_Componente_Ambiental,
-				Descripcion_Incidente = reporte.Descripcion_Incidente,
+				Id_Componente_Ambiental = reporte.Componente_Ambiental.Id_Componente_Ambiental,
+                Descripcion_Incidente = reporte.Descripcion_Incidente,
                 Id_Supervisor_MA = reporte.Supervisor_MA.IdUsuario,
 				//Otra_Causa_Incidente = reporte.Otra_Causa_Incidente,
 				Estado = EstadosIncidentes.Pendiente.ToString(),
@@ -130,16 +130,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<int> RegistrarAccionCorrectivaReportePreliminar(Accion_Incidente_Reporte accion)
         {
-            var entity = new Entities.Incidentes.ReportePreliminar.Accion_Incidente_Reporte
-            {
-                Id_Reporte_Preliminar = accion.Id_Reporte_Preliminar,
-                Accion_Inmediata = accion.Accion_Inmediata,
-                Id_Usuario = accion.Id_Usuario,
-                Responsable = accion.Responsable,
-                Fecha = accion.Fecha,
-                Estatus = accion.Estatus,
-                Estado = EstadosIncidentes.Registrado.ToString()
-            };
+            var entity = new Entities.Incidentes.ReportePreliminar.Accion_Incidente_Reporte();
+            entity.Id_Reporte_Preliminar = accion.Id_Reporte_Preliminar;
+            entity.Tipo_Accion = accion.Tipo_Accion;
+            entity.Accion_Inmediata = accion.Accion_Inmediata;
+            entity.Id_Usuario = accion.Id_Usuario;
+            entity.Id_Usuario2 = accion.Id_Usuario2;
+            entity.Responsable = accion.Responsable;
+            entity.Fecha = accion.Fecha;
+            entity.Comentarios_Verificacion = accion.Comentarios_Verificacion;
+            entity.Fecha_Verificacion = accion.Fecha_Verificacion;
+            entity.Estatus = accion.Estatus;
+            entity.Estado = EstadosIncidentes.Registrado.ToString();
 
             _context.Accion_Incidente_Reporte.Add(entity);
 
@@ -180,6 +182,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 Id_Reporte_Preliminar = causa.Id_Reporte_Preliminar,
                 Id_Acto_Condicion = causa.Id_Acto_Condicion,
                 Tipo_Acto_Condicion = causa.Tipo_Acto_Condicion,
+                Id_Factor_Causa_Incidente = causa.Id_Factor_Causa_Incidente,
+                Descripcion = causa.Descripcion,
                 Estado = EstadosIncidentes.Registrado.ToString()
             };
 

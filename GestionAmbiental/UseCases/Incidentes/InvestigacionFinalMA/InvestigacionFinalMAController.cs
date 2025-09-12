@@ -1644,12 +1644,12 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinalMA
                     model.ImpactoAmbiental.EO_RS,
                     model.Opcion
                     );
-                if (model.Opcion.Equals("Completar"))
-                    return RedirectToAction("DifundirInvestigacion", "NotificacionInvestigacionIncidente", new { IdInvestigacion = model.Id_Investigacion_Final });
-                else
-                    return View("Resumen");
+                //if (model.Opcion.Equals("Completar"))
+                //    return RedirectToAction("DifundirInvestigacion", "NotificacionInvestigacionIncidente", new { IdInvestigacion = model.Id_Investigacion_Final });
+                //else
+                //    return View("Resumen");
             }
-            return View("EditarInvestigacion", new { IdInvestigacion = model.Id_Encriptado_Investigacion_Final });
+            return RedirectToAction("EditarInvestigacion", new { IdInvestigacion = model.Id_Encriptado_Investigacion_Final });
 
         }
         [HttpPost]
@@ -1972,6 +1972,96 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinalMA
             return RedirectToAction("DetalleInvestigacion", new { IdInvestigacion = _protector.Protect(model.Id_Investigacion_Final.ToString()) });
         }
         //Carga y descarga de archivos
+        [HttpPost]
+        public async Task<IActionResult> ObtenerImagenesCargadas(string imagenes)
+        {
+            dynamic response;
+            if (HttpContext.Session.GetString("SessionUser") != null && imagenes != null)
+            {
+                var listaImagenes = new List<string>(imagenes.Split(','));
+                var archivos = JsonConvert.DeserializeObject<List<EvidenciaCategoria>>(imagenes);
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var imagesSrc = new List<ImagenCargada>();
+
+                for (int i = 0; i < archivos.Count; i++)
+                {
+                    foreach (var evidencia in archivos[i].Evidencias)
+                    {
+                        try
+                        {
+                            var encryptedFile = "";
+                            if (archivos[i].Categoria == "papel")
+                                encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(evidencia.NombreCarga, userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPapel);
+                            else if (archivos[i].Categoria == "persona")
+                                encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(evidencia.NombreCarga, userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPersona);
+                            else if (archivos[i].Categoria == "posicion")
+                                encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(evidencia.NombreCarga, userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPosicion);
+                            else if (archivos[i].Categoria == "parte")
+                                encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(evidencia.NombreCarga, userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPartes);
+                            /* Save encrypted file in temp path*/
+                            var tempPath = Path.GetTempPath();
+
+                            var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
+                            if (!Directory.Exists(SGATempPath))
+                            {
+                                Directory.CreateDirectory(SGATempPath);
+                            }
+                            var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                            var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
+
+                            /*decrypt file*/
+                            var decryptedFileName = "desencriptado" + i.ToString() + Path.GetExtension(evidencia.NombreCarga);
+                            await _gestorEncriptado.DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                            /*unzip file*/
+                            if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                                filePath += Path.DirectorySeparatorChar;
+
+                            using (ZipArchive archive = ZipFile.OpenRead(archivePath + decryptedFileName))
+                            {
+                                foreach (ZipArchiveEntry entry in archive.Entries)
+                                {
+                                    filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
+                                    if (filePath.StartsWith(filePath, StringComparison.Ordinal))
+                                        entry.ExtractToFile(filePath);
+                                }
+                            }
+                            byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+                            var newFileName = evidencia.NombreCarga.Replace(Path.GetExtension(evidencia.NombreCarga), Path.GetExtension(filePath));
+                            /*read decrypted file*/
+                            //byte[] imageByteData = System.IO.File.ReadAllBytes(archivePath + decryptedFileName);
+                            string imageBase64Data = Convert.ToBase64String(bytes);
+                            string imageDataURL = string.Format("data:image/png;base64,{0}", imageBase64Data);
+
+                            imagesSrc.Add(new ImagenCargada
+                            {
+                                Nombre = evidencia.NombreOrigen,
+                                NombreCarga = evidencia.NombreCarga,
+                                tipo = archivos[i].Categoria,
+                                Src = imageDataURL,
+                                EsImagen = (evidencia.ExtOrigen.ToLower() == ".jpg" || evidencia.ExtOrigen.ToLower() == ".jpeg" || evidencia.ExtOrigen.ToLower() == ".png" || evidencia.ExtCarga.ToLower() == ".jpg" || evidencia.ExtCarga.ToLower() == ".jpeg" || evidencia.ExtCarga.ToLower() == ".png")
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            //No se encontró el archivo 
+                        }
+                    }
+                }
+                response = new
+                {
+                    imagenes = JsonConvert.SerializeObject(imagesSrc)
+                };
+            }
+            else
+            {
+                response = new
+                {
+                    imagenes = "[]"
+                };
+            }
+            return Ok(response);
+        }
         private string CreateUniqueFileName(int index, string tipo)
         {
             switch (tipo)
@@ -2115,6 +2205,14 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinalMA
         {
             public string Categoria { get; set; }
             public List<NombreEvidencia> Evidencias { get; set; }
+        }
+        private class ImagenCargada
+        {
+            public string Nombre { get; set; }
+            public string Src { get; set; }
+            public string NombreCarga { get; set; }
+            public string tipo { get; set; }
+            public bool EsImagen { get; set; }
         }
     }
 }

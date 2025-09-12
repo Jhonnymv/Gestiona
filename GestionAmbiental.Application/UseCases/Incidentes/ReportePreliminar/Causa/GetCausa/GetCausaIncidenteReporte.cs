@@ -29,8 +29,11 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Cau
             output.Id_Causa_Incidente = causa.Id_Causa_Incidente_Reporte;
             output.Id_Reporte_Preliminar = causa.Id_Reporte_Preliminar;
             output.Id_Acto_Condicion = causa.Id_Acto_Condicion;
-            output.Acto_Condicion = actos_condiciones.FirstOrDefault(x => x.IdTipoCondicion.Equals(causa.Id_Acto_Condicion)).Descripcion;
+            if (causa.Id_Acto_Condicion.HasValue)
+                output.Acto_Condicion = actos_condiciones.FirstOrDefault(x => x.IdTipoCondicion.Equals(causa.Id_Acto_Condicion)).Descripcion;
             output.Tipo_Acto_Condicion = causa.Tipo_Acto_Condicion;
+            output.Id_Factor_Causa_Incidente = causa.Id_Factor_Causa_Incidente;
+            output.Descripcion = causa.Descripcion;
             output.Estado = causa.Estado;
 
             return output;

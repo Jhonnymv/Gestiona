@@ -315,19 +315,19 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
                 switch (Tipo)
                 {
-                    case "Papel": evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Papel); break;
-                    case "Parte": evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Parte); break;
-                    case "Persona": evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Persona); break;
-                    case "Posicion": evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Posicion); break;
+                    case "papel": evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Papel); break;
+                    case "parte": evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Parte); break;
+                    case "persona": evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Persona); break;
+                    case "posicion": evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Posicion); break;
                 }
                 if (evidencias.Remove(NombreArchivo))
                 {
                     switch (Tipo)
                     {
-                        case "Papel": investigacion.Evidencia_Papel = JsonConvert.SerializeObject(evidencias); break;
-                        case "Parte": investigacion.Evidencia_Parte = JsonConvert.SerializeObject(evidencias); break;
-                        case "Persona": investigacion.Evidencia_Persona = JsonConvert.SerializeObject(evidencias); break;
-                        case "Posicion": investigacion.Evidencia_Posicion = JsonConvert.SerializeObject(evidencias); break;
+                        case "papel": investigacion.Evidencia_Papel = JsonConvert.SerializeObject(evidencias); break;
+                        case "parte": investigacion.Evidencia_Parte = JsonConvert.SerializeObject(evidencias); break;
+                        case "persona": investigacion.Evidencia_Persona = JsonConvert.SerializeObject(evidencias); break;
+                        case "posicion": investigacion.Evidencia_Posicion = JsonConvert.SerializeObject(evidencias); break;
                     }
 
                     if (investigacion.Nombres_Archivos != null)
