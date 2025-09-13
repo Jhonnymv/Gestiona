@@ -9,6 +9,7 @@ using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Causa.E
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Causa.EliminarCausa;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Causa.RegistrarCausa;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.EditarReportePreliminar;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.EliminarEvidencias;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.EliminarReportePreliminar;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetCausaIncidenteReporte;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetEstadoReportePreliminar;
@@ -33,6 +34,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Renci.SshNet;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -74,7 +76,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         private readonly IEliminarCausaIncidenteReporte _eliminarCausaIncidenteReporte;
         private readonly IRegistrarCausaIncidenteReporte _registrarCausaIncidenteReporte;
         private readonly IEditarReportePreliminar _editarReportePreliminar;
-        IEliminarReportePreliminar _eliminarReportePreliminar;
+        private readonly IEliminarReportePreliminar _eliminarReportePreliminar;
+        private readonly IEliminarEvidencia _eliminarEvidencia;
         private readonly IGetInfo_SGA _info_SGA;
 
         private readonly IDataProtector _protector;
@@ -109,6 +112,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             IRegistrarCausaIncidenteReporte registrarCausaIncidenteReporte,
             IEditarReportePreliminar editarReportePreliminar,
             IEliminarReportePreliminar eliminarReportePreliminar,
+            IEliminarEvidencia eliminarEvidencia,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
@@ -141,6 +145,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             _registrarCausaIncidenteReporte = registrarCausaIncidenteReporte;
             _editarReportePreliminar = editarReportePreliminar;
             _eliminarReportePreliminar = eliminarReportePreliminar;
+            _eliminarEvidencia = eliminarEvidencia;
             _info_SGA = info_SGA;
 
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.ReportePreliminarIdRouteValue);
@@ -222,7 +227,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     {
                         var IdEncriptado = _protector.Protect(fila.Id_Reporte_Preliminar.ToString());
                         filasTabla += "<tr>";
-                        if (fila.PermisoEditar)
+                        if (fila.Estado.Equals(EstadosIncidentes.Pendiente.ToString()))
                             filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
                         else
                             filasTabla += "<td></td>";
@@ -1152,6 +1157,133 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             return Ok(response);
         }
         //Carga y descarga de archivos
+        [HttpPost]
+        public async Task<IActionResult> EliminarEvidencia(int IdReporte, string Evidencia)
+        {
+            dynamic response;
+            try
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var eliminado = await _eliminarEvidencia.Execute(IdReporte, Evidencia, userInfo.NombreUsuario);
+                var reportePreliminar = await _getReportePreliminar.Execute(IdReporte);
+                var nombresEvidencias = JsonConvert.DeserializeObject<List<NombreEvidencia>>(reportePreliminar.Nombres_Archivos);
+                //var evidencia = await _getEvidenciaInvestigacion.Execute(IdFlashReport, Tipo);
+                try
+                {
+                    if (eliminado)
+                    {
+                        var directorio = Tipo_Info_SGA.FTPConnectionEvidenciaFlashReport;
+                        await _gestorArchivos.DeleteFTPFileAsync(Evidencia, directorio);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                    Log.Error(e.Message + " - Archivo: " + Evidencia);
+                }
+                if (eliminado)
+                    response = new
+                    {
+                        success = true,
+                        nombresEvidencias = nombresEvidencias,
+                        evidencia = nombresEvidencias.Select(x => x.NombreCarga).ToList()
+                    };
+                else
+                    response = new
+                    {
+                        success = false,
+                        message = "No se eliminó la evidencia"
+                    };
+            }
+            catch (Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = e.Message
+                };
+            }
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ObtenerImagenesCargadas(string imagenes)
+        {
+            dynamic response;
+            if (HttpContext.Session.GetString("SessionUser") != null && imagenes != null)
+            {
+                var listaImagenes = new List<string>(imagenes.Split(','));
+                var archivos = JsonConvert.DeserializeObject<List<NombreEvidencia>>(imagenes);
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var imagesSrc = new List<ImagenCargada>();
+
+                for (int i = 0; i < archivos.Count; i++)
+                {
+                    try
+                    {
+                        var encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(archivos[i].NombreCarga, userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionEvidenciaIncR);
+                        /* Save encrypted file in temp path*/
+                        var tempPath = Path.GetTempPath();
+
+                        var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
+                        if (!Directory.Exists(SGATempPath))
+                        {
+                            Directory.CreateDirectory(SGATempPath);
+                        }
+                        var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                        var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
+
+                        /*decrypt file*/
+                        var decryptedFileName = "desencriptado" + i.ToString() + Path.GetExtension(archivos[i].NombreCarga);
+                        await _gestorEncriptado.DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                        /*unzip file*/
+                        if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                            filePath += Path.DirectorySeparatorChar;
+
+                        using (ZipArchive archive = ZipFile.OpenRead(archivePath + decryptedFileName))
+                        {
+                            foreach (ZipArchiveEntry entry in archive.Entries)
+                            {
+                                filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
+                                if (filePath.StartsWith(filePath, StringComparison.Ordinal))
+                                    entry.ExtractToFile(filePath);
+                            }
+                        }
+                        byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+                        var newFileName = archivos[i].NombreCarga.Replace(Path.GetExtension(archivos[i].NombreCarga), Path.GetExtension(filePath));
+                        /*read decrypted file*/
+                        //byte[] imageByteData = System.IO.File.ReadAllBytes(archivePath + decryptedFileName);
+                        string imageBase64Data = Convert.ToBase64String(bytes);
+                        string imageDataURL = string.Format("data:image/png;base64,{0}", imageBase64Data);
+
+                        imagesSrc.Add(new ImagenCargada
+                        {
+                            Nombre = archivos[i].NombreOrigen,
+                            NombreCarga = archivos[i].NombreCarga,
+                            Src = imageDataURL,
+                            EsImagen = (archivos[i].ExtOrigen.ToLower() == ".jpg" || archivos[i].ExtOrigen.ToLower() == ".jpeg" || archivos[i].ExtOrigen.ToLower() == ".png" || archivos[i].ExtCarga.ToLower() == ".jpg" || archivos[i].ExtCarga.ToLower() == ".jpeg" || archivos[i].ExtCarga.ToLower() == ".png")
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        //No se encontró el archivo 
+                    }
+                }
+                response = new
+                {
+                    imagenes = JsonConvert.SerializeObject(imagesSrc)
+                };
+            }
+            else
+            {
+                response = new
+                {
+                    imagenes = "[]"
+                };
+            }
+            return Ok(response);
+        }
         private string CreateUniqueFileName(int index)
         {
             return "Ev_Inc_Rep_Pre" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index;
@@ -1207,10 +1339,26 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     /*decrypt file*/
                     var decryptedFileName = archivePath + "desencriptado.zip";
                     await _gestorEncriptado.DecryptFileAsync(encryptedFile, decryptedFileName);
-                    /*read decrypted file*/
-                    FileStream stream = new FileStream(decryptedFileName, FileMode.Open);
+                    //descomprimir en carpeta temporal submission
+                    if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                        filePath += Path.DirectorySeparatorChar;
+                    var outputFileName = "";
+                    using (ZipArchive archive = ZipFile.OpenRead(decryptedFileName))
+                    {
+                        foreach (ZipArchiveEntry entry in archive.Entries)
+                        {
+                            outputFileName = entry.FullName;
+                            filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
+                            if (filePath.StartsWith(filePath, StringComparison.Ordinal))
+                                entry.ExtractToFile(filePath);
+                        }
+                    }
+                    byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+                    var newFileName = fileName.Replace(Path.GetExtension(fileName), Path.GetExtension(filePath));
+                    ///*read decrypted file*/
+                    //FileStream stream = new FileStream(decryptedFileName, FileMode.Open);
 
-                    return File(stream, GetContentType(decryptedFileName), fileName);
+                    return File(bytes, GetContentType(filePath), outputFileName!=""? outputFileName:newFileName);
                 }
                 catch (Exception e)
                 {
@@ -1269,6 +1417,20 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 
                 return await _gestorArchivos.UploadFTPFileAsync(encryptedArchiveFile, newFileName, Tipo_Info_SGA.FTPConnectionEvidenciaIncR);
             }
+        }
+        private class NombreEvidencia
+        {
+            public string NombreOrigen { get; set; }
+            public string NombreCarga { get; set; }
+            public string ExtOrigen { get; set; }
+            public string ExtCarga { get; set; }
+        }
+        private class ImagenCargada
+        {
+            public string Nombre { get; set; }
+            public string Src { get; set; }
+            public string NombreCarga { get; set; }
+            public bool EsImagen { get; set; }
         }
     }
 }

@@ -9,7 +9,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
     public class FiltroReportesInspeccionesModel
     {
         //Inspecciones
-        [DisplayName("Área Ejecutora de la Inspección:")]
+        [DisplayName("Gerencia Ejecutora de la Inspección:")]
         public int IdGerencia { get; set; }
         [DisplayName("Empresa Inspeccionada:")]
         public int IdEmpresa { get; set; }

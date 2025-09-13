@@ -173,6 +173,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
         public async Task<IActionResult> GetTablaResumenFiltrada(string fecha_inicio, string fecha_fin, int[] gerencia, int[] titular, string[] estado, int[] responsable, int[] asesor, string codigo, int rpp, int pagina)
         {
             var datosTabla = await _getReportesPreliminares.Execute(fecha_inicio, fecha_fin, gerencia, titular, estado, responsable, asesor, codigo, pagina, rpp);
+            datosTabla.Reportes = datosTabla.Reportes.Where(x => x.Estado.Equals(EstadosIncidentes.Registrado.ToString())).ToList();
+            datosTabla.NReportes = datosTabla.Reportes.Count;
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NReportes % rpp != 0 ? (datosTabla.NReportes / rpp) + 1 : datosTabla.NReportes / rpp;

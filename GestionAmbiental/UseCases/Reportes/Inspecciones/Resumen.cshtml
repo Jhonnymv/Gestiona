@@ -44,6 +44,11 @@
                                 <label asp-for="UsuarioInvolucrado"></label>
                                 <select class="form-control" asp-for="UsuarioInvolucrado" asp-items="@ViewBag.FiltroUsuarios"></select>
                             </div>
+
+                            <div class="col-12 col-md-6">
+                                <label asp-for="IdGerenciaInspeccionada"></label>
+                                <select class="form-control" asp-for="IdGerenciaInspeccionada" asp-items="@ViewBag.FiltroGerencias"></select>
+                            </div>
                         </div>
                     </div>
                     <div class="col-12">

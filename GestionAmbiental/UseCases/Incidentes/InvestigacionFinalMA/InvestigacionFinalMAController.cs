@@ -229,6 +229,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinalMA
 
             var filasTabla = "";
             var paginador = "";
+
+            datosTabla.Investigaciones = datosTabla.Investigaciones.Where(x => x.Estado.Equals(EstadosIncidentes.PendienteInvestigacion.ToString())).ToList();
+            datosTabla.NInvestigaciones = datosTabla.Investigaciones.Count;
+
             int nPaginas = datosTabla.NInvestigaciones % rpp != 0 ? (datosTabla.NInvestigaciones / rpp) + 1 : datosTabla.NInvestigaciones / rpp;
             if (datosTabla.NInvestigaciones > 0)
             {
@@ -2132,10 +2136,26 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinalMA
                     /*decrypt file*/
                     var decryptedFileName = archivePath + "desencriptado.zip";
                     await _gestorEncriptado.DecryptFileAsync(encryptedFile, decryptedFileName);
-                    /*read decrypted file*/
-                    FileStream stream = new FileStream(decryptedFileName, FileMode.Open);
+                    //descomprimir en carpeta temporal submission
+                    if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                        filePath += Path.DirectorySeparatorChar;
+                    var outputFileName = "";
+                    using (ZipArchive archive = ZipFile.OpenRead(decryptedFileName))
+                    {
+                        foreach (ZipArchiveEntry entry in archive.Entries)
+                        {
+                            outputFileName = entry.FullName;
+                            filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
+                            if (filePath.StartsWith(filePath, StringComparison.Ordinal))
+                                entry.ExtractToFile(filePath);
+                        }
+                    }
+                    byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+                    var newFileName = fileName.Replace(Path.GetExtension(fileName), Path.GetExtension(filePath));
+                    ///*read decrypted file*/
+                    //FileStream stream = new FileStream(decryptedFileName, FileMode.Open);
 
-                    return File(stream, GetContentType(decryptedFileName), fileName);
+                    return File(bytes, GetContentType(filePath), outputFileName != "" ? outputFileName : newFileName);
                 }
                 catch (Exception e)
                 {

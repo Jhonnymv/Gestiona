@@ -312,6 +312,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
 
             output.Evidencia = reporte.Evidencia;
+            output.NombresArchivos = reporte.Nombres_Archivos;
             output.Estado = reporte.Estado;
 
             return output;

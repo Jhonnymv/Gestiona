@@ -2139,11 +2139,12 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     //4. descomprimir en carpeta temporal submission
                     if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
                         filePath += Path.DirectorySeparatorChar;
-
+                    var outputFileName = "";
                     using (ZipArchive archive = ZipFile.OpenRead(decryptedFileName))
                     {
                         foreach (ZipArchiveEntry entry in archive.Entries)
                         {
+                            outputFileName = entry.FullName;
                             filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
                             if (filePath.StartsWith(filePath, StringComparison.Ordinal))
                                 entry.ExtractToFile(filePath);
@@ -2151,7 +2152,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     }
                     byte[] bytes = System.IO.File.ReadAllBytes(filePath);
                     var newFileName = fileName.Replace(Path.GetExtension(fileName), Path.GetExtension(filePath));
-                    return File(bytes, GetContentType(filePath), newFileName);
+                    return File(bytes, GetContentType(filePath), outputFileName != "" ? outputFileName : newFileName);
                 }
                 catch (Exception e)
                 {

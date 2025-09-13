@@ -17,5 +17,6 @@ namespace GestionAmbiental.Application.Repositories.Incidentes.FlashReport
         Task<int> RegistrarFlashReport(Flash_Report flashReport);
         Task<string> GetUltimoCodigo();
 		Task<string> GetEvidenciasReporte(int IdFlashReport);
-	}
+        Task<bool> EliminarEvidencia(int IdFlashReport, string NombreArchivo);
+    }
 }

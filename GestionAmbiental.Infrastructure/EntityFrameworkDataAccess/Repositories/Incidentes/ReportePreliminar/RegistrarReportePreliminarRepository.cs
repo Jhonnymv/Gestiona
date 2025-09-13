@@ -66,7 +66,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Responsable = accion.Responsable,
                     Fecha = accion.Fecha,
                     Estatus = accion.Estatus,
-                    Estado = EstadosIncidentes.Registrado.ToString()
+                    Estado = EstadosIncidentes.Registrado.ToString(),
+                    Tipo_Accion = "Acción Inmediata"
                 });
             }
             _context.Accion_Incidente_Reporte.AddRange(accionesEntities);

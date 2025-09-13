@@ -519,36 +519,29 @@
                             <div class="col-12 col-sm-12 col-lg-12">
                                 <label asp-for="Evidencias_Completas">Evidencias</label>
                                 <input type="hidden" asp-for="Evidencias_Completas" />
-                                <div class="col-sm-12 col-md-12 col-lg-12" id="Evidencias_Lista">
+                                @* <div class="col-sm-12 col-md-12 col-lg-12" id="Evidencias_Lista">
+                                </div> *@
+                                <div class="row mb-2 justify-content-center align-items-center" id="imagenes_cargadas">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="detail-button-container col-12 col-xl-10 mb-4">
-                    @if (Model.Estado == "Registrado")
-                    {
-                        @*<div class="row input_container">
-                                <div class="col-12 col-sm-12 col-lg-12">
-                                    <label asp-for="Investigacion"></label>
-                                    <input class="form-check-input position-static" type="checkbox" asp-for="Investigacion">
+                    <div class="button-container">
+                        @if (Model.Estado == "Registrado")
+                        {
+                            <div></div>
+                            <div class="button-container align-items-center">
+                                <div>
+                                    <a asp-action="Resumen" asp-controller="ReportePreliminarMA" class="btn btn-mc-outline-danger">Volver</a>
+                                    <button id="boton_guardar_estado" type="button" class="btn btn-mc-success">Guardar Estado</button>
+                                    <button id="boton_difundir" type="button" class="btn btn-mc">Difundir</button>
                                 </div>
-                            </div>*@
-                        <div class="button-container align-items-center">
-                            @* <div>
-                                <label asp-for="Investigacion"></label>
-                                <input class="ms-2 form-check-input position-static" type="checkbox" asp-for="Investigacion">
-                            </div> *@
-                            <div>
-                                <a asp-action="Resumen" asp-controller="ReportePreliminarMA" class="btn btn-mc-outline-danger">Volver</a>
-                                <button id="boton_guardar_estado" type="button" class="btn btn-mc-success">Guardar Estado</button>
-                                <button id="boton_difundir" type="button" class="btn btn-mc">Difundir</button>
                             </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="button-container">
+                        }
+                        else
+                        {
                             <div></div>
                             <div>
                                 <a asp-action="Resumen" asp-controller="ReportePreliminarMA" class="btn btn-mc-outline-danger">Volver</a>
@@ -566,8 +559,8 @@
                                     <button id="boton_iniciar_investigacion" type="button" class="btn btn-mc">Iniciar Investigación</button>
                                 } *@
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
             </form>
         </div>
@@ -940,7 +933,7 @@
         </div>
     </div>
 </div>
-@section Scripts{
+@section Scripts {
     <script type="text/javascript" src="~/js/UseCases/Incidentes/ReportePreliminar/EditarReportePreliminarMA.js"></script>
     <script type="text/javascript">
         var nombresEvidenciasString = '@Html.Raw(Model.Evidencias_Nombres)';
@@ -956,6 +949,7 @@
 
             let eliminar = $("#Estado").val() == "Registrado";
             CargarEvidencias(eliminar);
+                visualizarImagenesCargadas();
         });
 
         function CargarEvidenciasSinNombre(evidencias, html, input, eliminar) {
@@ -1380,6 +1374,68 @@
             }
             return result;
         }
+        function EliminarEvidencia(evidencia) {
+            var eliminar = $("#Estado").val() == "Pendiente"
+            if (eliminar)
+                if (confirm('¿Está seguro que desea eliminar esta evidencia?'))
+                    $.ajax({
+                        type: "POST",
+                        url: "/ReportePreliminar/EliminarEvidencia",
+                        data: {
+                            IdReporte: $("#Id_Reporte_Preliminar").val(),
+                            Evidencia: evidencia,
+                        },
+                        success: (response) => {
+                            if (response.success) {
+                                console.log(response)
+                                nombresEvidenciasString = JSON.stringify(response.nombresEvidencias);
+                                nombresEvidencias =response.nombresEvidencias;
+                                visualizarImagenesCargadas();
+                            } else {
+                                alert("Ocurrió un error");
+                                console.log("Error eliminar: " + response.message);
+                            }
+                        }
+                    });
+        }
+        function visualizarImagenesCargadas() {
+            $.ajax({
+                type: 'POST',
+                url: '/ReportePreliminar/ObtenerImagenesCargadas',
+                data:
+                {
+                    imagenes: nombresEvidenciasString
+                },
+                success: function (response) {
+                    var fuentes = JSON.parse(response.imagenes);
+                    console.log(fuentes)
 
+                    var html_imagenes = "";
+                    for (var i = 0; i < fuentes.length; i++) {
+                        html_imagenes += "<div class=\"col-lg-6 col-md-6 col-6 mt-2\" id=\""+fuentes[i].Nombre+"\">";
+                        html_imagenes += "<div class=\"card\" style=\"width:100%;\">";
+                        if(fuentes[i].EsImagen){
+                        html_imagenes += "<img style=\"width:100%; height:auto;\" class=\"card-img-top img-thumbnail\" src=\"";
+                        html_imagenes += fuentes[i].Src;
+                        html_imagenes += "\">";
+                        }
+                        html_imagenes += "<div class=\"card-body text-center\">";
+                        html_imagenes += fuentes[i].Nombre;
+                        html_imagenes += "</div>";
+                        html_imagenes += "<div class=\"card-body text-center\">";
+                        html_imagenes += "<a class=\"btn btn-mc\" href=\"/ReportePreliminar/Download?fileName=" + fuentes[i].NombreCarga + "\"><span>Descargar</span></a></p>";
+                        if($("#Estado").val() == "Registrado")
+                            html_imagenes += "<button type=\"button\" class=\"btn btn-danger\" style=\"margin-right: 10px;\" onclick=\"EliminarEvidencia(\'"+fuentes[i].NombreCarga+"\')\">Eliminar</button>";
+                        html_imagenes += "</div>";
+                        html_imagenes += "</div>";
+                        html_imagenes += "</div>";
+                    }
+                    $("#imagenes_cargadas").html(html_imagenes);
+                },
+                error: function () {
+                    console.log("No se ha podido obtener la información");
+                }
+            });
+        }
     </script>
 }

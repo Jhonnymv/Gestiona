@@ -2,6 +2,7 @@
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Incidentes.FlashReport;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -252,8 +253,31 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 			else
 				return "IA-00000000";
 		}
+        public async Task<bool> EliminarEvidencia(int IdFlashReport, string NombreArchivo)
+        {
+            var flashReport = await _context.Flash_Report.FirstOrDefaultAsync(x => x.Id_Flash_Report.Equals(IdFlashReport));
+            if (flashReport != null && flashReport.Archivos_Registro_Fotografico != null)
+            {
+                var archivos = JsonConvert.DeserializeObject<List<NombreEvidencia>>(flashReport.Archivos_Registro_Fotografico);
+                var evidencias = JsonConvert.DeserializeObject<List<string>>(flashReport.Registro_Fotografico);
 
-		public async Task<string> GetEvidenciasReporte(int IdFlashReport)
+                var archivosAEliminar = archivos.FirstOrDefault(a => a.NombreCarga == NombreArchivo);
+                var evidenciaAEliminar = evidencias.FirstOrDefault(a => a == archivosAEliminar.NombreCarga);
+                if (archivosAEliminar != null)
+                {
+                    archivos.Remove(archivosAEliminar);
+                    evidencias.Remove(evidenciaAEliminar);
+                    flashReport.Archivos_Registro_Fotografico = JsonConvert.SerializeObject(archivos);
+                    flashReport.Registro_Fotografico = JsonConvert.SerializeObject(evidencias);
+                    _context.Flash_Report.Update(flashReport);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public async Task<string> GetEvidenciasReporte(int IdFlashReport)
 		{
 			var reporte = await _context.Flash_Report.FirstOrDefaultAsync(x => x.Id_Flash_Report.Equals(IdFlashReport));
 			if (reporte != null && reporte.Archivos_Registro_Fotografico != null)
@@ -261,5 +285,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 			else
 				return "[]";
 		}
-	}
+        private class NombreEvidencia
+        {
+            public string NombreOrigen { get; set; }
+            public string NombreCarga { get; set; }
+            public string ExtOrigen { get; set; }
+            public string ExtCarga { get; set; }
+        }
+    }
 }

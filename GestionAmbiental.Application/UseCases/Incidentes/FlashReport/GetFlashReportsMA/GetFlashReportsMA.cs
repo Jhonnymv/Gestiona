@@ -36,7 +36,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.FlashReport.GetFlashR
             }
 
             var data = await _flashReportReadOnlyRepository.ListarFlashReport(fechaInicioFiltro, fechaFinFiltro, gerencia, titular, estados, responsable, asesor, codigo);
-            data = data.Where(x => x.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || x.Estado.Equals(EstadosIncidentes.Difundido.ToString())).ToList();
+            data = data.Where(x => x.Estado.Equals(EstadosIncidentes.Registrado.ToString())).ToList();
             var output = new FlashReportsOutput
             {
                 FlashReports = new List<FlashReportOutput>(),

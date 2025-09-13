@@ -199,6 +199,7 @@
 @section Scripts {
 	<script type="text/javascript">
 		var nombresEvidencias = @Html.Raw(Model.Evidencias_Nombres);
+		var nombresEvidenciasString = '@Html.Raw(Model.Evidencias_Nombres)';
 		var lista_acciones = [];
 		$(document).ready(function () {
 			var acciones = @Html.Raw(Model.Acciones);
@@ -221,6 +222,7 @@
 			console.log("evidencia_valores", evidencia_valores)
 			if (nombresEvidencias.length > 0) {
 				CargarEvidenciasConNombre(nombresEvidencias, "#Evidencias_Lista", "#Evidencias_Completas");
+				visualizarImagenesCargadas();
 			}
 			else if (evidencia.length > 0) {
 				CargarEvidenciasSinNombre(evidencia_valores, "#Evidencias_Lista", "#Evidencias_Completas");
@@ -317,5 +319,42 @@
 				filesName.length > 0 ? $("#files_name").html(filesName) : null;
 			}
 		});
+		function visualizarImagenesCargadas() {
+			$.ajax({
+				type: 'POST',
+				url: '/FlashReport/ObtenerImagenesCargadas',
+				data:
+				{
+					imagenes: nombresEvidenciasString
+				},
+				success: function (response) {
+					var fuentes = JSON.parse(response.imagenes);
+					console.log(fuentes)
+
+					var html_imagenes = "";
+					for (var i = 0; i < fuentes.length; i++) {
+						html_imagenes += "<div class=\"col-lg-6 col-md-6 col-6 mt-2\" id=\""+fuentes[i].Nombre+"\">";
+						html_imagenes += "<div class=\"card\" style=\"width:100%;\">";
+						if(fuentes[i].EsImagen){
+						html_imagenes += "<img style=\"width:100%; height:auto;\" class=\"card-img-top img-thumbnail\" src=\"";
+						html_imagenes += fuentes[i].Src;
+						html_imagenes += "\">";
+						}
+						html_imagenes += "<div class=\"card-body text-center\">";
+						html_imagenes += fuentes[i].Nombre;
+						html_imagenes += "</div>";
+						html_imagenes += "<div class=\"card-body text-center\">";
+						html_imagenes += "<a class=\"btn btn-mc\" href=\"/FlashReport/Download?fileName=" + fuentes[i].NombreCarga + "\"><span>Descargar</span></a></p>";
+						html_imagenes += "</div>";
+						html_imagenes += "</div>";
+						html_imagenes += "</div>";
+					}
+					$("#imagenes_cargadas").html(html_imagenes);
+				},
+				error: function () {
+					console.log("No se ha podido obtener la información");
+				}
+			});
+		}
 	</script>
 } 

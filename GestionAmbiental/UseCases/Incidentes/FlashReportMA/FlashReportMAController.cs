@@ -152,7 +152,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReportMA
 			{
 				foreach (var fila in datosTabla.FlashReports)
 				{
-					if (!fila.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) || (fila.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) && userInfo.Rol.Equals(InspeccionRol.Admin)))
+					if (fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) && (userInfo.Rol.Equals(InspeccionRol.AsesorMAP) || userInfo.Rol.Equals(InspeccionRol.Admin)))
 					{
 						var IdEncriptado = _protector.Protect(fila.Id_Flash_Report.ToString());
 						filasTabla += "<tr>";
@@ -160,10 +160,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReportMA
                             filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
                         else
                             filasTabla += "<td></td>";
-                        if (!fila.Estado.Equals(EstadosIncidentes.Eliminado.ToString()))
-							filasTabla += "<td style=\"width: 115px;\"><a href=\"/FlashReportMA/EditarFlashReport?IdFlashReport=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
-						else
-							filasTabla += "<td style=\"width: 115px;\"><a href=\"/FlashReportMA/EditarFlashReport?IdFlashReport=" + IdEncriptado + "\">" + fila.Codigo + " (Eliminado)" + "</a></td>";
+						filasTabla += "<td style=\"width: 115px;\"><a href=\"/FlashReportMA/EditarFlashReport?IdFlashReport=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
 						//filasTabla += "<td>" + fila.Tipo_Incidente + "</td>";
 						filasTabla += "<td>" + fila.Gerencia_Nombre + "</td>";
 						filasTabla += "<td>" + fila.Empresa_Nombre + "</td>";
@@ -444,7 +441,8 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReportMA
 
 				return RedirectToAction("Resumen");
 			}
-			return RedirectToAction("NuevoFlashReport");
+            var IdEncriptado = _protector.Protect(model.Id_Flash_Report.ToString());
+            return RedirectToAction("EditarFlashReport", new { IdFlashReport = IdEncriptado });
 		}
 		[HttpGet]
 		public async Task<IActionResult> ListarAcciones(int Id_Flash_Report)
