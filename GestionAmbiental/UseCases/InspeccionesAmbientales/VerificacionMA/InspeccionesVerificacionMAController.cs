@@ -34,9 +34,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         private readonly IWebHostEnvironment _hostingEnvironment;
         public InspeccionesVerificacionMAController(
             ISelectItems selectItems,
-            IConsultarCabecerasVerificacion consultarCabecerasVerificacion, 
-            IConsultarCabeceraVerificacion consultarCabeceraVerificacion, 
-            IConsultarInspeccionDetalle consultarInspeccionDetalle, 
+            IConsultarCabecerasVerificacion consultarCabecerasVerificacion,
+            IConsultarCabeceraVerificacion consultarCabeceraVerificacion,
+            IConsultarInspeccionDetalle consultarInspeccionDetalle,
             IConsultarDetallesVerificacion consultarDetalleVerificacion,
             IVerificarObservacionMA verificarObservacion,
             IWebHostEnvironment hostingEnvironment,
@@ -62,7 +62,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-            
+
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
@@ -96,7 +96,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                 ViewBag.Tipo_Inspeccion = tiposInspeccion;
 
                 return View();
-           }
+            }
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(string fechaInicioFiltro, string fechaFinFiltro, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro, int pagina, int rpp, string[] tipo_inspeccion_filtro, string[] tipo_observacion_filtro)
         {
@@ -172,7 +172,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                
+
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
@@ -189,17 +189,31 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                     foreach (var observacion in observaciones)
                     {
                         var IdObsEncriptado = _protector.Protect(observacion.IdInspeccionDetalle.ToString());
-                        var evidencia = "<label style=\"width:110px\">";
-                        var evidencia_implementacion = "<label style=\"width:110px\">";
+                        //var evidencia = "<label style=\"width:110px\">";
+                        //var evidencia_implementacion = "<label style=\"width:110px\">";
+
+                        var evidencia = "";
+                        var evidencia_implementacion = "";
+
                         for (int i = 0; i < observacion.EvidenciaCondicion.Count; i++)
-                            evidencia = "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "&tipo=condicion\">Evidencia</a>";
-                        evidencia += "</label>";
-                        if(observacion.EvidenciaImplementacion!=null)
-                        for (int i = 0; i < observacion.EvidenciaImplementacion.Count; i++)
                         {
-                            evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?fileName=" + observacion.EvidenciaImplementacion[i] + "&tipo=implementacion\">Evidencia</a>";
+                            evidencia = evidencia + "<button class=\"btn btn-mc\" type=\"button\" onclick=\"PrevisualizarImagen(\'" + observacion.EvidenciaCondicion[i] + "\',\'reg\')\">Evidencia</button>";
                         }
-                        evidencia_implementacion += "</label>";
+
+                        //for (int i = 0; i < observacion.EvidenciaCondicion.Count; i++)
+                        //    evidencia = "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "&tipo=condicion\">Evidencia</a>";
+                        //evidencia += "</label>";
+                        if (observacion.EvidenciaImplementacion != null)
+                        {
+                            for (int i = 0; i < observacion.EvidenciaImplementacion.Count; i++)
+                                evidencia = evidencia + "<button class=\"btn btn-mc\" type=\"button\" onclick=\"PrevisualizarImagen(\'" + observacion.EvidenciaImplementacion[i] + "\','imp')\">Evidencia Implementación</button>";
+                        }
+                        //if (observacion.EvidenciaImplementacion != null)
+                        //    for (int i = 0; i < observacion.EvidenciaImplementacion.Count; i++)
+                        //    {
+                        //        evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?fileName=" + observacion.EvidenciaImplementacion[i] + "&tipo=implementacion\">Evidencia</a>";
+                        //    }
+                        //evidencia_implementacion += "</label>";
                         filaObservacion += "<tr>";
                         if (observacion.Estado == EstadosInspeccion.Implementado.ToString() && observacion.PermisosAsesor)
                             filaObservacion += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"VerificarObservacion(" + observacion.IdInspeccionDetalle + ")\">" + "Verificar" + "</button></td>";
@@ -251,7 +265,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         EvidenciasImplementacion = JsonConvert.SerializeObject(x.EvidenciaImplementacion),
                         Comentario = x.ComentarioImplementacion,
                         PermisoImplementar = x.PermisosImplementar
-                    })); 
+                    }));
                     ViewBag.Observaciones = jsonObservaciones;
                     ViewBag.NObservaciones = observaciones.ToList().Count;
                     ViewBag.ContenidoTabla = filaObservacion;
@@ -299,8 +313,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             if (ModelState.IsValid)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                
-                if (model.Accion.Equals("Rechazar")) {
+
+                if (model.Accion.Equals("Rechazar"))
+                {
                     if (Convert.ToDateTime(model.FechaProgramada) > DateTime.Now)
                     {
                         await _verificarObservacion.Execute(model.idObs, model.ComentarioVerificacionMA, EstadosInspeccion.Rechazado.ToString(), userInfo.NombreUsuario);

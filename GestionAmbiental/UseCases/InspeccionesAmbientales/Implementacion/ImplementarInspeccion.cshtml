@@ -179,6 +179,28 @@
         </div>
     </div>
 </div>
+<!-- Modal Previsualizar Imagen-->
+<div class="modal fade" tabindex="-1" id="Modal_Previsualizar_Imagen" aria-labelledby="Modal_Previsualizar_ImagenLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-menu modal-inspecciones">
+            <div class="modal-content">
+                <div class="inspection">
+                    <div class="image-header-container"
+                         style="background-image: url(&quot;/img/back-inspection.png&quot;);">
+                        <div class="header-title inspection-opacity-color">
+                            <h3>Previsualización</h3><img src="/img/logo-white.png" alt="Logo Marcobre">
+                        </div><button type="button" class="btn-close" data-bs-dismiss="modal"
+                                      aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="col-12 d-flex justify-content-center" id="imagen_cargada">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts{
     <script src="~/js/stepper.js"></script>
     <script>
@@ -299,6 +321,51 @@
             if ($("#Comentario").val() == "") { result = false; $('span[data-valmsg-for="Comentario"]').text("Debe completar este campo"); }
             if (document.getElementById("EvidenciasInspeccion").files.length == 0) { result = false; $("#danger_evidencia").text("Debe seleccionar un archivo"); }
             return result;
+        }
+        function PrevisualizarImagen(imagen,tipo){
+            if(imagen!=null){
+                var moduloConsulta = '';
+                if(tipo=='reg'){
+                    moduloConsulta = 'Inspecciones';
+                }else{
+                    moduloConsulta = 'InspeccionesImplementacion';
+                }
+
+                $.ajax({
+                type: 'POST',
+                url: '/'+moduloConsulta+'/ObtenerImageneCargada',
+                data:
+                {
+                    imagen: imagen
+                },
+                success: function (response) {
+                    var fuente = JSON.parse(response.imagenes);
+
+                    var html_imagen = "";
+                        html_imagen += "<div class=\"col-lg-6 col-md-6 col-6 mt-2\" id=\""+fuente.Nombre+"\">";
+                        html_imagen += "<div class=\"card\" style=\"width:100%;\">";
+                        if(fuente.EsImagen){
+                        html_imagen += "<img style=\"width:100%; height:auto;\" class=\"card-img-top img-thumbnail\" src=\"";
+                        html_imagen += fuente.Src;
+                        html_imagen += "\">";
+                        }
+                        html_imagen += "<div class=\"card-body text-center\">";
+                        html_imagen += fuente.Nombre;
+                        html_imagen += "</div>";
+                        html_imagen += "<div class=\"card-body text-center\">";
+                        html_imagen += "<a class=\"btn btn-mc\" href=\"/"+moduloConsulta+"/Download?fileName=" + fuente.NombreCarga + "\"><span>Descargar</span></a></p>";
+                        html_imagen += "</div>";
+                        html_imagen += "</div>";
+                        html_imagen += "</div>";
+                    $("#imagen_cargada").html(html_imagen);
+
+                $("#Modal_Previsualizar_Imagen").modal('show');
+                },
+                error: function () {
+                    console.log("No se ha podido obtener la información");
+                }
+            });
+            }
         }
     </script>
 }

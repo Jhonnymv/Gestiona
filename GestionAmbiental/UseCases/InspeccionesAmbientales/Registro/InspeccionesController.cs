@@ -57,7 +57,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         private readonly IEliminarObservacion _eliminarObservacion;
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
-        private readonly IEliminarVencidos _eliminarVencidos; 
+        private readonly IEliminarVencidos _eliminarVencidos;
         private readonly IGetTiposInspeccion _getTiposInspeccion;
         private readonly IGetMiembrosComiteInspeccion _getMiembrosComiteInspeccion;
 
@@ -182,7 +182,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 return View();
             }
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string fechaInicioFiltro, string fechaFinFiltro, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro, int pagina, int rpp,string[] tipo_inspeccion_filtro, string[] tipo_observacion_filtro)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string fechaInicioFiltro, string fechaFinFiltro, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro, int pagina, int rpp, string[] tipo_inspeccion_filtro, string[] tipo_observacion_filtro)
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             DateTime fechaInicio;
@@ -196,7 +196,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             else
                 fechaFin = DateTime.Now;
 
-            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, estadoFiltro, responsableFiltro, asesorFiltro, codigoFiltro,tipo_inspeccion_filtro,tipo_observacion_filtro);
+            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, estadoFiltro, responsableFiltro, asesorFiltro, codigoFiltro, tipo_inspeccion_filtro, tipo_observacion_filtro);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NCabeceras % rpp != 0 ? (datosTabla.NCabeceras / rpp) + 1 : datosTabla.NCabeceras / rpp;
@@ -208,7 +208,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     filasTabla += "<tr>";
                     var obsAvance = fila.NObsAprobadas;
                     double avance = obsAvance != 0 ? Math.Round((float)obsAvance / fila.NObservaciones * 100, 1) : 0;
-                    if (fila.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) || userInfo.Rol.Equals(InspeccionRol.Admin))
+                    if (fila.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) || userInfo.Rol.Equals(InspeccionRol.Admin) || userInfo.Rol.Equals(InspeccionRol.AsesorSSO) || userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
                         filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     else
                         filasTabla += "<td><a href=\"/Inspecciones/DetalleInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
@@ -328,7 +328,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 asesoresSeguridad.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var miembrosComite = await _getMiembrosComiteInspeccion.Execute();
-                var miembosComiteSelect = miembrosComite.OrderBy(x=>x.Nombres).Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdMiembroComite.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var miembosComiteSelect = miembrosComite.OrderBy(x => x.Nombres).Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdMiembroComite.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 miembosComiteSelect.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var tiposInspeccionData = await _getTiposInspeccion.Execute();
@@ -343,7 +343,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 //CODIGOS AREA FORMATO
                 var codigosFormato = new List<SelectListItem>();
                 var areasFormato = new List<SelectListItem>();
-                string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_inspecciones.json");                
+                string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_inspecciones.json");
                 if (System.IO.File.Exists(filePath))
                 {
                     // Leer el contenido del archivo
@@ -364,7 +364,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 ViewBag.Usuarios = usuarios;
                 ViewBag.Tipo_Inspeccion = tiposInspeccion;
                 ViewBag.AsesoresMA = asesoresMA;
-                ViewBag.AsesoresSeguridad = asesoresSeguridad;                
+                ViewBag.AsesoresSeguridad = asesoresSeguridad;
 
                 ViewBag.TiposActoMA = tiposActoMA;
                 ViewBag.TiposCondicionMA = tiposCondicionMA;
@@ -417,7 +417,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         model.opcion,
                         model.Codigo_Formato,
                         model.Area_Formato,
-                        model.Id_Miembro_Comite==0?null : model.Id_Miembro_Comite,
+                        model.Id_Miembro_Comite == 0 ? null : model.Id_Miembro_Comite,
                         model.Participantes_Inspeccion);
                     response = new
                     {
@@ -517,7 +517,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
                         {
-                            var newfileName = CreateUniqueFileName(i + 1) + ".zip";
+                            var newfileName = CreateUniqueFileName(i + 1)+"_"+(i+1).ToString() + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias[i], newfileName);
                             evidencias.Add(filePath);
                         }
@@ -560,6 +560,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         public async Task<IActionResult> ConsultarObservaciones(string IdCabecera)
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+            //Edición por MA y SSO
+            var permisoMASSO = false;
+            if (userInfo.Rol.Equals(InspeccionRol.AsesorMAP) || userInfo.Rol.Equals(InspeccionRol.AsesorSSO))
+            {
+                permisoMASSO = true;
+            }
             int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
             dynamic response;
             try
@@ -573,15 +579,22 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     {
                         var evidencia = "";
                         var IdObsEncriptado = _protector.Protect(observacion.IdInspeccionDetalle.ToString());
+                        //for (int i = 0; i < observacion.EvidenciaCondicion.Count; i++)
+                        //{
+                        //    if (i == 0)
+                        //        evidencia = evidencia + "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "\">Evidencia</a>";
+                        //    else
+                        //        evidencia = evidencia + "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "\">, Evidencia</a>";
+                        //}
                         for (int i = 0; i < observacion.EvidenciaCondicion.Count; i++)
                         {
                             if (i == 0)
-                                evidencia = evidencia + "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "\">Evidencia</a>";
+                                evidencia = evidencia + "<button class=\"btn btn-mc\" type=\"button\" onclick=\"PrevisualizarImagen(\'" + observacion.EvidenciaCondicion[i] + "\')\">Evidencia</button>";
                             else
-                                evidencia = evidencia + "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "\">, Evidencia</a>";
+                                evidencia = evidencia + "<button class=\"btn btn-mc\" type=\"button\" onclick=\"PrevisualizarImagen(\'" + observacion.EvidenciaCondicion[i] + "\')\">Evidencia</button>";
                         }
                         filaObservacion += "<tr>";
-                        if ((cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) && cabecera.Permiso) || ((observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && observacion.PermisosAsesor) || observacion.PermisosAdmin))
+                        if ((cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) && cabecera.Permiso) || ((observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && observacion.PermisosAsesor) || observacion.PermisosAdmin || permisoMASSO))
                             filaObservacion += "<td><button class=\"btn btn-mc\" type=\"button\" onclick=\"EditarObservacion('" + observacion.IdInspeccionDetalle + "')\">" + "Editar" + "</button></td>";
                         else
                             filaObservacion += "<td></td>";
@@ -606,7 +619,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                                 filaObservacion += observacion.DescripcionCondicion.Equals("Buenas Prácticas") ? (observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ? "<td><span class=\"badge bg-info\">Pendiente de <br/>Verificación</span></td>" : "<td><span class=\"badge bg-danger\">Rechazado</span></td>") : "<td><span class=\"badge bg-warning\">Pendiente de<br/>Implementación</span></td>"; break;
                         }
 
-                        filaObservacion += "<td>" + (observacion.TipoInspeccion.Equals("MAP")?"MA": observacion.TipoInspeccion) + "</td>";
+                        filaObservacion += "<td>" + (observacion.TipoInspeccion.Equals("MAP") ? "MA" : observacion.TipoInspeccion) + "</td>";
                         filaObservacion += "<td>" + observacion.AsesorMASeguridad + "</td>";
                         filaObservacion += "<td>" + observacion.DescripcionCondicion + "</td>";
                         filaObservacion += "<td>" + observacion.TipoCondicion + "</td>";
@@ -716,13 +729,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                 var asesoresSeguridad = selectItemsResumen.Usuarios.Where(x => x.IdRol.Equals((int)InspeccionRol.AsesorSSO)).OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 asesoresSeguridad.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                
+
                 var miembrosComite = await _getMiembrosComiteInspeccion.Execute();
                 var miembosComiteSelect = miembrosComite.OrderBy(x => x.Nombres).Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdMiembroComite.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 miembosComiteSelect.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var tiposInspeccionData = await _getTiposInspeccion.Execute();
-                var tiposInspeccion = tiposInspeccionData.Select(g => new SelectListItem() { Value = g.Descripcion, Text = g.Descripcion}).ToList();
+                var tiposInspeccion = tiposInspeccionData.Select(g => new SelectListItem() { Value = g.Descripcion, Text = g.Descripcion }).ToList();
                 tiposInspeccion.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 //var tiposInspeccion = new List<SelectListItem>();
@@ -776,7 +789,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         model.Inspectores = cabecera.Participantes;
                         model.Estado = cabecera.Estado;
                         model.Area_Formato = codigosArea.FirstOrDefault(x => x.Area == cabecera.Area_Formato)?.Id.ToString();
-                        model.Codigo_Formato = codigosArea.FirstOrDefault(x=> x.Codigo == cabecera.Codigo_Formato)?.Id.ToString();
+                        model.Codigo_Formato = codigosArea.FirstOrDefault(x => x.Codigo == cabecera.Codigo_Formato)?.Id.ToString();
                         model.Id_Miembro_Comite = cabecera.Id_Miembro_Comite;
                         model.Participantes_Inspeccion = cabecera.Participantes_Inspección;
                     }
@@ -837,6 +850,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     ViewBag.Usuarios = usuarios;
                     ViewBag.Tipo_Inspeccion = tiposInspeccion;
                     ViewBag.nObservacioness = observaciones.Count;
+                    //Edición por MA y SSO
+                    ViewBag.PermisoMASSO = false;
+                    if (userInfo.Rol.Equals(InspeccionRol.AsesorMAP) || userInfo.Rol.Equals(InspeccionRol.AsesorSSO))
+                    {
+                        ViewBag.PermisoMASSO = true;
+                    }
+
                     ViewBag.Permiso = cabecera.Permiso;
                     ViewBag.PermisosAdmin = userInfo.Rol.Equals(InspeccionRol.Admin);
 
@@ -992,7 +1012,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                         if (allowed_extensions.Contains(extension) && model.E_Nueva_Evidencia[i].Length < max_file_size)
                         {
-                            var newfileName = CreateUniqueFileName(i + 1) + ".zip";
+                            var newfileName = CreateUniqueFileName(i + 1) + "_" + (i + 1).ToString() + ".zip";
                             var filePath = await UploadZipFileAsync(model.E_Nueva_Evidencia[i], newfileName);
                             evidencias.Add(filePath);
                         }
@@ -1262,11 +1282,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     //4. descomprimir en carpeta temporal submission
                     if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
                         filePath += Path.DirectorySeparatorChar;
-
+                    var outputFileName = "";
                     using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
                     {
                         foreach (ZipArchiveEntry entry in archive.Entries)
                         {
+                            outputFileName = entry.FullName;
                             filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
                             if (filePath.StartsWith(filePath, StringComparison.Ordinal))
                                 entry.ExtractToFile(filePath);
@@ -1274,7 +1295,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     }
                     byte[] bytes = System.IO.File.ReadAllBytes(filePath);
                     var newFileName = fileName.Replace(Path.GetExtension(fileName), Path.GetExtension(filePath));
-                    return File(bytes, GetContentType(filePath), newFileName);
+                    return File(bytes, GetContentType(filePath), outputFileName != "" ? outputFileName : newFileName);
                     //return File(stream, GetContentType(decryptedFileName), fileName);
                 }
                 catch (Exception e)
@@ -1282,6 +1303,97 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     return Content("No se encontró el archivo: " + e.Message);
                 }
             }
+        }
+        [HttpPost]
+        public async Task<IActionResult> ObtenerImageneCargada(string imagen)
+        {
+            dynamic response;
+            if (HttpContext.Session.GetString("SessionUser") != null && imagen != null)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var imagesSrc = new ImagenCargada();
+
+                try
+                {
+                    var encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(imagen, userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionEvidenciaR);
+
+                    /* Save encrypted file in temp path*/
+                    var tempPath = Path.GetTempPath();
+
+                    var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
+                    if (!Directory.Exists(SGATempPath))
+                    {
+                        Directory.CreateDirectory(SGATempPath);
+                    }
+                    var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                    var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
+
+                    /*decrypt file*/
+                    var decryptedFileName = "desencriptado.zip";
+                    await _gestorEncriptado.DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                    /*read decrypted file*/
+                    //FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
+
+                    //3. Desencriptar archivo
+                    DateTime dateTime = DateTime.UtcNow.Date;
+                    var pathDesencriptado = archivePath + "desencriptado" + dateTime.ToString("dd-MM-yyyy HHmm") + ".zip";
+                    await _gestorEncriptado.DecryptFileAsync(encryptedFile, pathDesencriptado);
+                    // fileStream.Dispose();
+                    //4. descomprimir en carpeta temporal submission
+                    if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                        filePath += Path.DirectorySeparatorChar;
+                    var outputFileName = "";
+                    var outputFileExtension = "";
+                    using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
+                    {
+                        foreach (ZipArchiveEntry entry in archive.Entries)
+                        {
+                            outputFileName = entry.FullName;
+                            outputFileExtension = Path.GetExtension(entry.FullName);
+                            filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
+                            if (filePath.StartsWith(filePath, StringComparison.Ordinal))
+                                entry.ExtractToFile(filePath);
+                        }
+                    }
+                    byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+                    var newFileName = imagen.Replace(Path.GetExtension(imagen), Path.GetExtension(filePath));
+
+                    /*read decrypted file*/
+                    //byte[] imageByteData = System.IO.File.ReadAllBytes(archivePath + decryptedFileName);
+                    string imageBase64Data = Convert.ToBase64String(bytes);
+                    string imageDataURL = string.Format("data:image/png;base64,{0}", imageBase64Data);
+
+                    imagesSrc = new ImagenCargada
+                    {
+                        Nombre = outputFileName,
+                        NombreCarga = imagen,
+                        Src = imageDataURL,
+                        EsImagen = (outputFileExtension.ToLower() == ".jpg" || outputFileExtension.ToLower() == ".jpeg" || outputFileExtension.ToLower() == ".png" || outputFileExtension.ToLower() == ".jpg" || outputFileExtension.ToLower() == ".jpeg" || outputFileExtension.ToLower() == ".png")
+                    };
+                }
+                catch (Exception ex)
+                {
+                    //No se encontró el archivo 
+                    response = new
+                    {
+                        imagenes = ""
+                    };
+                }
+
+                response = new
+                {
+                    imagenes = JsonConvert.SerializeObject(imagesSrc)
+                };
+            }
+            else
+            {
+                response = new
+                {
+                    imagenes = ""
+                };
+            }
+            return Ok(response);
         }
         public async Task<string> UploadZipFileAsync(IFormFile file, string newFileName)
         {
@@ -1332,6 +1444,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                 return await _gestorArchivos.UploadFTPFileAsync(encryptedArchiveFile, newFileName, Tipo_Info_SGA.FTPConnectionEvidenciaR);
             }
+        }
+        private class ImagenCargada
+        {
+            public string Nombre { get; set; }
+            public string Src { get; set; }
+            public string NombreCarga { get; set; }
+            public bool EsImagen { get; set; }
         }
     }
 }

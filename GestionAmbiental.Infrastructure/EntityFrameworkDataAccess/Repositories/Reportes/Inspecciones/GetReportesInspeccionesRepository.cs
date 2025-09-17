@@ -755,7 +755,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 new Dimension("Total", tempObservaciones.Count(), 6),
                 new Dimension("B" + EstadosInspeccion.Implementado.ToString(), 0, 7),
                 new Dimension("B" + EstadosInspeccion.Aprobado.ToString(), 0, 8),
-                new Dimension("B" + EstadosInspeccion.Rechazado.ToString(), 0, 9)
+                new Dimension("B" + EstadosInspeccion.Rechazado.ToString(), 0, 9),
+                new Dimension("B" + EstadosInspeccion.Vencido.ToString(), 0, 10)
             };
 
             foreach (var item in observaciones)

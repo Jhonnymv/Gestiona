@@ -381,6 +381,45 @@ a:focus {
     border-collapse: separate;
     border-spacing: 0 15px;
 }
+/* Aplica al contenedor de la tabla */
+.table-responsive {
+    overflow-x: auto; /* Scroll horizontal si es necesario */
+    overflow-y: auto; /* Scroll vertical si es necesario */
+    max-height: 800px; /* Altura máxima de la tabla */
+    scrollbar-width: thick; /* thin | auto | thick */
+    scrollbar-color: #888 #f1f1f1; /* thumb | track */
+}
+/* Mantener fija la cabecera */
+    /*.table-responsive thead,
+    .table-responsive tbody tr {
+        display: table;
+        width: 100%;*/
+        /*table-layout: fixed;*/ /* mantiene alineadas las columnas */
+    /*}*/
+
+    .table-responsive thead {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #fff; /* color de fondo para que no se traslape */
+    }
+    /* Scrollbar general */
+    .table-responsive::-webkit-scrollbar {
+        width: 32px; /* ancho del scroll vertical */
+        height: 32px; /* alto del scroll horizontal */
+    }
+
+    /* Fondo de la barra */
+    .table-responsive::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    /* La parte que se mueve */
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
 
 .table-responsive table thead {
     font-size: 12px;

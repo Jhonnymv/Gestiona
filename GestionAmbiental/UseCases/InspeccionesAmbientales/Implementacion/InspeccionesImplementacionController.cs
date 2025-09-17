@@ -220,13 +220,16 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     {
                         var evidencia = "";
                         var evidencia_implementacion = "";
+                        //for (int i = 0; i < observacion.EvidenciaCondicion.Count; i++)
+                        //    evidencia = "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "\">Evidencia</a>";
                         for (int i = 0; i < observacion.EvidenciaCondicion.Count; i++)
-                            evidencia = "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "\">Evidencia</a>";
-
+                        {
+                            evidencia = evidencia + "<button class=\"btn btn-mc\" type=\"button\" onclick=\"PrevisualizarImagen(\'" + observacion.EvidenciaCondicion[i] + "\',\'reg\')\">Evidencia</button>";
+                        }
                         if (observacion.EvidenciaImplementacion != null)
                         {
                             for (int i = 0; i < observacion.EvidenciaImplementacion.Count; i++)
-                                evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?fileName=" + observacion.EvidenciaImplementacion[i] + "\">Evidencia</a>";
+                                evidencia = evidencia + "<button class=\"btn btn-mc\" type=\"button\" onclick=\"PrevisualizarImagen(\'" + observacion.EvidenciaImplementacion[i] + "\','imp')\">Evidencia Implementación</button>";
                         }
                         filaObservacion += "<tr>";
 
@@ -516,6 +519,103 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 return await _gestorArchivos.UploadFTPFileAsync(encryptedArchiveFile, newFileName,Tipo_Info_SGA.FTPConnectionEvidenciaI);
             }
         }
-        
+        [HttpPost]
+        public async Task<IActionResult> ObtenerImageneCargada(string imagen)
+        {
+            dynamic response;
+            if (HttpContext.Session.GetString("SessionUser") != null && imagen != null)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var imagesSrc = new ImagenCargada();
+
+                try
+                {
+                    var encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(imagen, userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionEvidenciaI);
+
+                    /* Save encrypted file in temp path*/
+                    var tempPath = Path.GetTempPath();
+
+                    var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
+                    if (!Directory.Exists(SGATempPath))
+                    {
+                        Directory.CreateDirectory(SGATempPath);
+                    }
+                    var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                    var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
+
+                    /*decrypt file*/
+                    var decryptedFileName = "desencriptado.zip";
+                    await _gestorEncriptado.DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                    /*read decrypted file*/
+                    //FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
+
+                    //3. Desencriptar archivo
+                    DateTime dateTime = DateTime.UtcNow.Date;
+                    var pathDesencriptado = archivePath + "desencriptado" + dateTime.ToString("dd-MM-yyyy HHmm") + ".zip";
+                    await _gestorEncriptado.DecryptFileAsync(encryptedFile, pathDesencriptado);
+                    // fileStream.Dispose();
+                    //4. descomprimir en carpeta temporal submission
+                    if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                        filePath += Path.DirectorySeparatorChar;
+                    var outputFileName = "";
+                    var outputFileExtension = "";
+                    using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
+                    {
+                        foreach (ZipArchiveEntry entry in archive.Entries)
+                        {
+                            outputFileName = entry.FullName;
+                            outputFileExtension = Path.GetExtension(entry.FullName);
+                            filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
+                            if (filePath.StartsWith(filePath, StringComparison.Ordinal))
+                                entry.ExtractToFile(filePath);
+                        }
+                    }
+                    byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+                    var newFileName = imagen.Replace(Path.GetExtension(imagen), Path.GetExtension(filePath));
+
+                    /*read decrypted file*/
+                    //byte[] imageByteData = System.IO.File.ReadAllBytes(archivePath + decryptedFileName);
+                    string imageBase64Data = Convert.ToBase64String(bytes);
+                    string imageDataURL = string.Format("data:image/png;base64,{0}", imageBase64Data);
+
+                    imagesSrc = new ImagenCargada
+                    {
+                        Nombre = outputFileName,
+                        NombreCarga = imagen,
+                        Src = imageDataURL,
+                        EsImagen = (outputFileExtension.ToLower() == ".jpg" || outputFileExtension.ToLower() == ".jpeg" || outputFileExtension.ToLower() == ".png" || outputFileExtension.ToLower() == ".jpg" || outputFileExtension.ToLower() == ".jpeg" || outputFileExtension.ToLower() == ".png")
+                    };
+                }
+                catch (Exception ex)
+                {
+                    //No se encontró el archivo 
+                    response = new
+                    {
+                        imagenes = ""
+                    };
+                }
+
+                response = new
+                {
+                    imagenes = JsonConvert.SerializeObject(imagesSrc)
+                };
+            }
+            else
+            {
+                response = new
+                {
+                    imagenes = ""
+                };
+            }
+            return Ok(response);
+        }
+        private class ImagenCargada
+        {
+            public string Nombre { get; set; }
+            public string Src { get; set; }
+            public string NombreCarga { get; set; }
+            public bool EsImagen { get; set; }
+        }
     }
 }
