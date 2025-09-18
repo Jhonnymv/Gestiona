@@ -1112,13 +1112,11 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     model.Comentario_Accion,
                     model.Id_Supervisor,
                     model.Opcion);
-                //if (model.Opcion.Equals("Completar"))
-                //    return RedirectToAction("NotificarNuevoReporte", "NotificacionesReporteIncidente", new { IdReporte = model.Id_Reporte_Preliminar });
-                //else
-                //  return RedirectToAction("Resumen");
 
-            //}
-            return RedirectToAction("EditarReportePreliminar", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
+            //if (model.Opcion.Equals("Completar"))
+            //    return RedirectToAction("NotificarNuevoReporte", "NotificacionesReporteIncidente", new { IdReporte = model.Id_Reporte_Preliminar });
+            //else
+                return RedirectToAction("EditarReportePreliminar", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
         }
         [HttpPost]
         public async Task<IActionResult> EliminarReportePreliminar(string IdReporte)

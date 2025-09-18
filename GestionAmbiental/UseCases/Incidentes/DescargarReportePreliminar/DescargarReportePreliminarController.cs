@@ -119,8 +119,10 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
 
 
             int filaCausas = 20;
-            //Causas
-            foreach (var causa in causas)
+            //Causas Inmediatas
+            var causasInmediata = causas.Where(x => x.Tipo_Acto_Condicion.Equals("Acto Subestándar") || x.Tipo_Acto_Condicion.Equals("Condición Subestándar")).ToList();
+            var causasBasica = causas.Where(x => x.Tipo_Acto_Condicion.Equals("Factor Personal") || x.Tipo_Acto_Condicion.Equals("Factor Laboral")).ToList();
+            foreach (var causa in causasInmediata)
             {
                 IRow row = sheet.GetRow(filaCausas);
                 //Correr todas las filas y agregar una nueva
@@ -142,13 +144,38 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
                 sheet.AddMergedRegion(new CellRangeAddress(filaCausas, filaCausas, 5, 14));
                 sheet.AddMergedRegion(new CellRangeAddress(filaCausas, filaCausas, 15, 25));
             }
-            //Unir la primera columna y las n filas generadas
-            sheet.AddMergedRegion(new CellRangeAddress(filaCausas - 1, (filaCausas + causas.Count) - 1, 1, 4));
+            //Causas Básicas
 
-            sheet.GetRow(filaCausas + causas.Count).GetCell(5).SetCellValue(reporte.Otra_Causa_Incidente);
+            int filaCausasInmediatas = 22+ causasInmediata.Count;
+            foreach (var causa in causasBasica)
+            {
+                IRow row = sheet.GetRow(filaCausasInmediatas);
+                //Correr todas las filas y agregar una nueva
+                if (row != null)
+                {
+                    sheet.ShiftRows(filaCausasInmediatas, sheet.LastRowNum, 1);
+                    row = sheet.CreateRow(filaCausasInmediatas);
+                }
+                //Agregar las celdas necesarias y asignarles el estilo
+                for (int currentCell = 1; currentCell < 26; currentCell++)
+                {
+                    row.CreateCell(currentCell);
+                    row.GetCell(currentCell).CellStyle = customCellStyle;
+                }
+                //Completar la informacion
+                row.GetCell(5).SetCellValue(causa.Factor_Causa_Incidente);
+                row.GetCell(15).SetCellValue(causa.Descripcion);
+                //Unir las celdas
+                sheet.AddMergedRegion(new CellRangeAddress(filaCausasInmediatas, filaCausasInmediatas, 5, 14));
+                sheet.AddMergedRegion(new CellRangeAddress(filaCausasInmediatas, filaCausasInmediatas, 15, 25));
+            }
+            //Unir la primera columna y las n filas generadas
+            sheet.AddMergedRegion(new CellRangeAddress(filaCausasInmediatas - 1, (filaCausasInmediatas + causas.Count) - 1, 1, 4));
+
+            sheet.GetRow(filaCausasInmediatas + causasBasica.Count).GetCell(5).SetCellValue(reporte.Otra_Causa_Incidente);
 
             //Involucrados
-            int filaInvolucrados = filaCausas + causas.Count + 3;
+            int filaInvolucrados = filaCausasInmediatas + causasBasica.Count + 3;
             foreach (var involucrado in involucrados)
             {
                 IRow row = sheet.GetRow(filaInvolucrados);
@@ -180,16 +207,19 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
                 sheet.AddMergedRegion(new CellRangeAddress(filaInvolucrados, filaInvolucrados, 23, 25));
             }
 
-            //Acciones
-            int filaAcciones = filaInvolucrados + involucrados.Count + 2;
-            foreach (var accion in acciones)
+            //Acciones Inmediatas
+            int filaAccionesInmediatas = filaInvolucrados + involucrados.Count + 2;
+            var accionesInmediata = acciones.Where(x => x.Tipo_Accion.Equals("Acción Inmediata")).ToList();
+            var accionesCorrectiva = acciones.Where(x => x.Tipo_Accion.Equals("Acción Correctiva")).ToList();
+
+            foreach (var accion in accionesInmediata)
             {
-                IRow row = sheet.GetRow(filaAcciones);
+                IRow row = sheet.GetRow(filaAccionesInmediatas);
                 //Correr todas las filas y agregar una nueva
                 if (row != null)
                 {
-                    sheet.ShiftRows(filaAcciones, sheet.LastRowNum, 1);
-                    row = sheet.CreateRow(filaAcciones);
+                    sheet.ShiftRows(filaAccionesInmediatas, sheet.LastRowNum, 1);
+                    row = sheet.CreateRow(filaAccionesInmediatas);
                 }
                 //Agregar las celdas necesarias y asignarles el estilo
                 for (int currentCell = 1; currentCell < 26; currentCell++)
@@ -204,22 +234,54 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
                 row.GetCell(23).SetCellValue(accion.Fecha != null ? accion.Fecha.Value.ToString("dd/MM/yyyy") : "");
                 row.GetCell(24).SetCellValue(accion.Estatus);
                 //Unir las celdas
-                sheet.AddMergedRegion(new CellRangeAddress(filaAcciones, filaAcciones, 5, 14));
-                sheet.AddMergedRegion(new CellRangeAddress(filaAcciones, filaAcciones, 15, 19));
-                sheet.AddMergedRegion(new CellRangeAddress(filaAcciones, filaAcciones, 20, 22));
-                sheet.AddMergedRegion(new CellRangeAddress(filaAcciones, filaAcciones, 24, 25));
+                sheet.AddMergedRegion(new CellRangeAddress(filaAccionesInmediatas, filaAccionesInmediatas, 5, 14));
+                sheet.AddMergedRegion(new CellRangeAddress(filaAccionesInmediatas, filaAccionesInmediatas, 15, 19));
+                sheet.AddMergedRegion(new CellRangeAddress(filaAccionesInmediatas, filaAccionesInmediatas, 20, 22));
+                sheet.AddMergedRegion(new CellRangeAddress(filaAccionesInmediatas, filaAccionesInmediatas, 24, 25));
             }
             //Unir la primera columna y las n filas generadas
-            sheet.AddMergedRegion(new CellRangeAddress(filaAcciones - 1, (filaAcciones + acciones.Count) - 1, 1, 4));
+            sheet.AddMergedRegion(new CellRangeAddress(filaAccionesInmediatas - 1, (filaAccionesInmediatas + acciones.Count) - 1, 1, 4));
 
-            sheet.GetRow(filaAcciones + acciones.Count).GetCell(5).SetCellValue(reporte.Comentario_Accion);
-            var filaSupervisor = filaAcciones + acciones.Count + 2;
+            //Acciones Inmediatas
+            int filaAccionesCorrectivas = filaAccionesInmediatas + accionesInmediata.Count + 1;
+
+            foreach (var accion in accionesCorrectiva)
+            {
+                IRow row = sheet.GetRow(filaAccionesCorrectivas);
+                //Correr todas las filas y agregar una nueva
+                if (row != null)
+                {
+                    sheet.ShiftRows(filaAccionesCorrectivas, sheet.LastRowNum, 1);
+                    row = sheet.CreateRow(filaAccionesCorrectivas);
+                }
+                //Agregar las celdas necesarias y asignarles el estilo
+                for (int currentCell = 1; currentCell < 26; currentCell++)
+                {
+                    row.CreateCell(currentCell);
+                    row.GetCell(currentCell).CellStyle = customCellStyle;
+                }
+                //Completar la informacion
+                row.GetCell(5).SetCellValue(accion.Accion_Inmediata);
+                row.GetCell(15).SetCellValue(accion.Responsable_Marcobre);
+                row.GetCell(20).SetCellValue(accion.Responsable_Contratista != null ? accion.Responsable_Contratista : "No Aplica");
+                row.GetCell(23).SetCellValue(accion.Fecha != null ? accion.Fecha.Value.ToString("dd/MM/yyyy") : "");
+                row.GetCell(24).SetCellValue(accion.Estatus);
+                //Unir las celdas
+                sheet.AddMergedRegion(new CellRangeAddress(filaAccionesCorrectivas, filaAccionesCorrectivas, 5, 14));
+                sheet.AddMergedRegion(new CellRangeAddress(filaAccionesCorrectivas, filaAccionesCorrectivas, 15, 19));
+                sheet.AddMergedRegion(new CellRangeAddress(filaAccionesCorrectivas, filaAccionesCorrectivas, 20, 22));
+                sheet.AddMergedRegion(new CellRangeAddress(filaAccionesCorrectivas, filaAccionesCorrectivas, 24, 25));
+            }
+            //Unir la primera columna y las n filas generadas
+            sheet.AddMergedRegion(new CellRangeAddress(filaAccionesCorrectivas - 1, (filaAccionesCorrectivas + acciones.Count) - 1, 1, 4));
+
+            sheet.GetRow(filaAccionesCorrectivas + accionesCorrectiva.Count).GetCell(5).SetCellValue(reporte.Comentario_Accion);
+            var filaSupervisor = filaAccionesCorrectivas + accionesCorrectiva.Count + 2;
+
             sheet.GetRow(filaSupervisor).GetCell(12).SetCellValue(reporte.Supervisor_MA);
 
             int filaEvidencias = filaSupervisor + 2;
             int imageIndex = 1;
-
-
 
             if (reporte.Evidencia != null)
             {

@@ -670,6 +670,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                             RiesgoFatalidad = "",
                             GerenciaLevantamiento = inspeccion.GerenciaInspeccionada,
                             GerenciaInspeccion = inspeccion.Gerencia,
+                            EmpresaInspeccionada = inspeccion.Empresa,
                             ParticipantesInspeccion = inspeccion.Participantes_Inspección_Texto,
                             Asesor = observacion.Asesor.Nombres + " " + observacion.Asesor.Apellidos,
                             Codigo = inspeccion.Codigo,
@@ -875,7 +876,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     IRow row = sheet.CreateRow(fila);
 
                     //Aplicar cell style a una fila de observación
-                    for (int i = 1; i <= 23; i++)
+                    for (int i = 1; i <= 24; i++)
                     {
                         row.CreateCell(i);
                         row.GetCell(i).CellStyle = estiloNormal;
@@ -984,20 +985,22 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     row.GetCell(startIndex + 17).SetCellValue(observacion.GerenciaLevantamiento);
                     //-> Gerencia de la inspección
                     row.GetCell(startIndex + 18).SetCellValue(observacion.GerenciaInspeccion);
+                    //-> Empresa Inspeccionada
+                    row.GetCell(startIndex + 19).SetCellValue(observacion.EmpresaInspeccionada);
                     //-> Participantes de la inspección
-                    row.GetCell(startIndex + 19).SetCellValue(observacion.ParticipantesInspeccion);
+                    row.GetCell(startIndex + 20).SetCellValue(observacion.ParticipantesInspeccion);
                     //-> Asesor
-                    row.GetCell(startIndex + 20).SetCellValue(observacion.Asesor);
+                    row.GetCell(startIndex + 21).SetCellValue(observacion.Asesor);
                     //-> Tipo de Inspección
-                    row.GetCell(startIndex + 21).SetCellValue(observacion.TipoInspeccion);
+                    row.GetCell(startIndex + 22).SetCellValue(observacion.TipoInspeccion);
                     //-> N° Inspección GESTIONA
-                    row.GetCell(startIndex + 22).SetCellValue(observacion.Codigo);
+                    row.GetCell(startIndex + 23).SetCellValue(observacion.Codigo);
                     XSSFHyperlink UrlLinkLugReg = new XSSFHyperlink(HyperlinkType.Url)
                     {
                         //Address = "https://gestiona.marcobre.com:9190/Inspecciones/DetalleInspeccion?IdCabecera="+(_protector.Protect(observacion.IdInspeccion))
                         Address = "https://gestiona.marcobre.com:9190/Inspecciones/DetalleInspeccionNotificacion?IdCabecera=" + observacion.IdInspeccion
                     };
-                    row.GetCell(startIndex + 22).Hyperlink = (UrlLinkLugReg);
+                    row.GetCell(startIndex + 23).Hyperlink = (UrlLinkLugReg);
 
                     obsIndex++;
                     fila++;
@@ -1333,6 +1336,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             public string RiesgoFatalidad { get; set; }
             public string GerenciaLevantamiento { get; set; }
             public string GerenciaInspeccion { get; set; }
+            public string EmpresaInspeccionada { get; set; }
             public string ParticipantesInspeccion { get; set; }
             public string Asesor { get; set; }
             public string Codigo { get; set; }

@@ -480,9 +480,9 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
                     //if (model.Opcion.Equals("Difundir") && model.Investigacion)
                     //return RedirectToAction("IniciarInvestigacion", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
                     //else if (model.Opcion.Equals("Difundir"))
-                    if (model.Opcion.Equals("Difundir"))
-                        return RedirectToAction("DifundirNuevoReporte", "NotificacionesReporteIncidente", new { IdReporte = model.Id_Reporte_Preliminar });
-                    else
+                    //if (model.Opcion.Equals("Difundir"))
+                    //    return RedirectToAction("DifundirNuevoReporte", "NotificacionesReporteIncidente", new { IdReporte = model.Id_Reporte_Preliminar });
+                    //else
                         return RedirectToAction("EditarReportePreliminarMA", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
                 }
                 return RedirectToAction("EditarReportePreliminarMA", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });

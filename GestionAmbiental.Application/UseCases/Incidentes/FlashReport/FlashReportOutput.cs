@@ -32,6 +32,9 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.FlashReport
 		public string Archivo_Registro_Fotografico { get; set; }
 		public int Id_Supervisor_Marcobre { get; set; }
         public string Supervisor_Marcobre_Nombre { get; set; }
+        public string Supervisor_Marcobre_Email { get; set; }
+        public int? Id_Registrado_Por { get; set; }
+        public string Registrado_Por_Nombre { get; set; }
         public string Supervisor_Contratista { get; set; }
         public string Cargo_Supervisor_Marcobre { get; set; }
         public string Cargo_Supervisor_Contratista { get; set; }
@@ -50,6 +53,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.FlashReport
             Nivel_Incidente = flashReport.Id_Nivel_Incidente;
             Nivel_Incidente_Descripcion = flashReport.Nivel_Incidente.Descripcion;
 			Id_Componente_Ambiental = flashReport.Id_Componente_Ambiental;
+            Componente_Ambiental_Descripcion = flashReport.Componente_Ambiental.Descripcion;
             Id_Producto_Incidente = flashReport.Id_Producto_Incidente;
             Producto_Incidente_Nombre = flashReport.Producto_Incidente?.Descripcion ?? string.Empty;
             Cantidad_Derramada = flashReport.Cantidad_Derramada;
@@ -61,6 +65,11 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.FlashReport
             Id_Supervisor_Marcobre = flashReport.Id_Supervisor_Marcobre;
             Supervisor_Marcobre_Nombre = flashReport.Supervisor_Marcobre != null
                 ? (flashReport.Supervisor_Marcobre.Nombres + " " + flashReport.Supervisor_Marcobre.Apellidos) : string.Empty;
+            Supervisor_Marcobre_Email = flashReport.Supervisor_Marcobre != null
+                ? flashReport.Supervisor_Marcobre.Email : string.Empty;
+            Id_Registrado_Por = flashReport.Id_Registrado_Por;
+            Registrado_Por_Nombre = flashReport.Registrado_Por != null
+                ? (flashReport.Registrado_Por.Nombres + " " + flashReport.Registrado_Por.Apellidos) : string.Empty;
             Supervisor_Contratista = flashReport.Supervisor_Contratista;
             Cargo_Supervisor_Marcobre = flashReport.Cargo_Supervisor_Marcobre;
             Cargo_Supervisor_Contratista = flashReport.Cargo_Supervisor_Contratista;
