@@ -65,7 +65,7 @@ namespace GestionAmbiental.UseCases.Util.Implementation
             }
             /* Save file in application server to decrypt */
             var tempPath = Path.GetTempPath();
-            var SGATempPath = tempPath + "Descarga Temporal Gestiona/";
+            var SGATempPath = tempPath + "Descarga Temporal Gestiona-Pruebas/";
             if (!Directory.Exists(SGATempPath))
             {
                 Directory.CreateDirectory(SGATempPath);
