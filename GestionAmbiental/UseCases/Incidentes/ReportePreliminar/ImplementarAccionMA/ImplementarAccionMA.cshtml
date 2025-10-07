@@ -1,0 +1,154 @@
+﻿@model GestionAmbiental.UseCases.Incidentes.ReportePreliminar.ImplementarAccionMA.ImplementarAccionMAModel
+@{
+    ViewData["Title"] = "ImplementarAccionMA";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="incidentes">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title incidentes-opacity-color">
+                <h3>Implementar Acción</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" id="formImplementarAccion" asp-action="ImplementarAccionMA" asp-controller="ImplementarAccionMAIncidenteMenor" method="post" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" asp-for="Id_Reporte" value="@Model.Id_Reporte" />
+                <input type="hidden" asp-for="Id_Encriptado" value="@Model.Id_Encriptado" />
+                <input type="hidden" asp-for="Id_Reporte_Encriptado" value="@Model.Id_Reporte_Encriptado" />
+                <input type="hidden" asp-for="Id_Accion_Incidente_Investigacion" value="@Model.Id_Accion_Incidente_Investigacion" />
+                <input type="hidden" asp-for="Estado" value="@Model.Estado" />
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <label asp-for="Tipo_Accion"></label>
+                        <span class="text-danger" asp-validation-for="Tipo_Accion"></span>
+                        <input type="text" class="form-control" asp-for="Tipo_Accion" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Accion_Inmediata"></label>
+                        <span class="text-danger" asp-validation-for="Accion_Inmediata"></span>
+                        <input type="text" class="form-control" asp-for="Accion_Inmediata" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Responsable_Marcobre"></label>
+                        <span class="text-danger" asp-validation-for="Responsable_Marcobre"></span>
+                        <input type="text" class="form-control" asp-for="Responsable_Marcobre" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Responsable_Marcobre2"></label>
+                        <span class="text-danger" asp-validation-for="Responsable_Marcobre2"></span>
+                        <input type="text" class="form-control" asp-for="Responsable_Marcobre2" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Responsable_Contratista"></label>
+                        <span class="text-danger" asp-validation-for="Responsable_Contratista"></span>
+                        <input type="text" class="form-control" asp-for="Responsable_Contratista" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Fecha"></label>
+                        <span class="text-danger" asp-validation-for="Fecha"></span>
+                        <input type="date" class="form-control" asp-for="Fecha" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Estatus"></label>
+                        <span class="text-danger" asp-validation-for="Estatus"></span>
+                        <input type="text" class="form-control" asp-for="Estatus" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Evidencias"></label>
+                        <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
+                            <span id="danger_evidencias" class=""></span>
+                        </span>
+                        <input class="form-control" type="file" asp-for="Evidencias" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Comentarios_Implementacion"></label>
+                        <span class="text-danger" asp-validation-for="Comentarios_Implementacion"></span>
+                        <textarea type="text" class="form-control" asp-for="Comentarios_Implementacion" maxlength="250" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="button-container">
+                        <div></div>
+                        <div>
+                            <a id="boton_cancelar" class="btn btn-mc-outline-danger" asp-controller="ReportePreliminar" asp-action="EditarReportePreliminar" asp-route-IdReporte="@Model.Id_Reporte_Encriptado">Cancelar</a>
+                            <button id="boton_implementar" type="button" class="btn btn-mc" onclick="Implementar()">Implementar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+
+        function Implementar() {
+            if (ValidarEvidencia()) {
+                HabilitarInputs();
+                $("#formImplementarAccion").submit();
+            }
+        }
+        function ValidarEvidencia() {
+            if ($("#Evidencias").get(0).files.length === 0) {
+                $("#danger_evidencias").html("Debe ingresar evidencias<br/>");
+                return false;
+            }
+            return true;
+        }
+        //Evidencias
+        $("#Evidencias").change(function () {
+            $("#danger_evidencias").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Evidencias").data('max-size');
+            var archivos = $("#Evidencias").get(0).files;
+
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_evidencias").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    return;
+                }
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'png':
+                        case 'PNG':
+                        case 'xls':
+                        case 'xlsx':
+                        case 'doc':
+                        case 'docx':
+                        case 'pdf':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name").text(filesname);
+                            $("#danger_evidencias").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#files_name").html(filesName) : null;
+            }
+        });
+        function HabilitarInputs() {
+            $("#Tipo_Accion").prop("disabled", false);
+            $("#Accion_Inmediata").prop("disabled", false);
+            $("#Responsable_Marcobre").prop("disabled", false);
+            $("#Responsable_Contratista").prop("disabled", false);
+            $("#Fecha").prop("disabled", false);
+            $("#Estatus").prop("disabled", false);
+        }
+    </script>
+}
+

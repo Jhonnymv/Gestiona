@@ -80,7 +80,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReportMA
 			_getFlashReport = getFlashReport;
 			_getFlashReportsMA = getFlashReportsMA;
 
-			_protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InvestigacionIdRouteValue);
+			_protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.FlashReportIdRouteValue);
 		}
 		public IActionResult PropiedadesModulo()
 		{
@@ -437,13 +437,16 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReportMA
 							await _registrarAccionFlashReport.Execute(IdFlashReport, accion.Descripcion, accion.Usuario, accion.Contratista, accion.Fecha, accion.Estado, "Registrado");
 						}
 					}
-				}
-
-				return RedirectToAction("Resumen");
-			}
-            var IdEncriptado = _protector.Protect(model.Id_Flash_Report.ToString());
-            return RedirectToAction("EditarFlashReport", new { IdFlashReport = IdEncriptado });
-		}
+                }
+                var IdEncriptado = _protector.Protect(model.Id_Flash_Report.ToString());
+                if (model.Opcion == "GuardarEstado")
+                    return RedirectToAction("EditarFlashReport", "FlashReportMA", new { IdFlashReport = IdEncriptado });
+                else if (model.Opcion == "Difundir")
+                    return RedirectToAction("DifundirNuevoReporte", "NotificacionesFlashReport", new { IdFlashReport = IdFlashReport });
+                return RedirectToAction("EditarFlashReport", new { IdFlashReport = IdEncriptado });
+            }
+            return RedirectToAction("Resumen");
+        }
 		[HttpGet]
 		public async Task<IActionResult> ListarAcciones(int Id_Flash_Report)
 		{
@@ -546,7 +549,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReportMA
 					/* Save encrypted file in temp path*/
 					var tempPath = Path.GetTempPath();
 
-					var SGATempPath = tempPath + "Descarga Temporal Gestiona-Pruebas\\";
+					var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
 					if (!Directory.Exists(SGATempPath))
 					{
 						Directory.CreateDirectory(SGATempPath);
@@ -598,7 +601,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReportMA
 				ViewBag.Usuario = userInfo.NombreUsuario;
 
 				var tempPath = Path.GetTempPath();
-				var SGATempPath = tempPath + "Descarga Temporal Gestiona-Pruebas/";
+				var SGATempPath = tempPath + "Descarga Temporal Gestiona/";
 				if (!Directory.Exists(SGATempPath))
 				{
 					Directory.CreateDirectory(SGATempPath);

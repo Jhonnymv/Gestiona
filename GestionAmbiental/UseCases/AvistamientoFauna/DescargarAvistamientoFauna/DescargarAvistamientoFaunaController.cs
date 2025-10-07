@@ -324,7 +324,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
 
             //1. Vaciar carpeta temporal del usuario 
             var tempPath = Path.GetTempPath();
-            var SGATempPath = tempPath + "Descarga Temporal Gestiona-Pruebas\\";
+            var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
             if (!Directory.Exists(SGATempPath))
             {
                 Directory.CreateDirectory(SGATempPath);

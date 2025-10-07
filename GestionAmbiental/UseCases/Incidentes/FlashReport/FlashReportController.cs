@@ -88,7 +88,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
             _getFlashReport = getFlashReport;
             _getFlashReports = getFlashReports;
 
-            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InvestigacionIdRouteValue);
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.FlashReportIdRouteValue);
         }
         public IActionResult PropiedadesModulo()
         {
@@ -586,10 +586,13 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
                         await _registrarAccionFlashReport.Execute(IdFlashReport, accion.Descripcion, accion.Usuario, accion.Contratista, accion.Fecha, accion.Estado, "Registrado");
                     }
                 }
-
-                return RedirectToAction("Resumen");
+                var IdEncriptado = _protector.Protect(IdFlashReport.ToString());
+                if (model.Opcion== "GuardarEstado")
+                    return RedirectToAction("EditarFlashReport", "FlashReport", new { IdFlashReport = IdEncriptado });
+                else if(model.Opcion == "Registrar")
+                    return RedirectToAction("NotificarNuevoReporte", "NotificacionesFlashReport", new { IdFlashReport = IdFlashReport });
             }
-            return RedirectToAction("NuevoFlashReport");
+            return RedirectToAction("Resumen");
         }
         [HttpPost]
         public async Task<IActionResult> EditarFlashReport(EditarFlashReportModel model)
@@ -714,7 +717,11 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
                     }
                 }
 
-                return RedirectToAction("Resumen");
+                var IdEncriptado = _protector.Protect(IdFlashReport.ToString());
+                if (model.Opcion == "GuardarEstado")
+                    return RedirectToAction("EditarFlashReport", "FlashReport", new { IdFlashReport = IdEncriptado });
+                else if (model.Opcion == "Registrar")
+                    return RedirectToAction("NotificarNuevoReporte", "NotificacionesFlashReport", new { IdFlashReport = IdFlashReport });
             }
             return RedirectToAction("NuevoFlashReport");
         }
@@ -874,7 +881,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
                         /* Save encrypted file in temp path*/
                         var tempPath = Path.GetTempPath();
 
-                        var SGATempPath = tempPath + "Descarga Temporal Gestiona-Pruebas\\";
+                        var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
                         if (!Directory.Exists(SGATempPath))
                         {
                             Directory.CreateDirectory(SGATempPath);
@@ -948,7 +955,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
 
-                    var SGATempPath = tempPath + "Descarga Temporal Gestiona-Pruebas\\";
+                    var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
                     if (!Directory.Exists(SGATempPath))
                     {
                         Directory.CreateDirectory(SGATempPath);
@@ -1001,7 +1008,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "Descarga Temporal Gestiona-Pruebas/";
+                var SGATempPath = tempPath + "Descarga Temporal Gestiona/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);

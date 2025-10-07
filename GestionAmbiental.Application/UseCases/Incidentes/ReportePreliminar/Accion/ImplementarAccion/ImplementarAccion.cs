@@ -23,7 +23,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Acc
         public async Task<int> Execute(int IdAccion,List<string> evidencias, string comentario)
         {
             var input = new Accion_Incidente_Reporte();
-            input.Id_Reporte_Preliminar = IdAccion;
+            input.Id_Accion_Incidente_Reporte = IdAccion;
             input.Evidencia = JsonConvert.SerializeObject(evidencias);
             input.Comentarios_Implementacion = comentario;
             input.Fecha_Implementacion = DateTime.Now;

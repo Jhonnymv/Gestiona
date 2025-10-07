@@ -29,13 +29,20 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.FlashReport
         private readonly IDataProtector _protector;
         private readonly DescargarFlashReportController _descargarFlashReportController;
 
-        public NotificacionesFlashReportController(IWebHostEnvironment hostingEnvironment, IGetFlashReport getFlashReport, IGetUsuariosNotificarIncidente getUsuariosNotificarIncidente, IGetInfo_SGA info_SGA, IDataProtector protector, DescargarFlashReportController descargarFlashReportController)
+        public NotificacionesFlashReportController(
+            IWebHostEnvironment hostingEnvironment, 
+            IGetFlashReport getFlashReport, 
+            IGetUsuariosNotificarIncidente getUsuariosNotificarIncidente, 
+            IGetInfo_SGA info_SGA, 
+            IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
+            DescargarFlashReportController descargarFlashReportController)
         {
             _hostingEnvironment = hostingEnvironment;
             _getFlashReport = getFlashReport;
             _getUsuariosNotificarIncidente = getUsuariosNotificarIncidente;
             _info_SGA = info_SGA;
-            _protector = protector;
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.FlashReportIdRouteValue);
             _descargarFlashReportController = descargarFlashReportController;
         }
 
@@ -118,7 +125,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.FlashReport
 
             return RedirectToAction("Resumen", "FlashReport");
         }
-        public async Task<IActionResult> DifundirNuevoReporte(int IdReporte)
+        public async Task<IActionResult> DifundirNuevoReporte(int IdFlashReport)
         {
             var r = 76;
             var g = 193;
@@ -144,7 +151,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.FlashReport
                 Log.Error(e.Message);
             }
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-            var info = await _getFlashReport.Execute(IdReporte);
+            var info = await _getFlashReport.Execute(IdFlashReport);
             var usuarios = await _getUsuariosNotificarIncidente.Execute();
             var IdEncriptado = _protector.Protect(info.Id_Flash_Report.ToString());
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Incidentes", "FlashReport", "NuevaFlashReportMA.html");
@@ -191,7 +198,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.FlashReport
             msg.BodyEncoding = Encoding.UTF8;
             msg.Body = msgBody;
 
-            var archivoReporte = await _descargarFlashReportController.PrepararFlashReport(IdReporte, userInfo.NombreUsuario);
+            var archivoReporte = await _descargarFlashReportController.PrepararFlashReport(IdFlashReport, userInfo.NombreUsuario);
             msg.Attachments.Add(new Attachment(archivoReporte, "FlashReportIncidente-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx"));
 
             var correosUsuarios = new List<MailAddress>();

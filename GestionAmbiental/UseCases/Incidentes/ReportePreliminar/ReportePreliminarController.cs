@@ -554,15 +554,15 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                             default: filas_acciones += "<td><span class=\"badge bg-secondary\">" + fila.Estado + "</span>"; break;
                         }
                         if (fila.Permiso_Verificacion && fila.Estatus.Equals("Cerrado") && (fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString())))
-                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\" style=\"color:white;text-decoration: none;\" href=\"/ImplementarAccionMAInvestigacion/ImplementarAccionMA?IdAccion=" + IdEncriptado + "\">Cargar Evidencia" + "</a></td>";
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\" style=\"color:white;text-decoration: none;\" href=\"/ImplementarAccionMAIncidenteMenor/ImplementarAccionMA?IdAccion=" + IdEncriptado + "\">Cargar Evidencia" + "</a></td>";
                         else if (fila.Permiso_Implementacion && !fila.Estatus.Equals("Cerrado") && (fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString())))
-                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\" style=\"color:white;text-decoration: none;\" href=\"/ImplementarAccionInvestigacion/ImplementarAccion?IdAccion=" + IdEncriptado + "\">Implementar</a></td>";
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\" style=\"color:white;text-decoration: none;\" href=\"/ImplementarAccionIncidenteMenor/ImplementarAccion?IdAccion=" + IdEncriptado + "\">Implementar</a></td>";
                         else if (fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Implementado.ToString()))
-                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\"style=\"color:white;text-decoration: none;\" href=\"/VerificarAccionInvestigacion/VerificarAccion?IdAccion=" + IdEncriptado + "\">Verificar</a></td>";
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\"style=\"color:white;text-decoration: none;\" href=\"/VerificarAccionIncidenteMenor/VerificarAccion?IdAccion=" + IdEncriptado + "\">Verificar</a></td>";
                         else if ((fila.Permiso_Verificacion || userInfo.Rol.Equals(InspeccionRol.Admin)) && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
                             filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\" style=\"color:white;text-decoration: none;\" onclick=AmpliarFecha(" + fila.Id_Accion_Correctiva_Incidente + ")>Ampliar Fecha</button></td>";
                         else if (fila.Estado.Equals(EstadosIncidentes.Aprobado.ToString()))
-                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc-outline\" style=\"color:#2e6793;text-decoration: none;\" href=\"/VerificarAccionInvestigacion/DetalleAccion?IdAccion=" + IdEncriptado + "\">Detalle</a></td>";
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc-outline\" style=\"color:#2e6793;text-decoration: none;\" href=\"/VerificarAccionIncidenteMenor/DetalleAccion?IdAccion=" + IdEncriptado + "\">Detalle</a></td>";
                         else if ((fila.Permiso_Verificacion || userInfo.Rol.Equals(InspeccionRol.Admin)) && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
                             filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\"style=\"color:white;text-decoration: none;\" onclick=\"AmpliarFecha(" + IdEncriptado + ")\">Ampliar Fecha</button></td>";
                         else
@@ -1113,9 +1113,9 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     model.Id_Supervisor,
                     model.Opcion);
 
-            //if (model.Opcion.Equals("Completar"))
-            //    return RedirectToAction("NotificarNuevoReporte", "NotificacionesReporteIncidente", new { IdReporte = model.Id_Reporte_Preliminar });
-            //else
+            if (model.Opcion.Equals("Completar"))
+                return RedirectToAction("NotificarNuevoReporte", "NotificacionesReporteIncidente", new { IdReporte = model.Id_Reporte_Preliminar });
+            else
                 return RedirectToAction("EditarReportePreliminar", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
         }
         [HttpPost]
@@ -1224,7 +1224,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                         /* Save encrypted file in temp path*/
                         var tempPath = Path.GetTempPath();
 
-                        var SGATempPath = tempPath + "Descarga Temporal Gestiona-Pruebas\\";
+                        var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
                         if (!Directory.Exists(SGATempPath))
                         {
                             Directory.CreateDirectory(SGATempPath);
@@ -1326,7 +1326,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
 
-                    var SGATempPath = tempPath + "Descarga Temporal Gestiona-Pruebas\\";
+                    var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
                     if (!Directory.Exists(SGATempPath))
                     {
                         Directory.CreateDirectory(SGATempPath);
@@ -1379,7 +1379,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 
 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "Descarga Temporal Gestiona-Pruebas/";
+                var SGATempPath = tempPath + "Descarga Temporal Gestiona/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);

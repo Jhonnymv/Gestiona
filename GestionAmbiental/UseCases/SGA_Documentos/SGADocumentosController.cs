@@ -424,7 +424,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "Descarga Temporal Gestiona-Pruebas/";
+                var SGATempPath = tempPath + "Descarga Temporal Gestiona/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
@@ -529,7 +529,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
 
-                    var SGATempPath = tempPath + "Descarga Temporal Gestiona-Pruebas\\";
+                    var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
                     if (!Directory.Exists(SGATempPath))
                     {
                         Directory.CreateDirectory(SGATempPath);
@@ -568,7 +568,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 }
                 /* Save file in application server to decrypt */
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SDescarga Temporal Gestiona-Pruebas/";
+                var SGATempPath = tempPath + "SDescarga Temporal Gestiona/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);

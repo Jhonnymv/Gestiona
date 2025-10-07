@@ -728,7 +728,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                 //1. Vaciar carpeta temporal del usuario 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "Descarga Temporal Gestiona-Pruebas\\";
+                var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
@@ -1017,7 +1017,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 /*
                 //VACIAR CARPETA TEMPORAL
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "Descarga Temporal Gestiona-Pruebas\\";
+                var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
@@ -1051,7 +1051,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
             //1. Vaciar carpeta temporal del usuario 
             var tempPath = Path.GetTempPath();
-            var SGATempPath = tempPath + "Descarga Temporal Gestiona-Pruebas\\";
+            var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
             if (!Directory.Exists(SGATempPath))
             {
                 Directory.CreateDirectory(SGATempPath);

@@ -493,7 +493,7 @@
 
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="detail-header">
-                        <span class="text-white bold text-center ">SEGUIMIENTO</span>
+                        <span class="text-white bold text-center ">SEGUIMIENTO Y VERIFICACIÓN</span>
                     </div>
                     <div class="details-content">
                         <div class="row input_container">
@@ -501,6 +501,43 @@
                                 <label asp-for="Id_Supervisor">Supervisor de Medio Ambiente encargado del seguimiento</label>
                                 <span class="text-danger" asp-validation-for="Id_Supervisor"></span>
                                 <select class="form-control" asp-items="@ViewBag.Supervisor" asp-for="Id_Supervisor" disabled></select>
+                            </div>
+                        </div>
+                        <div class="p-0">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-danger">Progreso de Verificación de Acciones</span>
+                            </div>
+                            <div class="incidentes">
+                                <div class="progress progress-mc" id="progreso_vefirifacion">
+                                    <div class="progress-bar" role="progressbar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                        <span class="percent">0%</span>
+                                    </div>
+                                </div>
+                                <div class="tertiary-content col-12">
+                                    <div class="table-responsive incidentes-color">
+                                        <table class="table" id="tabla_acciones">
+                                            <thead>
+                                                <tr>
+                                                    <th>Acción Tomada</th>
+                                                    <th>Responsable Marcobre 1</th>
+                                                    <th>Responsable Marcobre 2</th>
+                                                    <th>Responsable Contratista</th>
+                                                    <th>Fecha</th>
+                                                    <th>Estatus</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="100">Sin Datos</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="pagination-container incidentes-color" id="paginado">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -904,6 +941,7 @@
             GetInvolucrados();
             GetAcciones();
             GetCausas();
+            GetAccionesVerificacion();
             if ('@ViewBag.PermisosAdmin' == 'True')
                 HabilitarInputs();
 
@@ -999,6 +1037,25 @@
                     $('#tabla_acciones_correctivas tbody').empty();
                     $('#tabla_acciones_correctivas tbody').html(response.filas_acciones_correctivas);
                     $('#NAcciones').val(response.nAcciones);
+                    dataModulo();
+                }
+            });
+        }
+        function GetAccionesVerificacion() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportePreliminar/ListarAccionesVerificacion",
+                data: {
+                    IdReporte: $("#Id_Reporte_Preliminar").val()
+                },
+                success: (response) => {
+                    $('#tabla_acciones tbody').empty();
+                    $('#tabla_acciones tbody').html(response.filas_acciones);
+                    var nAcciones = response.nAcciones;
+                    var nVerificado = response.nVerificado;
+                    var porcentaje = roundNumber((nVerificado * 100 / nAcciones).toString(),2) + "%";
+                    $('#progreso_vefirifacion .progress-bar').width(porcentaje);
+                    $('#progreso_vefirifacion .percent').text(porcentaje);
                     dataModulo();
                 }
             });
