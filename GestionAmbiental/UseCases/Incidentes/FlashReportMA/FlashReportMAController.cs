@@ -312,7 +312,8 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReportMA
 				ViewBag.UsuariosJson = usuariosJson;
 				ViewBag.Componente_Ambiental = componente_Ambiental;
 				ViewBag.Causa_Incidente = causa_Incidente;
-				ViewBag.Supervisores_Marcobre = supervisores_marcobre;
+				ViewBag.Supervisores_Marcobre = usuario;
+				//ViewBag.Supervisores_Marcobre = supervisores_marcobre;
 
 				return View(model);
 			}

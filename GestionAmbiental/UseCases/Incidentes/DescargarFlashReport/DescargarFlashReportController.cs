@@ -196,7 +196,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarFlashReport
                     }
                 }
 
-                for (int i = 0; i <= contador_fila; i++)
+                for (int i = 0; i < contador_fila; i++)
                 {
                     IRow filaDescripción = sheet.CreateRow(11 + i);
                     for (int currentCell = 1; currentCell < 5; currentCell++)
