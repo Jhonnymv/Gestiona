@@ -209,9 +209,9 @@
                                         @if (ViewBag.PermisosAdmin || ViewBag.PermisoMASSO)
                                         {
                                             <button id="guardar_admin" type="button" onclick=" GuardarCambiosAdmin()" class="btn btn-mc-success">Guardar Cambios</button>
-                                            @if(Model.Estado != "Pendiente")
+                                            if (Model.Estado == "Pendiente")
                                             {
-                                                <button id="guardar" type="submit" onclick="FinalizarRegistro()" class="btn btn-mc" disabled>Finalizar Registro</button>
+                                                <button id="guardar" type="submit" onclick="FinalizarRegistro()" class="btn btn-mc" disabled>Finalizar Registro</button>                                                
                                             }
                                             <a id="descargar" type="button" class="btn btn-mc-success" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccionV2" asp-route-IdCabecera="@Model.Id_Inspeccion_Cabecera">
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
