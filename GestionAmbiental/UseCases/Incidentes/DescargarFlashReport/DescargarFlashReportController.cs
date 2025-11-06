@@ -87,7 +87,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarFlashReport
             sheet.GetRow(8).GetCell(4).SetCellValue(flashReport.Componente_Ambiental_Descripcion);
 
             sheet.GetRow(9).GetCell(2).SetCellValue(flashReport.Producto_Incidente_Nombre);
-            sheet.GetRow(9).GetCell(4).SetCellValue(flashReport.Cargo_Supervisor_Contratista + " " + flashReport.Unidad_Cantidad_Derramada_Nombre);
+            sheet.GetRow(9).GetCell(4).SetCellValue(flashReport.Cantidad_Derramada + " " + flashReport.Unidad_Cantidad_Derramada_Nombre);
 
 
             int filaAcciones = 15;
@@ -241,7 +241,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarFlashReport
 
             //1. Vaciar carpeta temporal del usuario 
             var tempPath = Path.GetTempPath();
-            var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
+            var SGATempPath = tempPath + "Descarga Temporal Gestiona V2\\";
             if (!Directory.Exists(SGATempPath))
             {
                 Directory.CreateDirectory(SGATempPath);

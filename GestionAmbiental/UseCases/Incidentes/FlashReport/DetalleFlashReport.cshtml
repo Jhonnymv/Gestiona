@@ -212,6 +212,7 @@
 	<script type="text/javascript">
 		var nombresEvidencias = @Html.Raw(Model.Evidencias_Nombres);
 		var nombresEvidenciasString = '@Html.Raw(Model.Evidencias_Nombres)';
+		var evidencias = '@Html.Raw(Model.Evidencias_Completas)';
 		var lista_acciones = [];
 		$(document).ready(function () {
 			var acciones = @Html.Raw(Model.Acciones);
@@ -236,7 +237,7 @@
 				CargarEvidenciasConNombre(nombresEvidencias, "#Evidencias_Lista", "#Evidencias_Completas");
 				visualizarImagenesCargadas()
 			}
-			else if (evidencia.length > 0) {
+			else if (evidencias.length > 0) {
 				CargarEvidenciasSinNombre(evidencia_valores, "#Evidencias_Lista", "#Evidencias_Completas");
 			}
 		});

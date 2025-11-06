@@ -170,7 +170,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinalMA.ImplementarA
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
 
-                    var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
+                    var SGATempPath = tempPath + "Descarga Temporal Gestiona V2\\";
                     if (!Directory.Exists(SGATempPath))
                     {
                         Directory.CreateDirectory(SGATempPath);
@@ -207,7 +207,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinalMA.ImplementarA
 
 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "Descarga Temporal Gestiona/";
+                var SGATempPath = tempPath + "Descarga Temporal Gestiona V2/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);

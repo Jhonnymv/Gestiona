@@ -14,6 +14,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
     internal class GetReportesIncidentesReadOnlyRepository : IGetReportesIncidentesReadOnlyRepository
     {
         private readonly Context _context;
+        private static readonly int[] ids_incidentes_menores = [6, 1, 2];
+        private static readonly int[] ids_incidentes_mayores = [3, 4, 5];
 
         public GetReportesIncidentesReadOnlyRepository(Context context)
         {
@@ -36,6 +38,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToListAsync();
 
             var registrosIncidentesMenores = await _context.Reporte_Preliminar_Incidente.Where(x =>
+                ids_incidentes_menores.Contains(x.Id_Nivel_Incidente??-1) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
                 x.Id_Gerencia_Responsable.Equals(gerencia != 0 ? gerencia : x.Id_Gerencia_Responsable) &&
@@ -46,6 +49,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
 
             var registrosIncidentesMayores = await _context.Investigacion_Final_Incidente.Where(x =>
+                ids_incidentes_mayores.Contains(x.Id_Nivel_Incidente ?? -1) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
                 x.Id_Gerencia_Responsable.Equals(gerencia != 0 ? gerencia : x.Id_Gerencia_Responsable) &&
@@ -411,6 +415,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var dataIncidentesMenores = await _context.Reporte_Preliminar_Incidente.ToListAsync();
             var registrosIncidentesMenores = dataIncidentesMenores.Where(x =>
+                ids_incidentes_menores.Contains(x.Id_Nivel_Incidente ?? -1) &&
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
@@ -423,6 +428,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var dataIncidentesMayores = await _context.Investigacion_Final_Incidente.ToListAsync();
             var registrosIncidentesMayores = dataIncidentesMayores.Where(x =>
+                ids_incidentes_mayores.Contains(x.Id_Nivel_Incidente ?? -1) &&
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
@@ -467,6 +473,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var dataIncidentesMenores = await _context.Reporte_Preliminar_Incidente.ToListAsync();
             var registrosIncidentesMenores = dataIncidentesMenores.Where(x =>
+                ids_incidentes_menores.Contains(x.Id_Nivel_Incidente ?? -1) &&
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
@@ -479,6 +486,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var dataIncidentesMayores = await _context.Investigacion_Final_Incidente.ToListAsync();
             var registrosIncidentesMayores = dataIncidentesMayores.Where(x =>
+                ids_incidentes_mayores.Contains(x.Id_Nivel_Incidente ?? -1) &&
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
@@ -531,6 +539,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var dataIncidentesMenores = await _context.Reporte_Preliminar_Incidente.ToListAsync();
             var registrosIncidentesMenores = dataIncidentesMenores.Where(x =>
+                ids_incidentes_menores.Contains(x.Id_Nivel_Incidente ?? -1) &&
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
@@ -543,6 +552,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var dataIncidentesMayores = await _context.Investigacion_Final_Incidente.ToListAsync();
             var registrosIncidentesMayores = dataIncidentesMayores.Where(x =>
+                ids_incidentes_mayores.Contains(x.Id_Nivel_Incidente ?? -1) &&
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
@@ -595,6 +605,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var dataIncidentesMenores = await _context.Reporte_Preliminar_Incidente.ToListAsync();
             var registrosIncidentesMenores = dataIncidentesMenores.Where(x =>
+                ids_incidentes_menores.Contains(x.Id_Nivel_Incidente ?? -1) &&
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
@@ -607,6 +618,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var dataIncidentesMayores = await _context.Investigacion_Final_Incidente.ToListAsync();
             var registrosIncidentesMayores = dataIncidentesMayores.Where(x =>
+                ids_incidentes_mayores.Contains(x.Id_Nivel_Incidente ?? -1) &&
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
@@ -651,6 +663,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var dataIncidentesMenores = await _context.Reporte_Preliminar_Incidente.ToListAsync();
             var registrosIncidentesMenores = dataIncidentesMenores.Where(x =>
+                ids_incidentes_menores.Contains(x.Id_Nivel_Incidente ?? -1) &&
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 !x.Id_Tipo_Incidente.Equals(null) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
@@ -664,6 +677,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var dataIncidentesMayores = await _context.Investigacion_Final_Incidente.ToListAsync();
             var registrosIncidentesMayores = dataIncidentesMayores.Where(x =>
+                ids_incidentes_mayores.Contains(x.Id_Nivel_Incidente ?? -1) &&
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 !x.Id_Tipo_Incidente.Equals(null) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&

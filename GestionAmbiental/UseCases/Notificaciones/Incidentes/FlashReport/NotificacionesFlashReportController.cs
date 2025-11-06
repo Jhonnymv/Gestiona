@@ -150,8 +150,23 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.FlashReport
                 Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
                 Log.Error(e.Message);
             }
-            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-            var info = await _getFlashReport.Execute(IdFlashReport);
+
+            UserInfo userInfo;
+            if(HttpContext.Session.GetString("SessionUser")!=null)
+            {
+                userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+            }
+            else
+            {
+                userInfo = new UserInfo
+                {
+                    NombreUsuario = "DescargasGestiona",
+                    Rol = InspeccionRol.Admin
+                };
+            }
+
+
+                var info = await _getFlashReport.Execute(IdFlashReport);
             var usuarios = await _getUsuariosNotificarIncidente.Execute();
             var IdEncriptado = _protector.Protect(info.Id_Flash_Report.ToString());
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Incidentes", "FlashReport", "NuevaFlashReportMA.html");

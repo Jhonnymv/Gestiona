@@ -62,6 +62,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var producto = await _context.Producto_Incidente.FirstOrDefaultAsync(x => x.Id_Producto_Incidente == flashReport.Id_Producto_Incidente);
             var nivelIncidente = await _context.Nivel_Incidente.FirstOrDefaultAsync(x => x.Id_Nivel_Incidente == flashReport.Nivel_Incidente);
             var componenteAmbiental = await _context.Componente_Ambiental.FirstOrDefaultAsync(x => x.Id_Componente_Ambiental == flashReport.Id_Componente_Ambiental);
+            var unidades = await _context.Unidad_Medida.FirstOrDefaultAsync(x => x.Id_Unidad_Medida == flashReport.Id_Unidad_Cantidad_Derramada);
 
             var output = new Flash_Report();
 
@@ -78,6 +79,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 output.Id_Producto_Incidente = flashReport.Id_Producto_Incidente;
                 output.Cantidad_Derramada = flashReport.Cantidad_Derramada;
                 output.Id_Unidad_Cantidad_Derramada = flashReport.Id_Unidad_Cantidad_Derramada;
+                output.Unidad_Cantidad_Derramada = new Domain.Incidentes.Items.Unidad_Medida
+                {
+                    Id_Unidad_Medida = unidades.Id_Unidad_Medida,
+                    Descripcion = unidades.Descripcion
+                };
                 output.Descripcion = flashReport.Descripcion;
                 output.Registro_Fotografico = flashReport.Registro_Fotografico;
                 output.Archivos_Registro_Fotografico = flashReport.Archivos_Registro_Fotografico;

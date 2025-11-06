@@ -10,6 +10,7 @@ var data_inc_flashreports_fechas = [];
 var data_inc_incidentesmenores_fechas = [];
 var data_inc_incidentesmayores_fechas = [];
 var graph_inc_fechas;
+var incidentesTotales = 0;
 
 //Variable gráfico Tipo Incidente
 //var data_rep_tipo_incidente = [];
@@ -69,6 +70,7 @@ function ActualizarIncidentesFechas() {
     supervisor = $("#Supervisor").val();
     fechaInicio = $("#FInicio").val();
     fechaFin = $("#FFin").val();
+    incidentesTotales = 0;
 
     if (fechaInicio <= fechaFin || (fechaInicio == "" && fechaFin == "")) {
         $.ajax({
@@ -104,18 +106,20 @@ function ActualizarIncidentesFechas() {
                             labels.push(data_inc_incidentesmenores_fechas[i].nombre);
                         }
                         dataIncidenteMenor.push(data_inc_incidentesmenores_fechas[i].valor);
+                        incidentesTotales = incidentesTotales + data_inc_incidentesmenores_fechas[i].valor;
                     }
                     for (var i = 0; i < data_inc_incidentesmayores_fechas.length; i++) {
                         if (!labels.includes(data_inc_incidentesmayores_fechas[i].nombre)) {
                             labels.push(data_inc_incidentesmayores_fechas[i].nombre);
                         }
                         dataIncidenteMayor.push(data_inc_incidentesmayores_fechas[i].valor);
+                        incidentesTotales = incidentesTotales + data_inc_incidentesmayores_fechas[i].valor;
                     }
                     //Actualizar gráfica
                     graph_inc_fechas.data.labels = labels;
-                    graph_inc_fechas.data.datasets[0].data = dataFlashReports;
-                    graph_inc_fechas.data.datasets[1].data = dataIncidenteMenor;
-                    graph_inc_fechas.data.datasets[2].data = dataIncidenteMayor;
+                    //graph_inc_fechas.data.datasets[0].data = dataFlashReports;
+                    graph_inc_fechas.data.datasets[0].data = dataIncidenteMenor;
+                    graph_inc_fechas.data.datasets[1].data = dataIncidenteMayor;
                     graph_inc_fechas.options.scales.yAxes[0].ticks.stepSize = Math.max(dataFlashReports) / 10;
                     graph_inc_fechas.update();
                 } else {
@@ -137,18 +141,21 @@ function ActualizarIncidentesFechas() {
                             labels.push(data_inc_incidentesmenores_fechas[i].nombre);
                         }
                         dataIncidenteMenor.push(data_inc_incidentesmenores_fechas[i].valor);
+                        incidentesTotales = incidentesTotales + data_inc_incidentesmenores_fechas[i].valor;
                     }
                     for (var i = 0; i < data_inc_incidentesmayores_fechas.length; i++) {
                         if (!labels.includes(data_inc_incidentesmayores_fechas[i].nombre)) {
                             labels.push(data_inc_incidentesmayores_fechas[i].nombre);
                         }
                         dataIncidenteMayor.push(data_inc_incidentesmayores_fechas[i].valor);
+                        incidentesTotales = incidentesTotales + data_inc_incidentesmayores_fechas[i].valor;
                     }
                     console.log(labels)
                     console.log(dataFlashReports)
                     //Crear gráfica
-                    CrearGraficaIncidentesFechas(labels, dataFlashReports, dataIncidenteMenor, dataIncidenteMayor, Math.max(...dataFlashReports) / 10);
+                    CrearGraficaIncidentesFechas(labels, dataFlashReports, dataIncidenteMenor, dataIncidenteMayor, Math.max(...dataFlashReports) / 10);                    
                 }
+                $("#IncTotal").text(incidentesTotales);
                 //ActualizarContadorOxFecha();
             }
         });
@@ -164,14 +171,15 @@ function CrearGraficaIncidentesFechas(labels, dataFlashReports, dataIncidenteMen
             "type": "bar",
             "data": {
                 "labels": labels,
-                "datasets": [{
-                    "label": "# Flash Reports",
-                    "data": dataFlashReports,
-                    "fill": false,
-                    "backgroundColor": "rgb(46, 103, 147)",
-                    "borderColor": "rgb(46, 103, 147)",
-                    "lineTension": 0.1
-                    },
+                "datasets": [
+                    //{
+                    //"label": "# Flash Reports",
+                    //"data": dataFlashReports,
+                    //"fill": false,
+                    //"backgroundColor": "rgb(46, 103, 147)",
+                    //"borderColor": "rgb(46, 103, 147)",
+                    //"lineTension": 0.1
+                    //},
                     {
                         "label": "# Incidentes Menores",
                         "data": dataIncidenteMenor,
@@ -379,9 +387,9 @@ function ActualizarDatosGraficoNivelIncidente() {
                 }
                 //Actualizar gráfica
                 graph_inc_nivel_incidente.data.labels = labels;
-                graph_inc_nivel_incidente.data.datasets[0].data = dataFlashReports;
-                graph_inc_nivel_incidente.data.datasets[1].data = dataIncidenteMenor;
-                graph_inc_nivel_incidente.data.datasets[2].data = dataIncidenteMayor;
+                //graph_inc_nivel_incidente.data.datasets[0].data = dataFlashReports;
+                graph_inc_nivel_incidente.data.datasets[0].data = dataIncidenteMenor;
+                graph_inc_nivel_incidente.data.datasets[1].data = dataIncidenteMayor;
                 graph_inc_nivel_incidente.update();
             } else {
                 //Actualizar contador
@@ -423,14 +431,14 @@ function CrearGraficoNivelIncidente(labels, dataFlashReports, dataIncidenteMenor
             "data": {
                 "labels": labels,
                 "datasets": [
-                    {
-                        "label": "# Flash Reports",
-                        "data": dataFlashReports,
-                        "fill": false,
-                        "backgroundColor": "rgb(46, 103, 147)",
-                        "borderColor": "rgb(46, 103, 147)",
-                        "lineTension": 0.1
-                    },
+                    //{
+                    //    "label": "# Flash Reports",
+                    //    "data": dataFlashReports,
+                    //    "fill": false,
+                    //    "backgroundColor": "rgb(46, 103, 147)",
+                    //    "borderColor": "rgb(46, 103, 147)",
+                    //    "lineTension": 0.1
+                    //},
                     {
                         "label": "# Incidentes Menores",
                         "data": dataIncidenteMenor,
@@ -518,9 +526,9 @@ function ActualizarDatosGraficoGerenciaIncidente() {
                 }
                 //Actualizar gráfica
                 graph_inc_gerencia_incidente.data.labels = labels;
-                graph_inc_gerencia_incidente.data.datasets[0].data = dataFlashReports;
-                graph_inc_gerencia_incidente.data.datasets[1].data = dataIncidenteMenor;
-                graph_inc_gerencia_incidente.data.datasets[2].data = dataIncidenteMayor;
+                //graph_inc_gerencia_incidente.data.datasets[0].data = dataFlashReports;
+                graph_inc_gerencia_incidente.data.datasets[0].data = dataIncidenteMenor;
+                graph_inc_gerencia_incidente.data.datasets[1].data = dataIncidenteMayor;
                 graph_inc_gerencia_incidente.update();
             } else {
                 //Actualizar contador
@@ -574,14 +582,14 @@ function CrearGraficoGerenciaIncidente(labels, dataFlashReports, dataIncidenteMe
             "data": {
                 "labels": labels,
                 "datasets": [
-                    {
-                        "label": "# Flash Reports",
-                        "data": dataFlashReports,
-                        "fill": false,
-                        "backgroundColor": "rgb(46, 103, 147)",
-                        "borderColor": "rgb(46, 103, 147)",
-                        "lineTension": 0.1
-                    },
+                    //{
+                    //    "label": "# Flash Reports",
+                    //    "data": dataFlashReports,
+                    //    "fill": false,
+                    //    "backgroundColor": "rgb(46, 103, 147)",
+                    //    "borderColor": "rgb(46, 103, 147)",
+                    //    "lineTension": 0.1
+                    //},
                     {
                         "label": "# Incidentes Menores",
                         "data": dataIncidenteMenor,

@@ -424,7 +424,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
 
-                    var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
+                    var SGATempPath = tempPath + "Descarga Temporal Gestiona V2\\";
                     if (!Directory.Exists(SGATempPath))
                     {
                         Directory.CreateDirectory(SGATempPath);
@@ -482,7 +482,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
 
 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "Descarga Temporal Gestiona/";
+                var SGATempPath = tempPath + "Descarga Temporal Gestiona V2/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
@@ -536,7 +536,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
 
-                    var SGATempPath = tempPath + "Descarga Temporal Gestiona\\";
+                    var SGATempPath = tempPath + "Descarga Temporal Gestiona V2\\";
                     if (!Directory.Exists(SGATempPath))
                     {
                         Directory.CreateDirectory(SGATempPath);
