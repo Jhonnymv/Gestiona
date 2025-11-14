@@ -2174,7 +2174,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "Descarga Temporal Gestiona V2/";
+                var SGATempPath = tempPath + "Carga Temporal Gestiona V2/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
