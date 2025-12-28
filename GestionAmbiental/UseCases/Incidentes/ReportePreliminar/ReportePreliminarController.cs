@@ -226,6 +226,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     if (!fila.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) || (fila.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) && userInfo.Rol.Equals(InspeccionRol.Admin)))
                     {
                         var IdEncriptado = _protector.Protect(fila.Id_Reporte_Preliminar.ToString());
+                        var obsAvance = fila.NAccionesAprobadas;
+                        double avance = obsAvance != 0 ? Math.Round((double)(obsAvance / fila.NAcciones * 100), 1) : 0;
                         filasTabla += "<tr>";
                         if (fila.Estado.Equals(EstadosIncidentes.Pendiente.ToString()))
                             filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
@@ -246,6 +248,13 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                         filasTabla += "<td>" + fila.Lugar_Incidente + "</td>";
                         filasTabla += "<td>" + fila.Equipo_Involucrado + "</td>";
                         filasTabla += "<td>" + fila.Gerencia_Responsable + "</td>";
+                        filasTabla += "<td style=\"width: 10%\"><div class=\"progress\">" +
+                                          "<span class=\"percent\" >" + avance + "%</span>" +
+                                          "<div class=\"progress-bar\" role=\"progressbar\" style=\"width:" + avance + "%; \" aria-valuemin=\"0\" aria-valuemax=\"100\">"
+                                           +
+                                          "</div>" +
+                                      "</div>" +
+                                    "</td>";
                         filasTabla += "</tr>";
                     }
                 }

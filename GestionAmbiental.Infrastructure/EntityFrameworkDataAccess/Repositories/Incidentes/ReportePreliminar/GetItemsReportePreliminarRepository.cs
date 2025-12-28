@@ -43,6 +43,32 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
+        public async Task<List<Accion_Incidente_Reporte>> GetAccionesReporte()
+        {
+            var involucrados = await _context.Accion_Incidente_Reporte.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToListAsync();
+            var output = new List<Accion_Incidente_Reporte>();
+            foreach (var item in involucrados)
+            {
+                var outputItem = new Accion_Incidente_Reporte();
+
+                outputItem.Id_Accion_Incidente_Reporte = item.Id_Accion_Incidente_Reporte;
+                outputItem.Id_Reporte_Preliminar = item.Id_Reporte_Preliminar;
+                outputItem.Tipo_Accion = item.Tipo_Accion;
+                outputItem.Accion_Inmediata = item.Accion_Inmediata;
+                outputItem.Id_Usuario = item.Id_Usuario;
+                outputItem.Id_Usuario2 = item.Id_Usuario2;
+                outputItem.Responsable = item.Responsable;
+                outputItem.Fecha = item.Fecha;
+                outputItem.Estatus = item.Estatus;
+                outputItem.Fecha_Verificacion = item.Fecha_Verificacion;
+                outputItem.Comentarios_Verificacion = item.Comentarios_Verificacion;
+                outputItem.Estado = item.Estado;
+                outputItem.Evidencia = item.Evidencia;
+
+                output.Add(outputItem);
+            }
+            return output;
+        }
         public async Task<List<Accion_Incidente_Reporte>> GetAccionesReporte(int IdReportePreliminar)
         {
             var involucrados = await _context.Accion_Incidente_Reporte.Where(x => x.Id_Reporte_Preliminar.Equals(IdReportePreliminar)).ToListAsync();

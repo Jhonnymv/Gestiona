@@ -7,6 +7,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ac
 {
     public interface IGetAccionesIncidenteInvestigacion
     {
+        Task<List<AccioneIncidenteOutput>> Execute();
         Task<List<AccioneIncidenteOutput>> Execute(int IdInvestigacion);
         Task<List<AccioneIncidenteOutput>> Execute(int IdInvestigacion,string usuario_red);
     }

@@ -578,7 +578,7 @@
                         <div></div>
                         <div>
                             <a type="button" class="btn btn-mc-outline-danger" asp-action="Resumen" asp-controller="ReportePreliminar">Volver</a>
-                            @if (Model.Estado.Equals("Pendiente") && Model.Permiso_Editar)
+                            @if (Model.Estado.Equals("Pendiente"))
                             {
                                 <button id="boton_guardar_estado" type="button" class="btn btn-mc-outline-success">Guardar Estado</button>                            
                                 <button id="boton_completar" type="button" class="btn btn-mc">Completar</button>

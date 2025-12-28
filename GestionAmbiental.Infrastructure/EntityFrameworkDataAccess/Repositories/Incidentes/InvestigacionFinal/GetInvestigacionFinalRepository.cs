@@ -20,6 +20,110 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
+        public async Task<List<Investigacion_Final_Incidente>> GetInvestigacionesFinales(DateTime? fechaInicio, DateTime? fechaFin, int tipoIncidente, int nivelIncidente, int gerencia, int asesor)
+        {
+            var investigaciones = await _context.Investigacion_Final_Incidente.ToListAsync();
+            var filtrado = investigaciones
+                .OrderByDescending(x => x.Codigo)
+                .ToList();
+
+            if (fechaInicio.HasValue)
+                filtrado = filtrado.Where(x => x.Fecha_Incidente.HasValue &&
+                x.Fecha_Incidente.Value.Date >= fechaInicio.Value.Date).ToList();
+            if (fechaFin.HasValue)
+                filtrado = filtrado.Where(x => x.Fecha_Incidente.HasValue &&
+                x.Fecha_Incidente.Value.Date <= fechaFin.Value.Date).ToList();
+
+            if (gerencia != 0)
+                filtrado = filtrado.Where(x => x.Id_Gerencia_Responsable.HasValue && x.Id_Gerencia_Responsable.Value.Equals(gerencia)).ToList();
+
+            if (nivelIncidente != 0)
+                filtrado = filtrado.Where(x => x.Id_Nivel_Incidente.HasValue && x.Id_Nivel_Incidente.Value.Equals(nivelIncidente)).ToList();
+            if (asesor != 0)
+                filtrado = filtrado.Where(x => x.Id_Supervisor_MA.HasValue && x.Id_Supervisor_MA.Value.Equals(asesor)).ToList();
+            if (tipoIncidente != 0)
+                filtrado = filtrado.Where(x => x.Id_Tipo_Incidente.HasValue && x.Id_Tipo_Incidente.Value.Equals(tipoIncidente)).ToList();
+
+            var tiposIncidente = await _context.Tipo_Incidente.ToListAsync();
+            var nivelesIncidente = await _context.Nivel_Incidente.ToListAsync();
+            var gerencias = await _context.Gerencias.ToListAsync();
+            var usuarios = await _context.Usuarios.ToListAsync();
+
+            var output = new List<Investigacion_Final_Incidente>();
+
+            foreach (var item in filtrado)
+            {
+                var outputItem = new Investigacion_Final_Incidente();
+                outputItem.Id_Investigacion_Final = item.Id_Investigacion_Final;
+                outputItem.Id_Reporte_Preliminar = item.Id_Reporte_Preliminar;
+                outputItem.Codigo = item.Codigo;
+                outputItem.Num_Trabajadores = item.Num_Trabajadores;
+                outputItem.Razon_Social_Contratista = item.Razon_Social_Contratista;
+                outputItem.RUC_Contratista = item.RUC_Contratista;
+                outputItem.Actividad_Contratista = item.Actividad_Contratista;
+                outputItem.Domicilio_Contratista = item.Domicilio_Contratista;
+                outputItem.Num_Trabajadores_Contratista = item.Num_Trabajadores_Contratista;
+                outputItem.Id_Registrado_Por = item.Id_Registrado_Por;
+
+                if (item.Id_Tipo_Incidente != null)
+                {
+                    var tipoIncidenteCompletar = tiposIncidente.FirstOrDefault(x => x.Id_Tipo_Incidente.Equals(item.Id_Tipo_Incidente));
+                    outputItem.Tipo_Incidente = new Tipo_Incidente
+                    {
+                        Id_Tipo_Incidente = tipoIncidenteCompletar.Id_Tipo_Incidente,
+                        Descripcion = tipoIncidenteCompletar.Descripcion,
+                        Estado = tipoIncidenteCompletar.Estado
+                    };
+                }
+                if (item.Id_Nivel_Incidente != null)
+                {
+                    var nivelIncidenteCompletar = nivelesIncidente.FirstOrDefault(x => x.Id_Nivel_Incidente.Equals(item.Id_Nivel_Incidente));
+                    outputItem.Nivel_Incidente = new Nivel_Incidente
+                    {
+                        Id_Nivel_Incidente = nivelIncidenteCompletar.Id_Nivel_Incidente,
+                        Descripcion = nivelIncidenteCompletar.Descripcion,
+                        Estado = nivelIncidenteCompletar.Estado
+                    };
+                }
+                outputItem.Fecha_Incidente = item.Fecha_Incidente;
+                outputItem.Lugar_Incidente = item.Lugar_Incidente;
+                outputItem.Descripcion_Incidente = item.Descripcion_Incidente;
+
+                if (item.Id_Gerencia_Responsable != null)
+                {
+                    var gerenciaDomain = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(item.Id_Gerencia_Responsable));
+                    outputItem.Gerencia_Responsable = new Gerencia
+                    {
+                        IdGerencia = gerenciaDomain.Id_Gerencia,
+                        Descripcion = gerenciaDomain.Descripcion,
+                        Estado = gerenciaDomain.Estado
+                    };
+                }
+
+                if (item.Id_Supervisor_MA != null)
+                {
+                    var supervisor = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Supervisor_MA));
+                    outputItem.Supervisor_MA = new Usuario
+                    {
+                        IdUsuario = supervisor.Id_Usuario,
+                        Nombres = supervisor.Nombres,
+                        Apellidos = supervisor.Apellidos,
+                        Email = supervisor.Email,
+                        IdRol = supervisor.Id_Rol,
+                        UsuarioRed = supervisor.usuario_red,
+                        Estado = supervisor.Estado
+                    };
+                }
+
+                outputItem.Estado = item.Estado;
+                var acciones = await _context.Accion_Incidente_Investigacion.Where(x => x.Id_Investigacion_Final.Equals(item.Id_Investigacion_Final) && !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToListAsync();
+                outputItem.NAcciones = acciones.Count;
+                outputItem.NAccionesAprobadas = acciones.Count(x => x.Estado.Equals(EstadosIncidentes.Aprobado.ToString()));
+
+                output.Add(outputItem);
+            }
+            return output;
+        }
 
         public async Task<List<Investigacion_Final_Incidente>> GetInvestigacionesFinales(DateTime? fechaInicio, DateTime? fechaFin, int[] gerencia, int[] titular, List<string> estado, int[] responsable, int[] asesor, string codigo)
         {

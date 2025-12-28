@@ -5,6 +5,7 @@ using GestionAmbiental.Application.UseCases.Incidentes.FlashReport.Accion.GetAcc
 using GestionAmbiental.Application.UseCases.Incidentes.FlashReport.Accion.RegistrarAccionFlashReport;
 using GestionAmbiental.Application.UseCases.Incidentes.FlashReport.EditarFlashReport;
 using GestionAmbiental.Application.UseCases.Incidentes.FlashReport.EliminarEvidencias;
+using GestionAmbiental.Application.UseCases.Incidentes.FlashReport.EliminarFlashReport;
 using GestionAmbiental.Application.UseCases.Incidentes.FlashReport.GetEvidenciasFlashReport;
 using GestionAmbiental.Application.UseCases.Incidentes.FlashReport.GetFlashReport;
 using GestionAmbiental.Application.UseCases.Incidentes.FlashReport.GetFlashReports;
@@ -42,6 +43,8 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
         private readonly IGetFlashReport _getFlashReport;
         private readonly IGetFlashReports _getFlashReports;
 
+        private readonly IEliminarFlashReport _eliminarFlashReport;
+
         private readonly IEditarAccionFlashReport _editarAccionFlashReport;
         private readonly IGetAccionesFlashReport _getAccionesFlashReport;
         private readonly IGetAccionFlashReport _getAccionFlashReport;
@@ -62,6 +65,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
             IEditarFlashReport editarFlashReport,
             IGetFlashReport getFlashReport,
             IGetFlashReports getFlashReports,
+            IEliminarFlashReport eliminarFlashReport,
             IEditarAccionFlashReport editarAccionFlashReport,
             IGetAccionesFlashReport getAccionesFlashReport,
             IGetAccionFlashReport getAccionFlashReport,
@@ -87,6 +91,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
             _getEvidenciasFlashReport = getEvidenciasFlashReport;
             _getFlashReport = getFlashReport;
             _getFlashReports = getFlashReports;
+            _eliminarFlashReport = eliminarFlashReport;
 
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.FlashReportIdRouteValue);
         }
@@ -317,6 +322,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
                     Codigo = flashReport.Codigo,
                     Acciones = JsonConvert.SerializeObject(acciones.AccionesFlashReport),
                     Id_Flash_Report = flashReport.Id_Flash_Report,
+                    Id_Encriptado_Flash_Report = IdFlashReport,
                     Id_Gerencia = flashReport.Id_Gerencia,
                     Id_Empresa = flashReport.Id_Empresa,
                     Lugar = flashReport.Lugar,
@@ -403,6 +409,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
                 ViewBag.Componente_Ambiental = componente_Ambiental;
                 ViewBag.Causa_Incidente = causa_Incidente;
                 ViewBag.Supervisores_Marcobre = usuario;
+                ViewBag.PermisosAdmin = userInfo.Rol.Equals(InspeccionRol.Admin);
                 //ViewBag.Supervisores_Marcobre = supervisores_marcobre;
 
                 return View(model);
@@ -1047,6 +1054,42 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
 
                 return await _gestorArchivos.UploadFTPFileAsync(encryptedArchiveFile, newFileName, Tipo_Info_SGA.FTPConnectionEvidenciaFlashReport);
             }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EliminarFlashReport(string IdFlashReport)
+        {
+            dynamic response;
+
+            try
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (userInfo.Rol.Equals(InspeccionRol.Admin))
+                {
+                    var IdDesenc = Convert.ToInt32(_protector.Unprotect(IdFlashReport));
+                    await _eliminarFlashReport.Execute(IdDesenc);
+                    response = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    response = new
+                    {
+                        success = false,
+                        message = "No está autorizado"
+                    };
+                }
+            }
+            catch (Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = e.Message
+                };
+            }
+            return Ok(response);
         }
         private string CreateUniqueFileName(int index)
         {

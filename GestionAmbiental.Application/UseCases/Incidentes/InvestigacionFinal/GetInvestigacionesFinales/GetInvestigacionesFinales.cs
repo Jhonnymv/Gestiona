@@ -22,6 +22,33 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ge
             _getRolUsuario = getRolUsuario ?? throw new ArgumentNullException(nameof(getRolUsuario));
             _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorUsuarioReadOnlyRepository));
         }
+        public async Task<InvestigacionesFinalesOutput> Execute(int tipoIncidente, int nivelIncidente, int gerencia, int asesor, string fecha_inicio, string fecha_fin)
+        {
+            DateTime? fechaInicioFiltro = null;
+            DateTime? fechaFinFiltro = null;
+
+            if (fecha_inicio != null)
+                fechaInicioFiltro = Convert.ToDateTime(fecha_inicio);
+            if (fecha_fin != null)
+                fechaFinFiltro = Convert.ToDateTime(fecha_fin);
+
+            var estados = new List<string>();
+            
+
+            var data = await _getInvestigacionFinalReadOnlyRepository.GetInvestigacionesFinales(fechaInicioFiltro,fechaFinFiltro,tipoIncidente,nivelIncidente,gerencia,asesor);
+
+            var output = new InvestigacionesFinalesOutput();
+
+            output.Investigaciones = new List<InvestigacionFinalOutput>();
+            output.NInvestigaciones = data.Count;
+
+            foreach (var item in data)
+            {
+                var outputItem = new InvestigacionFinalOutput(item);
+                output.Investigaciones.Add(outputItem);
+            }
+            return output;
+        }
 
         public async Task<InvestigacionesFinalesOutput> Execute(string fecha_inicio, string fecha_fin, int[] gerencia, int[] titular, string[] estado, int[] responsable, int[] asesor, string codigo, int pagina, int rpp, string usuarioRed)
         {

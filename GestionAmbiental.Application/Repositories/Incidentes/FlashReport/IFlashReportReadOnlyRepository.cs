@@ -14,6 +14,7 @@ namespace GestionAmbiental.Application.Repositories.Incidentes.FlashReport
         Task<List<Flash_Report>> ListarFlashReport(DateTime? fechaInicio, DateTime? fechaFin, int[] gerencia, int[] titular, List<string> estado, int[] responsable, int[] asesor, string codigo);
         Task<Flash_Report> DetalleFlashReport(int id);
         Task<int> EditarFlashReport(Flash_Report flashReport);
+        Task<int> EliminarFlashReport(int id);
         Task<int> RegistrarFlashReport(Flash_Report flashReport);
         Task<string> GetUltimoCodigo();
 		Task<string> GetEvidenciasReporte(int IdFlashReport);

@@ -15,7 +15,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         [DisplayName("Código:")]
         public string Codigo { get; set; }
         [DisplayName("N° Trabajadores en el Centro Laboral:")]
-        [Range(1, Int32.MaxValue, ErrorMessage = "Debe completar este campo")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Debe completar este campo")]
         public int Num_Trabajadores { get; set; }
         [DisplayName("Razón Social:")]
         public string Razon_Social_Contratista { get; set; }

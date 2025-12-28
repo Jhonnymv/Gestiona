@@ -203,6 +203,10 @@
 							<a asp-action="Resumen" asp-controller="FlashReport" class="btn btn-mc-outline-danger">Volver</a>
 							<button id="boton_guardar_estado" type="button" class="btn btn-mc-outline-success">Guardar Estado</button>
 							<button id="boton_finalizar" type="button" class="btn btn-mc">Finalizar</button>
+							@if (ViewBag.PermisosAdmin)
+							{
+								<button id="boton_eliminar" type="button" class="btn btn-mc-danger" onclick="EliminarFlashReport('@Model.Id_Encriptado_Flash_Report')">Eliminar FlashReport</button>
+							}
 						</div>
 					</div>
 				</div>
@@ -711,6 +715,22 @@
 				},
 				error: function () {
 					console.log("No se ha podido obtener la información");
+				}
+			});
+		}
+		function EliminarFlashReport(IdFlashReport) {
+			$.ajax({
+				type: "POST",
+				url: "/FlashReport/EliminarFlashReport",
+				data: {
+					IdFlashReport: IdFlashReport
+				},
+				success: (response) => {
+					if (response.success) {
+						window.location.replace("/FlashReport/Resumen");
+					} else {
+						console.log(response.message);
+					}
 				}
 			});
 		}

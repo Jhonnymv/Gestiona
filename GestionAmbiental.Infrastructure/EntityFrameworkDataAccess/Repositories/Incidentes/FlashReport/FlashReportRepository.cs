@@ -327,6 +327,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             else
                 return "[]";
         }
+
+        public async Task<int> EliminarFlashReport(int id)
+        {
+            var entity = await _context.Flash_Report.FirstOrDefaultAsync(x => x.Id_Flash_Report == id);
+            if (entity == null)
+            {
+                throw new InvalidOperationException($"Flash_Report with Id {id} not found.");
+            }           
+            entity.Estado = EstadosIncidentes.Eliminado.ToString();
+
+            _context.Flash_Report.Update(entity);
+            await _context.SaveChangesAsync();
+
+            return entity.Id_Flash_Report;
+        }
+
         private class NombreEvidencia
         {
             public string NombreOrigen { get; set; }

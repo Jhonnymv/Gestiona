@@ -11,6 +11,7 @@ namespace GestionAmbiental.Application.Repositories.Incidentes.InvestigacionFina
         Task<List<Producto_Derramado_Incidente>> GetProductosDerramados(int IdInvestigacion);
         Task<List<Involucrado_Incidente_Investigacion>> GetInvolucradosInvestigacion(int IdInvestigacion);
         Task<List<Accion_Incidente_Investigacion>> GetAccionesInvestigacion(int IdInvestigacion);
+        Task<List<Accion_Incidente_Investigacion>> GetAccionesInvestigacion();
         Task<List<Causa_Incidente_Investigacion>> GetCausasInvestigacion(int IdInvestigacion);
         Task<Producto_Derramado_Incidente> GetProductoDerramado(int IdProducto);
         Task<Accion_Incidente_Investigacion> GetAccionInvestigacion(int IdAccionCorrectiva);

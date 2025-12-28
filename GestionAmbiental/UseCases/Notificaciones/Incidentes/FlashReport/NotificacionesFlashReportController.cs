@@ -82,7 +82,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.FlashReport
                 info.Fecha_Hora.ToString("dd/MM/yyyy HH:mm"),
                 info.Empresa_Nombre,
                 info.Gerencia_Nombre,
-                info.Nivel_Incidente,
+                info.Nivel_Incidente_Descripcion,
                 info.Descripcion,
                 info.Supervisor_Marcobre_Nombre,
                 IdEncriptado
@@ -179,7 +179,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.FlashReport
                 info.Fecha_Hora.ToString("dd/MM/yyyy HH:mm"),
                 info.Empresa_Nombre,
                 info.Gerencia_Nombre,
-                info.Nivel_Incidente,
+                info.Nivel_Incidente_Descripcion,
                 info.Descripcion,
                 info.Supervisor_Marcobre_Nombre,
                 IdEncriptado

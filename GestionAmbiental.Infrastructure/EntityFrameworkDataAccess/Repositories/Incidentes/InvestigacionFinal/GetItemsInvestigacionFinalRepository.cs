@@ -198,6 +198,31 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
+        public async Task<List<Accion_Incidente_Investigacion>> GetAccionesInvestigacion()
+        {
+            var involucrados = await _context.Accion_Incidente_Investigacion.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToListAsync();
+            var output = new List<Accion_Incidente_Investigacion>();
+            foreach (var item in involucrados)
+            {
+                var outputItem = new Accion_Incidente_Investigacion();
+
+                outputItem.Id_Accion_Incidente_Investigacion = item.Id_Accion_Incidente_Investigacion;
+                outputItem.Id_Investigacion_Final = item.Id_Investigacion_Final;
+                outputItem.Tipo_Accion = item.Tipo_Accion;
+                outputItem.Accion_Inmediata = item.Accion_Inmediata;
+                outputItem.Id_Usuario = item.Id_Usuario;
+                outputItem.Id_Usuario2 = item.Id_Usuario2;
+                outputItem.Responsable = item.Responsable;
+                outputItem.Fecha = item.Fecha;
+                outputItem.Estatus = item.Estatus;
+                outputItem.Fecha_Verificacion = item.Fecha_Verificacion;
+                outputItem.Comentarios_Verificacion = item.Comentarios_Verificacion;
+                outputItem.Estado = item.Estado;
+
+                output.Add(outputItem);
+            }
+            return output;
+        }
 
         public async Task<Accion_Incidente_Investigacion> GetAccionInvestigacion(int IdAccionCorrectiva)
         {

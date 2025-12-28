@@ -48,12 +48,21 @@
                             <input type="date" class="form-control" asp-for="FFin" value="@ViewBag.FechaFin" />
                         </div>
                     </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label asp-for="IncluirEvidencias"></label>
+                            <input type="checkbox" class="form-check" asp-for="IncluirEvidencias" />
+                        </div>
+                    </div>
                 </div>
                 <div class="col-12 col-lg-1">
                 </div>
-                <div class="col-12 col-lg-2">
-                    <div class="w-100 row-center-center">
+                <div class="col-12 col-lg-3 flex-column">
+                    <div class="row-center-center">
                         <button type="button" class="btn btn-mc w-100" onclick="Filtrar()">Filtrar</button>
+                    </div>
+                    <div class="row-center-center">
+                        <button type="button" class="btn btn-mc-success w-100" onclick="DescargarObservaciones()">Descargar Acciones</button>
                     </div>
                 </div>
             </form>
@@ -333,6 +342,22 @@
         $("#frecuencia").on("change", function () {
             ActualizarIncidentesFechas();
         });
+        function DescargarObservaciones() {
+            Filtrar();
+            $("#Modal_Descargando_Archivo").modal('show');
+            $("#mensajeModalConfig").text('Descargando Archivo');
+            var tipoIncidente = $("#TipoIncidente").val();
+            var nivelIncidente = $("#NivelIncidente").val();
+            var gerencia = $("#Gerencia").val();
+            var supervisor = $("#Supervisor").val();
+            var fechaInicio = $("#FInicio").val();
+            var fechaFin = $("#FFin").val();
+            var IncluirEvidencias = $("#IncluirEvidencias").is(':checked');
+            window.location.assign("@Url.Action("DescargarFechas", "DescargarIncidentes")" + "?tipoIncidente=" + tipoIncidente + "&nivelIncidente=" + nivelIncidente + "&gerencia=" + gerencia + "&supervisor=" + supervisor + "&FechaInicio=" + fechaInicio + "&FechaFin=" + fechaFin+ "&incluirEvidencias=" + IncluirEvidencias);
+            setTimeout(function () {
+                $("#btnAceptarSettings").show();
+            }, 5000);
+        }
     </script>
 
 }

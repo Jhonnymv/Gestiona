@@ -23,7 +23,44 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ac
             _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorUsuarioReadOnlyRepository));
             _getInvestigacionFinalReadOnlyRepository = getInvestigacionFinalReadOnlyRepository ?? throw new ArgumentNullException(nameof(getInvestigacionFinalReadOnlyRepository));
         }
+        public async Task<List<AccioneIncidenteOutput>> Execute()
+        {
+            var items = await _getItemsReportePreliminarReadOnlyRepository.GetAccionesInvestigacion();
+            var output = new List<AccioneIncidenteOutput>();
+            foreach (var item in items)
+            {
+                var outputItem = new AccioneIncidenteOutput();
+                outputItem.Id_Accion_Correctiva_Incidente = item.Id_Accion_Incidente_Investigacion;
+                outputItem.Id_Investigacion_Final = item.Id_Investigacion_Final;
+                outputItem.Tipo_Accion = item.Tipo_Accion;
+                outputItem.Accion_Inmediata = item.Accion_Inmediata;
+                outputItem.Id_Usuario = item.Id_Usuario;
+                outputItem.Id_Usuario2 = item.Id_Usuario2;
+                if (outputItem.Id_Usuario.HasValue)
+                {
+                    var usuario = await _gestorTablasMaestrasReadOnlyRepository.GetUsuario(outputItem.Id_Usuario.Value);
+                    outputItem.Responsable_Marcobre = usuario.Nombres.ToUpper() + " " + usuario.Apellidos.ToUpper();
+                    outputItem.Responsable_Marcobre_Email = usuario.Email;
+                }
+                if (outputItem.Id_Usuario2.HasValue)
+                {
+                    var usuario = await _gestorTablasMaestrasReadOnlyRepository.GetUsuario(outputItem.Id_Usuario2.Value);
+                    outputItem.Responsable_Marcobre2 = usuario.Nombres.ToUpper() + " " + usuario.Apellidos.ToUpper();
+                    outputItem.Responsable_Marcobre2_Email = usuario.Email;
+                }
 
+                outputItem.Responsable_Contratista = item.Responsable;
+                outputItem.Fecha = item.Fecha;
+                outputItem.Comentarios_Verificacion = item.Comentarios_Verificacion;
+                outputItem.Fecha_Verificacion = item.Fecha_Verificacion;
+                outputItem.Evidencia = item.Evidencia;
+                outputItem.Estatus = item.Estatus;
+                outputItem.Estado = item.Estado;
+
+                output.Add(outputItem);
+            }
+            return output;
+        }
         public async Task<List<AccioneIncidenteOutput>> Execute(int IdInvestigacion)
         {
             var items = await _getItemsReportePreliminarReadOnlyRepository.GetAccionesInvestigacion(IdInvestigacion);

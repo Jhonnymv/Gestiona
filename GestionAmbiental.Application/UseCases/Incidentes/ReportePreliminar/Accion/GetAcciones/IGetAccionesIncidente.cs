@@ -7,6 +7,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Acc
 {
     public interface IGetAccionesIncidente
     {
+        Task<List<AccioneIncidenteOutput>> Execute();
         Task<List<AccioneIncidenteOutput>> Execute(int IdReportePreliminar);
         Task<List<AccioneIncidenteOutput>> Execute(int IdReportePreliminar, string usuario_red);
     }

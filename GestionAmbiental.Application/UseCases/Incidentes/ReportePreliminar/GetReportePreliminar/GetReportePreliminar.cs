@@ -1,5 +1,6 @@
 ﻿using GestionAmbiental.Application.Repositories.GestorUsuarios;
 using GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar;
+using GestionAmbiental.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -30,7 +31,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Get
 
             var reporte = await _getReportePreliminarReadOnlyRepository.GetReporte(IdReporte);
             var output = new ReportePreliminarOutput(reporte);
-            if (output.Id_Registrado_Por == usuario.IdUsuario)
+            if (output.Id_Registrado_Por == usuario.IdUsuario || usuario.IdRol==((int)InspeccionRol.AsesorMAP))
                 output.PermisoEditar = true;
 
             output.Investigacion = await _getReportePreliminarReadOnlyRepository.GetInvestigacionReporte(IdReporte);

@@ -20,5 +20,7 @@ namespace GestionAmbiental.UseCases.Reportes.Incidentes
         public string FInicio { get; set; }
         [DisplayName("Hasta:")]
         public string FFin { get; set; }
+        [DisplayName("¿Inluir Evidencias?")]
+        public bool IncluirEvidencias { get; set; }
     }
 }
