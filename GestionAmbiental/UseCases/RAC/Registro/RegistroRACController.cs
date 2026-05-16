@@ -128,9 +128,9 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 var items = await _selectItems.Execute();
 
                 var filtroEmpresas = items.ItemsEmpresa.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
-                var filtroGerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                var filtroGerencias = items.ItemsGerencia.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 var filtroUsuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-                var filtroAreas = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                var filtroAreas = items.ItemsGerencia.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
 
                 var usuariosAgrupados = items.ItemsUsuarios.GroupBy(x => x.IdRol).ToList();
                 var asesores = new List<SelectListItem>();

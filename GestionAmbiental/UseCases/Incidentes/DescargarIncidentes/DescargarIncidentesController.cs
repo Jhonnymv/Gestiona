@@ -465,8 +465,28 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarIncidentes
                     //row.GetCell(startIndex + 10).SetCellValue(acciones.ResponsableInspeccion);
                     //-> Fecha Cierre
                     row.GetCell(startIndex + 11).SetCellValue(acciones.Fecha_Cierre.HasValue ? acciones.Fecha_Cierre.Value.ToString("dd/MM/yyyy") : "");
-                    //-> Área Inspeccionada
-                    row.GetCell(startIndex + 12).SetCellValue(acciones.Estado);
+                    //-> Estado
+                    var estadoObs = "";
+                    switch (acciones.Estado)
+                    {
+                        case "Registrado":
+                        case "Ampliado":
+                            estadoObs = "Pendiente de Implementación";
+                            break;
+                        case "Implementado":
+                            estadoObs = "Pendiente de Verificación";
+                            break;
+                        case "Vencido":
+                            estadoObs = "Vencido";
+                            break;
+                        case "Aprobado":
+                            estadoObs = "Aprobado";
+                            break;
+                        case "Rechazado":
+                                estadoObs = "Pendiente de Implementación";
+                            break;
+                    }
+                    row.GetCell(startIndex + 12).SetCellValue(estadoObs);
                     //-> Riesgo de Fatalidad
                     row.GetCell(startIndex + 13).SetCellValue(acciones.Empresa);
                     //-> Gerencia Responsable Levantamiento

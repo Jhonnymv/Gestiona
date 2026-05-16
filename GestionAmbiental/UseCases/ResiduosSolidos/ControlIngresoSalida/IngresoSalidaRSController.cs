@@ -102,11 +102,11 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 ingreso_salida.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var tipo_residuo = items.ItemsTipoResiduo.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Residuo.ToString(), Text = g.Descripcion }).ToList();
                 tipo_residuo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                var empresa = items.ItemsEmpresa.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                var empresa = items.ItemsEmpresa.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
                 empresa.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var responsable_arc_cmrs = items.ItemsResponsableACR_CMRS.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Responsable_ACR_CRMS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 responsable_arc_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                var gerencias = items.ItemsGerencia.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 
                 ViewBag.ACR_CMRS = acr_cmrs;

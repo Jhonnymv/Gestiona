@@ -69,7 +69,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                 var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
                 var filtroEmpresas = selectItemsResumen.EmpContratMarcobre.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
-                var filtroGerencias = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                var filtroGerencias = selectItemsResumen.GerenciaEjecutora.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 var filtroUsuarios = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
 
                 var usuariosAgrupados = selectItemsResumen.Usuarios.GroupBy(x => x.IdRol).ToList();
