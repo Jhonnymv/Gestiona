@@ -430,8 +430,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var involucrados = await _getInvolucradosIncidente.Execute(IdReporte);
-            if (!userInfo.Rol.Equals(InspeccionRol.Admin))
-                involucrados = involucrados.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
+            //if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+            involucrados = involucrados.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var estadoReporte = await _getEstadoReportePreliminar.Execute(IdReporte);
             var filas_involucrados = "";
             foreach (var fila in involucrados)
@@ -599,18 +599,18 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var acciones = await _getAccionesIncidente.Execute(IdReporte);
-            if (!userInfo.Rol.Equals(InspeccionRol.Admin))
-                acciones = acciones.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
+            //if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+            acciones = acciones.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var estadoReporte = await _getEstadoReportePreliminar.Execute(IdReporte);
             var filas_acciones_inmediatas = "";
             var filas_acciones_correctivas = "";
-            if (acciones.Where(x => x.Tipo_Accion.Equals("Acción Inmediata")).Count() == 0)
+            if (acciones.Where(x => x.Tipo_Accion!=null && x.Tipo_Accion.Equals("Acción Inmediata")).Count() == 0)
             {
                 filas_acciones_inmediatas += "<tr>";
                 filas_acciones_inmediatas += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
                 filas_acciones_inmediatas += "</tr>";
             }
-            if (acciones.Where(x => x.Tipo_Accion.Equals("Acción Correctiva")).Count() == 0)
+            if (acciones.Where(x => x.Tipo_Accion != null && x.Tipo_Accion.Equals("Acción Correctiva")).Count() == 0)
             {
                 filas_acciones_correctivas += "<tr>";
                 filas_acciones_correctivas += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
@@ -618,6 +618,10 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             }
             foreach (var fila in acciones)
             {
+                if(fila.Tipo_Accion == null)
+                {
+                    continue;
+                }   
                 if (fila.Tipo_Accion.Equals("Acción Inmediata"))
                 {
                     filas_acciones_inmediatas += "<tr>";
@@ -738,8 +742,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var causas = await _getCausasIncidenteReporte.Execute(IdReporte);
-            if (!userInfo.Rol.Equals(InspeccionRol.Admin))
-                causas = causas.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
+            //if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+            causas = causas.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var estadoReporte = await _getEstadoReportePreliminar.Execute(IdReporte);
             var filas_causas_inmediatas = "";
             var filas_causas_basicas = "";
