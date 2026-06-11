@@ -32,8 +32,9 @@
                                         <label class="AsesorMedioAmbiente" style="display:none">Asesor MAP:</label>
                                         <label class="AsesorSeguridad" style="display:none">Asesor SSO:</label>
                                         <span class="text-danger" asp-validation-for="Asesor_MA_Seguridad"></span>
-                                        <select class="form-control AsesorMedioAmbiente" asp-for="Asesor_MA_Seguridad" asp-items="@ViewBag.AsesoresMA" style="display:none"></select>
-                                        <select class="form-control AsesorSeguridad" asp-for="Asesor_MA_Seguridad" asp-items="@ViewBag.AsesoresSeguridad" style="display:none"></select>
+                                        <input type="hidden" asp-for="Asesor_MA_Seguridad"/>
+                                        <select class="form-control AsesorMedioAmbiente" id="Asesores_MA" asp-items="@ViewBag.AsesoresMA" style="display:none"></select>
+                                        <select class="form-control AsesorSeguridad" id="Asesores_Seguridad" asp-items="@ViewBag.AsesoresSeguridad" style="display:none"></select>
                                     </div>
                                 </div>
                                 <div class="row input_container w-100">

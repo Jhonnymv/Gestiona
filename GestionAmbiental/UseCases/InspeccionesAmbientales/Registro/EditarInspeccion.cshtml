@@ -679,6 +679,16 @@
             $(".SEG-Acto").val("0");
             $(".SEG-Acto").prop('disabled', true);
         }
+        $("#Asesores_MA").on('change', function () {
+            let asesor = $("#Asesores_MA").val()
+            console.log(asesor)
+            $("#Asesor_MA_Seguridad").val(asesor)
+        })
+        $("#Asesores_Seguridad").on('change', function () {
+            let asesor = $("#Asesores_Seguridad").val()
+            console.log(asesor)
+            $("#Asesor_MA_Seguridad").val(asesor)
+        })
         $("#TipoInspeccion").on('change', function () {
             if ($("#TipoInspeccion").val() == "MAP") {
                 //Mostrar asesores
@@ -691,6 +701,8 @@
                 //Agregar opciones a nivel de riesgo
                 ActualizarNivelRiesgo("MAP");
 
+                $("#Asesor_MA_Seguridad").val($("#Asesores_MA").val())
+
             } else if ($("#TipoInspeccion").val() == "SSO") {
                 //Mostrar asesores seguridad
                 $(".AsesorMedioAmbiente").hide();
@@ -701,6 +713,7 @@
                 $("#CondicionIdentificada").val("");
                 //Agregar opciones a nivel de riesgo
                 ActualizarNivelRiesgo("SSO");
+                $("#Asesor_MA_Seguridad").val($("#Asesores_Seguridad").val())
             } else {
                 $(".OpcMedioAmbiente").hide();
                 $(".OpcMedioAmbiente").prop('disabled', true);

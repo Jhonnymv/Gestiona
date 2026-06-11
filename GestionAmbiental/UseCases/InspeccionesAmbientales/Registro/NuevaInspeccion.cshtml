@@ -1210,6 +1210,16 @@
             //reiniciar estilo de nivel de riesgo
             $("#E_NivelRiesgo").css({ "background-color": "white", "color": "black" });
         });
+        $("#Asesores_MA").on('change', function () {
+            let asesor = $("#Asesores_MA").val()
+            console.log(asesor)
+            $("#Asesor_MA_Seguridad").val(asesor)
+        })
+        $("#Asesores_Seguridad").on('change', function () {
+            let asesor = $("#Asesores_Seguridad").val()
+            console.log(asesor)
+            $("#Asesor_MA_Seguridad").val(asesor)
+        })
         $("#E_CondicionIdentificada").on('change', function () {
             var selectedOption = $("#E_CondicionIdentificada option:selected").val();
             var tipoInspeccion = $("#E_TipoInspeccion").val();
