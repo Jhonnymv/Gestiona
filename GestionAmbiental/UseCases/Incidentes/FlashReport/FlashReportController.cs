@@ -340,7 +340,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
                     Cargo_Supervisor_Marcobre = flashReport.Cargo_Supervisor_Marcobre,
                     Cargo_Supervisor_Contratista = flashReport.Cargo_Supervisor_Contratista,
                     Estado = flashReport.Estado,
-                    Evidencias_Completas = flashReport.Registro_Fotografico != null ? JsonConvert.SerializeObject(flashReport.Registro_Fotografico) : null,
+                    Evidencias_Completas = (flashReport.Registro_Fotografico != null && flashReport.Registro_Fotografico != "[]") ? JsonConvert.SerializeObject(flashReport.Registro_Fotografico) : null,
                     Evidencias_Nombres = flashReport.Archivo_Registro_Fotografico,
                 };
 
@@ -851,7 +851,7 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReport
                     response = new
                     {
                         success = true,
-                        nombresEvidencias = nombresEvidencias,
+                        NombresEvidencias = nombresEvidencias,
                         evidencia = nombresEvidencias.Select(x=>x.NombreCarga).ToList()
                     };
                 else

@@ -244,8 +244,8 @@ namespace GestionAmbiental.UseCases.Incidentes.FlashReportMA
 					Cargo_Supervisor_Marcobre = flashReport.Cargo_Supervisor_Marcobre,
 					Cargo_Supervisor_Contratista = flashReport.Cargo_Supervisor_Contratista,
 					Estado = flashReport.Estado,
-					Evidencias_Completas = flashReport.Registro_Fotografico != null ? JsonConvert.SerializeObject(flashReport.Registro_Fotografico) : null,
-					Evidencias_Nombres = flashReport.Archivo_Registro_Fotografico,
+					Evidencias_Completas = (flashReport.Registro_Fotografico != null && flashReport.Registro_Fotografico != "[]") ? JsonConvert.SerializeObject(flashReport.Registro_Fotografico) : null,
+                    Evidencias_Nombres = flashReport.Archivo_Registro_Fotografico,
 				};
 
 				ViewBag.Rol = userInfo.Rol.ToString();
